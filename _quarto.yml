@@ -29,12 +29,13 @@ website:
   navbar:
     left:
       - text: "Start"
-        href: start.qmd
+        href: index.qmd
       - text: "Slides"
         menu:
           - text: "Introduction to Machine Learning"
             href: slides/intro_ml.qmd
           - text: "Decision Trees"
             href: slides/decision_trees.qmd
+    right:
       - text: Cross-Validation
         href: slides/cross_validation.ipynb"
