@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://fonsecamig.github.io/mpaaaf_course/start.html</loc>
+    <loc>https://fonsecamig.github.io/mpaaaf_course/slides/intro_ml.html</loc>
+    <lastmod>2026-01-09T12:45:22.698Z</lastmod>
+  </url>
+  <url>
+    <loc>https://fonsecamig.github.io/mpaaaf_course/index.html</loc>
     <lastmod>2026-01-09T13:03:54.137Z</lastmod>
   </url>
   <url>
     <loc>https://fonsecamig.github.io/mpaaaf_course/slides/decision_trees.html</loc>
-    <lastmod>2026-01-09T12:45:22.698Z</lastmod>
-  </url>
-  <url>
-    <loc>https://fonsecamig.github.io/mpaaaf_course/slides/intro_ml.html</loc>
     <lastmod>2026-01-09T12:45:22.698Z</lastmod>
   </url>
 </urlset>

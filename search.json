@@ -1,14 +1,161 @@
 [
   {
-    "objectID": "start.html",
-    "href": "start.html",
+    "objectID": "slides/intro_ml.html#what-is-machine-learning",
+    "href": "slides/intro_ml.html#what-is-machine-learning",
+    "title": "Introduction to Machine Learning",
+    "section": "What is Machine Learning?",
+    "text": "What is Machine Learning?\n\n\n\n\n\n\nMachine Learning (ML)\n\n\nAlgorithms that learn patterns from data and make predictions or decisions without being explicitly programmed.\n\n\n\n\nExamples:\n\nEmail spam detection\nCredit risk assessment\nImage and speech recognition\nRecommendation systems"
+  },
+  {
+    "objectID": "slides/intro_ml.html#machine-learning-vs.-statistics",
+    "href": "slides/intro_ml.html#machine-learning-vs.-statistics",
+    "title": "Introduction to Machine Learning",
+    "section": "Machine Learning vs. Statistics",
+    "text": "Machine Learning vs. Statistics\n\n\n\n\n\n\n\n\nAspect\nStatistics\nMachine Learning\n\n\n\n\nPrimary goal\nInference, explanation, uncertainty quantification\nPrediction, pattern discovery, automation\n\n\nTypical questions\nWhy does this happen?Is the effect significant?\nWhat will happen next?Can we predict accurately?\n\n\nModel assumptions\nStrong (distributional forms, linearity, independence)\nOften weak or implicit\n\n\nData size\nSmall to moderate datasets\nLarge, high-dimensional datasets\n\n\n\n\nEvaluation | Hypothesis tests, confidence intervals | Train/validation/test split, predictive metrics |\n\nPhilosophy | Model the data-generating process | Optimize performance on unseen data |"
+  },
+  {
+    "objectID": "slides/intro_ml.html#main-categories-of-machine-learning",
+    "href": "slides/intro_ml.html#main-categories-of-machine-learning",
+    "title": "Introduction to Machine Learning",
+    "section": "Main Categories of Machine Learning",
+    "text": "Main Categories of Machine Learning\n1. Supervised Learning\n\nData with labels\nLearn input → output mapping\n\n2. Unsupervised Learning\n\nData without labels\nDiscover hidden structure\n\n(We will focus mainly on supervised learning.)"
+  },
+  {
+    "objectID": "slides/intro_ml.html#supervised-learning-1",
+    "href": "slides/intro_ml.html#supervised-learning-1",
+    "title": "Introduction to Machine Learning",
+    "section": "Supervised Learning",
+    "text": "Supervised Learning\nEach observation consists of:\n\nFeatures \\(X\\)\nTarget \\(y\\)\n\nGoal: \\[\nf(X) \\approx y\n\\]\nTypical applications:\n\nPredict prices\nClassify emails\nDiagnose diseases"
+  },
+  {
+    "objectID": "slides/intro_ml.html#supervised-learning-tasks",
+    "href": "slides/intro_ml.html#supervised-learning-tasks",
+    "title": "Introduction to Machine Learning",
+    "section": "Supervised Learning Tasks",
+    "text": "Supervised Learning Tasks\nTwo main task types:\n\n\n\nTask\nOutput\n\n\n\n\nRegression\nContinuous value\n\n\nClassification\nDiscrete class"
+  },
+  {
+    "objectID": "slides/intro_ml.html#regression",
+    "href": "slides/intro_ml.html#regression",
+    "title": "Introduction to Machine Learning",
+    "section": "Regression",
+    "text": "Regression\nRegression predicts a numerical value.\nExamples:\n\nHouse price prediction\nStock return forecasting\nTemperature prediction\n\nTypical models:\n\nLinear Regression\nRidge / Lasso\nRandom Forest Regressor"
+  },
+  {
+    "objectID": "slides/intro_ml.html#classification",
+    "href": "slides/intro_ml.html#classification",
+    "title": "Introduction to Machine Learning",
+    "section": "Classification",
+    "text": "Classification\nClassification predicts a category or label.\nExamples:\n\nSpam vs non-spam\nFraud vs non-fraud\nDisease vs healthy\n\nTypical models:\n\nLogistic Regression\nk-Nearest Neighbors\nDecision Trees\nSupport Vector Machines"
+  },
+  {
+    "objectID": "slides/intro_ml.html#unsupervised-learning-2",
+    "href": "slides/intro_ml.html#unsupervised-learning-2",
+    "title": "Introduction to Machine Learning",
+    "section": "Unsupervised Learning",
+    "text": "Unsupervised Learning\nNo labeled output variable.\nGoals:\n\nDiscover structure\nGroup similar observations\nReduce dimensionality\n\nExamples:\n\nCustomer segmentation\nTopic modeling\nData visualization"
+  },
+  {
+    "objectID": "slides/intro_ml.html#unsupervised-learning-tasks",
+    "href": "slides/intro_ml.html#unsupervised-learning-tasks",
+    "title": "Introduction to Machine Learning",
+    "section": "Unsupervised Learning Tasks",
+    "text": "Unsupervised Learning Tasks\nCommon tasks:\n\nClustering (e.g. k-means)\nDimensionality reduction (e.g. PCA)\n\nTypical use cases:\n\nExploratory data analysis\nPreprocessing\nFeature engineering"
+  },
+  {
+    "objectID": "slides/intro_ml.html#the-machine-learning-workflow",
+    "href": "slides/intro_ml.html#the-machine-learning-workflow",
+    "title": "Introduction to Machine Learning",
+    "section": "The Machine Learning Workflow",
+    "text": "The Machine Learning Workflow\n\nCollect data\n\nClean and preprocess\n\nSplit data\n\nTrain model\n\nEvaluate model\n\nImprove / deploy"
+  },
+  {
+    "objectID": "slides/intro_ml.html#data-splitting",
+    "href": "slides/intro_ml.html#data-splitting",
+    "title": "Introduction to Machine Learning",
+    "section": "Data Splitting",
+    "text": "Data Splitting\nWe typically split data into:\n\nTraining set – used to fit the model\n\nValidation set – used for model selection / tuning\n\nTest set – used for final evaluation"
+  },
+  {
+    "objectID": "slides/intro_ml.html#why-not-train-on-all-data",
+    "href": "slides/intro_ml.html#why-not-train-on-all-data",
+    "title": "Introduction to Machine Learning",
+    "section": "Why Not Train on all Data?",
+    "text": "Why Not Train on all Data?\nIf we train and evaluate on the same data:\n\nModel may memorize the data\nPerformance estimate becomes optimistic\n\nThis is called overfitting."
+  },
+  {
+    "objectID": "slides/intro_ml.html#train-validation-test-1",
+    "href": "slides/intro_ml.html#train-validation-test-1",
+    "title": "Introduction to Machine Learning",
+    "section": "Train / Validation / Test",
+    "text": "Train / Validation / Test\nTypical split ratios:\n\n60% train / 20% validation / 20% test\nor 70% / 15% / 15%\n\n\n\n\n\nKey principle:\n\n\nThe test set must remain untouched until the very end."
+  },
+  {
+    "objectID": "slides/intro_ml.html#example-data-splitting-in-python",
+    "href": "slides/intro_ml.html#example-data-splitting-in-python",
+    "title": "Introduction to Machine Learning",
+    "section": "Example: Data Splitting in Python",
+    "text": "Example: Data Splitting in Python\n\nfrom sklearn.model_selection import train_test_split\nimport numpy as np\n\n# Dummy data\nX = np.random.rand(100, 2)\ny = np.random.rand(100)\n\n# Train + test split\nX_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.2, random_state=42\n)\n\n# Train + validation split\nX_train, X_val, y_train, y_val = train_test_split(\n    X_train, y_train, test_size=0.25, random_state=42\n)\n\nX_train.shape, X_val.shape, X_test.shape\n\n((60, 2), (20, 2), (20, 2))"
+  },
+  {
+    "objectID": "slides/intro_ml.html#motivation",
+    "href": "slides/intro_ml.html#motivation",
+    "title": "Introduction to Machine Learning",
+    "section": "Motivation",
+    "text": "Motivation\nWhy Do We Need Cross-Validation?\n\nGoal: estimate generalization performance\nTraining error is optimistically biased\nSingle train/test split:\n\nHigh variance\nSensitive to random split\n\n\nCross-validation reduces uncertainty in model evaluation"
+  },
+  {
+    "objectID": "slides/intro_ml.html#the-core-idea",
+    "href": "slides/intro_ml.html#the-core-idea",
+    "title": "Introduction to Machine Learning",
+    "section": "The Core Idea",
+    "text": "The Core Idea\nWhat Is k-Fold Cross-Validation?\n\nSplit data into k approximately equal folds\nFor each fold:\n\nTrain on k−1 folds\nTest on the remaining fold\n\nAggregate performance metrics\n\n\\[\n\\text{CV score} = \\frac{1}{k} \\sum_{i=1}^{k} \\text{Score}_i\n\\]"
+  },
+  {
+    "objectID": "slides/intro_ml.html#choosing-k",
+    "href": "slides/intro_ml.html#choosing-k",
+    "title": "Introduction to Machine Learning",
+    "section": "Choosing k",
+    "text": "Choosing k\nBias–Variance Trade-off\n\n\n\nk\nCharacteristics\n\n\n\n\n2–5\nHigher bias, lower variance\n\n\n5–10\nCommon practical choice\n\n\nn (LOOCV)\nMinimal bias, high variance & cost\n\n\n\n\n\n\n\nRule of thumb\n\n\n\nk = 5 or 10 for most problems"
+  },
+  {
+    "objectID": "slides/intro_ml.html#formal-perspective",
+    "href": "slides/intro_ml.html#formal-perspective",
+    "title": "Introduction to Machine Learning",
+    "section": "Formal Perspective",
+    "text": "Formal Perspective\nExpected Error Estimation\nk-fold CV estimates:\n\\[\n\\mathbb{E}_{(X,Y)}[L(f_{\\mathscr{D}}, (X,Y))]\n\\]\nwith:\n\nDifferent training sets \\(\\mathscr{D}\\)\nSame learning algorithm\nSame data distribution"
+  },
+  {
+    "objectID": "slides/intro_ml.html#regression-vs-classification",
+    "href": "slides/intro_ml.html#regression-vs-classification",
+    "title": "Introduction to Machine Learning",
+    "section": "Regression vs Classification",
+    "text": "Regression vs Classification\nKey Differences\n\n\n\nAspect\nRegression\nClassification\n\n\n\n\nMetrics\nMSE, MAE, R²\nAccuracy, F1, AUC\n\n\nSplits\nRandom OK\nMust preserve class balance\n\n\nCV variant\nKFold\nStratified k-Fold"
+  },
+  {
+    "objectID": "slides/intro_ml.html#regression-k-fold-cv",
+    "href": "slides/intro_ml.html#regression-k-fold-cv",
+    "title": "Introduction to Machine Learning",
+    "section": "Regression: k-Fold CV",
+    "text": "Regression: k-Fold CV\nTypical Metrics\n\nMean Squared Error (MSE)\nMean Absolute Error (MAE)\n\\(R^2\\)\n\n\n\n\n\n\n\nNote\n\n\nScores may be negative in scikit-learn (loss convention)"
+  },
+  {
+    "objectID": "slides/intro_ml.html#regression-example-scikit-learn",
+    "href": "slides/intro_ml.html#regression-example-scikit-learn",
+    "title": "Introduction to Machine Learning",
+    "section": "Regression Example (scikit-learn)",
+    "text": "Regression Example (scikit-learn)\n\nimport numpy as np\nfrom sklearn.datasets import make_regression\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.model_selection import KFold, cross_val_score\n\nX, y = make_regression(n_samples=100, n_features=5, noise=10, random_state=42)\n\nmodel = LinearRegression()\ncv = KFold(n_splits=5, shuffle=True, random_state=42)\n\nscores = cross_val_score(\n    model, X, y,\n    cv=cv,\n    scoring=\"neg_mean_squared_error\"\n)\n\nmse_scores = -scores\nprint(\"MSE per fold:\", mse_scores)\nprint(\"Mean MSE:\", mse_scores.mean())\n\nMSE per fold: [113.44800318  81.16181775  88.22981966  85.52522476 102.8583864 ]\nMean MSE: 94.2446503511611"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
     "title": "MPAAAF",
     "section": "",
     "text": "Graduate-level course (12 weeks × 4h/week) on ML for financial data with emphasis on time-series modeling, backtesting, and finance-aware metrics."
   },
   {
-    "objectID": "start.html#overview",
-    "href": "start.html#overview",
+    "objectID": "index.html#overview",
+    "href": "index.html#overview",
     "title": "MPAAAF",
     "section": "",
     "text": "Graduate-level course (12 weeks × 4h/week) on ML for financial data with emphasis on time-series modeling, backtesting, and finance-aware metrics."
@@ -166,152 +313,5 @@
     "title": "Decision Trees for Financial Data",
     "section": "Financial Application 3: Trading Rules",
     "text": "Financial Application 3: Trading Rules\nExample learned rule:\n```text IF momentum &gt; 0.02 AND volatility &lt; 0.15 THEN Buy ELSE Hold"
-  },
-  {
-    "objectID": "slides/intro_ml.html#what-is-machine-learning",
-    "href": "slides/intro_ml.html#what-is-machine-learning",
-    "title": "Introduction to Machine Learning",
-    "section": "What is Machine Learning?",
-    "text": "What is Machine Learning?\n\n\n\n\n\n\nMachine Learning (ML)\n\n\nAlgorithms that learn patterns from data and make predictions or decisions without being explicitly programmed.\n\n\n\n\nExamples:\n\nEmail spam detection\nCredit risk assessment\nImage and speech recognition\nRecommendation systems"
-  },
-  {
-    "objectID": "slides/intro_ml.html#machine-learning-vs.-statistics",
-    "href": "slides/intro_ml.html#machine-learning-vs.-statistics",
-    "title": "Introduction to Machine Learning",
-    "section": "Machine Learning vs. Statistics",
-    "text": "Machine Learning vs. Statistics\n\n\n\n\n\n\n\n\nAspect\nStatistics\nMachine Learning\n\n\n\n\nPrimary goal\nInference, explanation, uncertainty quantification\nPrediction, pattern discovery, automation\n\n\nTypical questions\nWhy does this happen?Is the effect significant?\nWhat will happen next?Can we predict accurately?\n\n\nModel assumptions\nStrong (distributional forms, linearity, independence)\nOften weak or implicit\n\n\nData size\nSmall to moderate datasets\nLarge, high-dimensional datasets\n\n\n\n\nEvaluation | Hypothesis tests, confidence intervals | Train/validation/test split, predictive metrics |\n\nPhilosophy | Model the data-generating process | Optimize performance on unseen data |"
-  },
-  {
-    "objectID": "slides/intro_ml.html#main-categories-of-machine-learning",
-    "href": "slides/intro_ml.html#main-categories-of-machine-learning",
-    "title": "Introduction to Machine Learning",
-    "section": "Main Categories of Machine Learning",
-    "text": "Main Categories of Machine Learning\n1. Supervised Learning\n\nData with labels\nLearn input → output mapping\n\n2. Unsupervised Learning\n\nData without labels\nDiscover hidden structure\n\n(We will focus mainly on supervised learning.)"
-  },
-  {
-    "objectID": "slides/intro_ml.html#supervised-learning-1",
-    "href": "slides/intro_ml.html#supervised-learning-1",
-    "title": "Introduction to Machine Learning",
-    "section": "Supervised Learning",
-    "text": "Supervised Learning\nEach observation consists of:\n\nFeatures \\(X\\)\nTarget \\(y\\)\n\nGoal: \\[\nf(X) \\approx y\n\\]\nTypical applications:\n\nPredict prices\nClassify emails\nDiagnose diseases"
-  },
-  {
-    "objectID": "slides/intro_ml.html#supervised-learning-tasks",
-    "href": "slides/intro_ml.html#supervised-learning-tasks",
-    "title": "Introduction to Machine Learning",
-    "section": "Supervised Learning Tasks",
-    "text": "Supervised Learning Tasks\nTwo main task types:\n\n\n\nTask\nOutput\n\n\n\n\nRegression\nContinuous value\n\n\nClassification\nDiscrete class"
-  },
-  {
-    "objectID": "slides/intro_ml.html#regression",
-    "href": "slides/intro_ml.html#regression",
-    "title": "Introduction to Machine Learning",
-    "section": "Regression",
-    "text": "Regression\nRegression predicts a numerical value.\nExamples:\n\nHouse price prediction\nStock return forecasting\nTemperature prediction\n\nTypical models:\n\nLinear Regression\nRidge / Lasso\nRandom Forest Regressor"
-  },
-  {
-    "objectID": "slides/intro_ml.html#classification",
-    "href": "slides/intro_ml.html#classification",
-    "title": "Introduction to Machine Learning",
-    "section": "Classification",
-    "text": "Classification\nClassification predicts a category or label.\nExamples:\n\nSpam vs non-spam\nFraud vs non-fraud\nDisease vs healthy\n\nTypical models:\n\nLogistic Regression\nk-Nearest Neighbors\nDecision Trees\nSupport Vector Machines"
-  },
-  {
-    "objectID": "slides/intro_ml.html#unsupervised-learning-2",
-    "href": "slides/intro_ml.html#unsupervised-learning-2",
-    "title": "Introduction to Machine Learning",
-    "section": "Unsupervised Learning",
-    "text": "Unsupervised Learning\nNo labeled output variable.\nGoals:\n\nDiscover structure\nGroup similar observations\nReduce dimensionality\n\nExamples:\n\nCustomer segmentation\nTopic modeling\nData visualization"
-  },
-  {
-    "objectID": "slides/intro_ml.html#unsupervised-learning-tasks",
-    "href": "slides/intro_ml.html#unsupervised-learning-tasks",
-    "title": "Introduction to Machine Learning",
-    "section": "Unsupervised Learning Tasks",
-    "text": "Unsupervised Learning Tasks\nCommon tasks:\n\nClustering (e.g. k-means)\nDimensionality reduction (e.g. PCA)\n\nTypical use cases:\n\nExploratory data analysis\nPreprocessing\nFeature engineering"
-  },
-  {
-    "objectID": "slides/intro_ml.html#the-machine-learning-workflow",
-    "href": "slides/intro_ml.html#the-machine-learning-workflow",
-    "title": "Introduction to Machine Learning",
-    "section": "The Machine Learning Workflow",
-    "text": "The Machine Learning Workflow\n\nCollect data\n\nClean and preprocess\n\nSplit data\n\nTrain model\n\nEvaluate model\n\nImprove / deploy"
-  },
-  {
-    "objectID": "slides/intro_ml.html#data-splitting",
-    "href": "slides/intro_ml.html#data-splitting",
-    "title": "Introduction to Machine Learning",
-    "section": "Data Splitting",
-    "text": "Data Splitting\nWe typically split data into:\n\nTraining set – used to fit the model\n\nValidation set – used for model selection / tuning\n\nTest set – used for final evaluation"
-  },
-  {
-    "objectID": "slides/intro_ml.html#why-not-train-on-all-data",
-    "href": "slides/intro_ml.html#why-not-train-on-all-data",
-    "title": "Introduction to Machine Learning",
-    "section": "Why Not Train on all Data?",
-    "text": "Why Not Train on all Data?\nIf we train and evaluate on the same data:\n\nModel may memorize the data\nPerformance estimate becomes optimistic\n\nThis is called overfitting."
-  },
-  {
-    "objectID": "slides/intro_ml.html#train-validation-test-1",
-    "href": "slides/intro_ml.html#train-validation-test-1",
-    "title": "Introduction to Machine Learning",
-    "section": "Train / Validation / Test",
-    "text": "Train / Validation / Test\nTypical split ratios:\n\n60% train / 20% validation / 20% test\nor 70% / 15% / 15%\n\n\n\n\n\nKey principle:\n\n\nThe test set must remain untouched until the very end."
-  },
-  {
-    "objectID": "slides/intro_ml.html#example-data-splitting-in-python",
-    "href": "slides/intro_ml.html#example-data-splitting-in-python",
-    "title": "Introduction to Machine Learning",
-    "section": "Example: Data Splitting in Python",
-    "text": "Example: Data Splitting in Python\n\nfrom sklearn.model_selection import train_test_split\nimport numpy as np\n\n# Dummy data\nX = np.random.rand(100, 2)\ny = np.random.rand(100)\n\n# Train + test split\nX_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.2, random_state=42\n)\n\n# Train + validation split\nX_train, X_val, y_train, y_val = train_test_split(\n    X_train, y_train, test_size=0.25, random_state=42\n)\n\nX_train.shape, X_val.shape, X_test.shape\n\n((60, 2), (20, 2), (20, 2))"
-  },
-  {
-    "objectID": "slides/intro_ml.html#motivation",
-    "href": "slides/intro_ml.html#motivation",
-    "title": "Introduction to Machine Learning",
-    "section": "Motivation",
-    "text": "Motivation\nWhy Do We Need Cross-Validation?\n\nGoal: estimate generalization performance\nTraining error is optimistically biased\nSingle train/test split:\n\nHigh variance\nSensitive to random split\n\n\nCross-validation reduces uncertainty in model evaluation"
-  },
-  {
-    "objectID": "slides/intro_ml.html#the-core-idea",
-    "href": "slides/intro_ml.html#the-core-idea",
-    "title": "Introduction to Machine Learning",
-    "section": "The Core Idea",
-    "text": "The Core Idea\nWhat Is k-Fold Cross-Validation?\n\nSplit data into k approximately equal folds\nFor each fold:\n\nTrain on k−1 folds\nTest on the remaining fold\n\nAggregate performance metrics\n\n\\[\n\\text{CV score} = \\frac{1}{k} \\sum_{i=1}^{k} \\text{Score}_i\n\\]"
-  },
-  {
-    "objectID": "slides/intro_ml.html#choosing-k",
-    "href": "slides/intro_ml.html#choosing-k",
-    "title": "Introduction to Machine Learning",
-    "section": "Choosing k",
-    "text": "Choosing k\nBias–Variance Trade-off\n\n\n\nk\nCharacteristics\n\n\n\n\n2–5\nHigher bias, lower variance\n\n\n5–10\nCommon practical choice\n\n\nn (LOOCV)\nMinimal bias, high variance & cost\n\n\n\n\n\n\n\nRule of thumb\n\n\n\nk = 5 or 10 for most problems"
-  },
-  {
-    "objectID": "slides/intro_ml.html#formal-perspective",
-    "href": "slides/intro_ml.html#formal-perspective",
-    "title": "Introduction to Machine Learning",
-    "section": "Formal Perspective",
-    "text": "Formal Perspective\nExpected Error Estimation\nk-fold CV estimates:\n\\[\n\\mathbb{E}_{(X,Y)}[L(f_{\\mathscr{D}}, (X,Y))]\n\\]\nwith:\n\nDifferent training sets \\(\\mathscr{D}\\)\nSame learning algorithm\nSame data distribution"
-  },
-  {
-    "objectID": "slides/intro_ml.html#regression-vs-classification",
-    "href": "slides/intro_ml.html#regression-vs-classification",
-    "title": "Introduction to Machine Learning",
-    "section": "Regression vs Classification",
-    "text": "Regression vs Classification\nKey Differences\n\n\n\nAspect\nRegression\nClassification\n\n\n\n\nMetrics\nMSE, MAE, R²\nAccuracy, F1, AUC\n\n\nSplits\nRandom OK\nMust preserve class balance\n\n\nCV variant\nKFold\nStratified k-Fold"
-  },
-  {
-    "objectID": "slides/intro_ml.html#regression-k-fold-cv",
-    "href": "slides/intro_ml.html#regression-k-fold-cv",
-    "title": "Introduction to Machine Learning",
-    "section": "Regression: k-Fold CV",
-    "text": "Regression: k-Fold CV\nTypical Metrics\n\nMean Squared Error (MSE)\nMean Absolute Error (MAE)\n\\(R^2\\)\n\n\n\n\n\n\n\nNote\n\n\nScores may be negative in scikit-learn (loss convention)"
-  },
-  {
-    "objectID": "slides/intro_ml.html#regression-example-scikit-learn",
-    "href": "slides/intro_ml.html#regression-example-scikit-learn",
-    "title": "Introduction to Machine Learning",
-    "section": "Regression Example (scikit-learn)",
-    "text": "Regression Example (scikit-learn)\n\nimport numpy as np\nfrom sklearn.datasets import make_regression\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.model_selection import KFold, cross_val_score\n\nX, y = make_regression(n_samples=100, n_features=5, noise=10, random_state=42)\n\nmodel = LinearRegression()\ncv = KFold(n_splits=5, shuffle=True, random_state=42)\n\nscores = cross_val_score(\n    model, X, y,\n    cv=cv,\n    scoring=\"neg_mean_squared_error\"\n)\n\nmse_scores = -scores\nprint(\"MSE per fold:\", mse_scores)\nprint(\"Mean MSE:\", mse_scores.mean())\n\nMSE per fold: [113.44800318  81.16181775  88.22981966  85.52522476 102.8583864 ]\nMean MSE: 94.2446503511611"
   }
 ]
