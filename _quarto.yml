@@ -36,6 +36,5 @@ website:
             href: slides/intro_ml.qmd
           - text: "Decision Trees"
             href: slides/decision_trees.qmd
-    right:
       - text: Cross-Validation
         href: slides/cross_validation.qmd"
