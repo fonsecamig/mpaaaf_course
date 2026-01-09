@@ -37,4 +37,4 @@ website:
           - text: "Decision Trees"
             href: slides/decision_trees.qmd
       - text: Cross-Validation
-        href: slides/cross_validation.qmd"
+        href: slides/cross_validation.ipynb"
