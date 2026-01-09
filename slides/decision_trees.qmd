@@ -4,15 +4,7 @@ subtitle: "Theory, Evaluation, Feature Importance & Applications"
 author: "Miguel Fonseca"
 format:
   revealjs:
-    # theme: solarized
-    # slide-number: true
-    # incremental: true
-    # chalkboard: true
     toc: true
-    # transition: slide
-    # center: true
-# execute:
-#   echo: false
 ---
 
 # Motivation & intuition
