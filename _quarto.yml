@@ -38,4 +38,4 @@ website:
             href: slides/decision_trees.qmd
     right:
       - text: Cross-Validation
-        href: slides/cross_validation.ipynb"
+        href: notebooks/cross_validation.ipynb"
