@@ -1,6 +1,11 @@
 ---
 title: "MPAAAF"
 format: html
+sidebar:
+    contents:
+      - section: "Notebooks"
+        contents: 
+          - notebooks/cross-validation.ipynb
 ---
 
 ## Overview
