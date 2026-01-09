@@ -1,0 +1,372 @@
+---
+title: "Decision Trees for Financial Data"
+subtitle: "Theory, Evaluation, Feature Importance & Applications"
+author: "Miguel Fonseca"
+format:
+  revealjs:
+    # theme: solarized
+    # slide-number: true
+    # incremental: true
+    # chalkboard: true
+    toc: true
+    # transition: slide
+    # center: true
+# execute:
+#   echo: false
+---
+
+# Motivation & intuition
+<!--## Outline
+- Motivation & intuition  
+- Decision tree theory  
+- Splitting criteria  
+- Overfitting & regularization  
+- Evaluation metrics  
+- Feature importance  
+- Financial applications  
+- Practical considerations  -->
+
+## Why Decision Trees?
+
+:::{.non-incremental}
+- Non-linear models  
+- Easy to interpret  
+- Handle mixed data types  
+- Minimal preprocessing  
+- Strong baseline in finance  
+:::
+
+**Used in:**
+
+:::{.non-incremental}
+- Credit scoring  
+- Risk classification  
+- Trading rules  
+- Fraud detection  
+:::
+
+---
+
+## Intuition
+
+A decision tree:
+
+::: {.non-incremental}
+- Recursively splits data
+- Uses simple decision rules
+- Creates homogeneous regions
+:::
+
+> *“If–then–else logic learned from data”*
+
+<!-- --- -->
+
+# Decision tree theory
+
+## Tree Structure
+
+- **Root node** – first split  
+- **Internal nodes** – decision rules  
+- **Leaves** – predictions  
+
+Predictions:
+
+::: {.incremental}
+- **Regression** → mean value  
+- **Classification** → majority class / probability  
+:::
+
+---
+
+## Mathematical View
+
+Given data $(X, y)$:
+
+At each node, choose split $s$ that minimizes impurity:
+
+$$
+s^* = \mathop{\arg\min}_s \sum_{k \in \{L,R\}} \frac{n_k}{n} \, I(y_k)
+$$
+
+where $I(\cdot)$ is an impurity measure.
+
+<!-- --- -->
+
+# Splitting criteria
+
+## Splitting Criteria (Classification) {.scrollable}
+
+::: {.incremental}
+- **Gini Impurity**
+$$
+G = 1 - \sum_{c} p_c^2
+$$
+
+- **Entropy**
+$$
+H = -\sum_c p_c \log (p_c)
+$$
+
+- **Information Gain**
+$$
+IG = H(\text{parent}) - \sum_k \frac{n_k}{n} H(\text{child}_k)
+$$
+:::
+
+---
+
+## Splitting Criteria (Regression)
+
+### Variance Reduction
+
+$$
+\mathrm{Var}(y) = \frac{1}{n} \sum (y_i - \bar{y})^2
+$$
+
+The optimal split minimizes **weighted variance** across child nodes.
+
+---
+
+## Continuous vs Categorical Features
+
+- Continuous: threshold splits (e.g. return > 0.01)  
+- Categorical: subset splits  
+
+Financial data characteristics:
+
+:::{.non-incremental}
+- Skewed distributions  
+- Heavy tails  
+- Strong correlations  
+:::
+
+---
+
+## Stopping Criteria
+
+Trees stop growing when:
+
+:::{.incremental}
+- Maximum depth is reached  
+- Minimum samples per leaf is violated  
+- No impurity reduction is possible  
+- Node becomes pure  
+:::
+
+<!-- --- -->
+
+# Overfitting & regularization
+
+## Overfitting Problem
+
+Decision trees:
+
+:::{.nonincremental}
+- Low bias  
+- **High variance**
+:::
+
+Unrestricted trees:
+
+:::{.non-incremental}
+- Memorize noise  
+- Poor out-of-sample performance  
+:::
+
+---
+
+## Regularization (Pruning)
+
+Key hyperparameters:
+
+:::{.non-incremental}
+- `max_depth`
+- `min_samples_leaf`
+- `min_samples_split`
+- `max_leaf_nodes`
+:::
+
+:::{.callout}
+Controls the **bias–variance tradeoff**.
+:::
+
+---
+
+## Cost-Complexity Pruning
+
+Objective function:
+
+$$
+R_\alpha(T) = R(T) + \alpha |T|
+$$
+
+::: {.non-incremental}
+- $R(T)$: training error  
+- $|T|$: number of leaves  
+:::
+
+Used in **CART**.
+
+<!-- --- -->
+
+# Evaluation metrics
+
+## Evaluation Metrics (Classification) {.scrollable}
+
+**Confusion Matrix**
+
+|              | Predicted + | Predicted - |
+|:------------:|:-----------:|:-----------:|
+| **Actual +** |     TP      |     FN      |
+| **Actual -** |     FP      |     TN      |
+
+**Common Metrics**
+
+::: {.non-incremental}
+- Accuracy: $\frac{TP + TN}{TP + TN + FP + FN}$  
+- Precision: $\frac{TP}{TP + FP}$  
+- Recall: $\frac{TP}{TP + FN}$  
+- F1-score: $2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}$
+- ROC / AUC
+:::
+
+---
+
+## Evaluation Metrics (Finance-Aware)
+
+Accuracy is often misleading.
+
+Prefer:
+
+::: {.non-incremental}
+- Recall (default detection)  
+- Precision (fraud detection)  
+- Expected loss  
+- Cost-weighted metrics  
+:::
+
+---
+
+## Evaluation Metrics (Regression)
+
+::: {.non-incremental}
+- MAE  
+- MSE / RMSE  
+- $R^2$  
+- Out-of-sample error  
+:::
+
+For trading:
+
+::: {.non-incremental}
+- Directional accuracy  
+- PnL-based metrics  
+:::
+
+---
+
+## Cross-Validation
+
+Essential due to high variance:
+
+::: {.non-incremental}
+- K-fold cross-validation  
+- **Time-series split** for financial data  
+:::
+
+::: {.callout-warning}
+Never shuffle time series data.
+:::
+
+<!-- --- -->
+
+# Feature importance
+
+## Feature Importance: Concept
+
+Decision tree importance is based on:
+- Reduction in impurity
+- Aggregated over all splits
+
+$$
+FI_j = \sum_{t \in j} \Delta I_t
+$$
+
+---
+
+## Impurity-Based Importance
+
+**Pros**
+- Fast
+- Built-in
+
+**Cons**
+- Biased toward:
+  - Continuous variables  
+  - High-cardinality features  
+
+---
+
+## Permutation Importance
+
+Idea:
+- Shuffle one feature at a time  
+- Measure performance degradation  
+
+Advantages:
+- Model-agnostic  
+- Less biased  
+
+---
+
+## Feature Importance in Finance
+
+Interpret carefully:
+- Correlated predictors  
+- Lagged variables  
+- Proxy features  
+
+Best practice:
+- Combine with SHAP  
+- Apply economic intuition  
+
+<!-- --- -->
+
+# Financial applications
+
+## Financial Application 1: Credit Scoring
+
+**Inputs**
+- Income  
+- Debt ratio  
+- Payment history  
+
+**Target**
+- Default / No default  
+
+Decision trees:
+- Transparent rules  
+- Regulatory-friendly  
+
+---
+
+## Financial Application 2: Fraud Detection
+
+Characteristics:
+- Highly imbalanced data  
+- Rare events  
+
+Trees:
+- Capture non-linear interactions  
+- Produce interpretable alerts  
+
+---
+
+## Financial Application 3: Trading Rules
+
+Example learned rule:
+
+```text
+IF momentum > 0.02 AND volatility < 0.15
+THEN Buy
+ELSE Hold

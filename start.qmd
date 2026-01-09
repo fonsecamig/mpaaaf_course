@@ -1,0 +1,11 @@
+---
+title: "MPAAAF"
+format: html
+---
+
+## Overview
+
+Graduate-level course (12 weeks × 4h/week) on ML for financial data with emphasis on time-series modeling, backtesting, and finance-aware metrics.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]
+(https://colab.research.google.com/github/fonsecamig/mpaaaf_webpage/blob/main/notebooks/cross-validation.ipynb)

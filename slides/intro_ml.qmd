@@ -1,0 +1,362 @@
+---
+title: "Introduction to Machine Learning"
+subtitle: "Core Concepts and First Examples"
+author: "Miguel Fonseca"
+format:
+  revealjs
+#     theme: simple
+#     slide-number: true
+#     transition: fade
+#     code-line-numbers: true
+# execute:
+#   echo: true
+#   warning: false
+#   message: false
+---
+
+# Definition
+
+## What is Machine Learning?
+
+<!-- **Machine Learning (ML)** -->
+<!-- is a branch of Artificial Intelligence that focuses on: -->
+
+:::{.callout title="Machine Learning (ML)"}
+Algorithms that learn patterns from data and make predictions or decisions without being explicitly programmed.
+:::
+
+Examples:
+
+- Email spam detection
+- Credit risk assessment
+- Image and speech recognition
+- Recommendation systems
+
+<!-- ## Why Machine Learning?
+
+Traditional programming:
+
+- Rules are **explicitly coded**
+- Hard to scale for complex patterns
+
+Machine learning:
+
+- Rules are **learned from data**
+- Scales well to high-dimensional problems
+- Adapts as more data becomes available
+
+--- -->
+## Machine Learning vs. Statistics {.scrollable}
+
+| Aspect                | Statistics                                              | Machine Learning                                         |
+| --------------------- | ------------------------------------------------------- | -------------------------------------------------------- |
+| **Primary goal**      | Inference, explanation, uncertainty quantification      | Prediction, pattern discovery, automation                |
+| **Typical questions** | *Why does this happen?*<br>*Is the effect significant?* | *What will happen next?*<br>*Can we predict accurately?* |
+| **Model assumptions** | Strong (distributional forms, linearity, independence)  | Often weak or implicit                                   |
+| **Data size**         | Small to moderate datasets                              | Large, high-dimensional datasets                         |
+<!-- | **Interpretability**  | High (coefficients, confidence intervals, p-values)     | Varies (from linear models to black boxes)               | -->
+| **Evaluation**        | Hypothesis tests, confidence intervals                  | Train/validation/test split, predictive metrics          |
+<!-- | **Typical methods**   | Linear regression, hypothesis testing, ANOVA            | Trees, random forests, neural networks                   | -->
+| **Philosophy**        | Model the data-generating process                       | Optimize performance on unseen data                      |
+
+
+## Main Categories of Machine Learning
+
+### 1. Supervised Learning
+- Data with **labels**
+- Learn input → output mapping
+
+### 2. Unsupervised Learning
+- Data **without labels**
+- Discover hidden structure
+
+(We will focus mainly on supervised learning.)
+
+---
+
+## Supervised Learning {.scrollable}
+
+Each observation consists of:
+
+- **Features** $X$
+- **Target** $y$
+
+Goal:
+$$
+f(X) \approx y
+$$
+
+Typical applications:
+
+- Predict prices
+- Classify emails
+- Diagnose diseases
+
+# Supervised Learning
+
+## Supervised Learning Tasks
+
+### Two main task types:
+
+| Task | Output |
+|----|----|
+| **Regression** | Continuous value |
+| **Classification** | Discrete class |
+
+---
+
+## Regression
+
+**Regression** predicts a numerical value.
+
+Examples:
+
+- House price prediction
+- Stock return forecasting
+- Temperature prediction
+
+Typical models:
+
+- Linear Regression
+- Ridge / Lasso
+- Random Forest Regressor
+
+---
+
+## Classification {.scrollable}
+
+**Classification** predicts a category or label.
+
+Examples:
+
+- Spam vs non-spam
+- Fraud vs non-fraud
+- Disease vs healthy
+
+Typical models:
+
+- Logistic Regression
+- k-Nearest Neighbors
+- Decision Trees
+- Support Vector Machines
+
+# Unsupervised Learning
+
+## Unsupervised Learning
+
+No labeled output variable.
+
+Goals:
+
+- Discover structure
+- Group similar observations
+- Reduce dimensionality
+
+Examples:
+
+- Customer segmentation
+- Topic modeling
+- Data visualization
+
+---
+
+## Unsupervised Learning Tasks
+
+Common tasks:
+
+- **Clustering** (e.g. k-means)
+- **Dimensionality reduction** (e.g. PCA)
+
+Typical use cases:
+
+- Exploratory data analysis
+- Preprocessing
+- Feature engineering
+
+---
+
+# Machine Learning Workflow
+
+## The Machine Learning Workflow
+
+1. Collect data  
+2. Clean and preprocess  
+3. Split data  
+4. Train model  
+5. Evaluate model  
+6. Improve / deploy  
+
+# Train, Validation & Test
+
+## Data Splitting
+
+We typically split data into:
+
+- **Training set** – used to fit the model  
+- **Validation set** – used for model selection / tuning  
+- **Test set** – used for final evaluation  
+
+---
+
+## Why Not Train on all Data?
+
+If we train and evaluate on the same data:
+
+- Model may **memorize** the data
+- Performance estimate becomes **optimistic**
+
+This is called **overfitting**.
+
+---
+
+## Train / Validation / Test
+
+Typical split ratios:
+
+- 60% train / 20% validation / 20% test
+- or 70% / 15% / 15%
+
+:::{.callout title="Key principle:"}
+The test set must remain untouched until the very end.
+:::
+
+---
+
+## Example: Data Splitting in Python
+
+```{python}
+from sklearn.model_selection import train_test_split
+import numpy as np
+
+# Dummy data
+X = np.random.rand(100, 2)
+y = np.random.rand(100)
+
+# Train + test split
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# Train + validation split
+X_train, X_val, y_train, y_val = train_test_split(
+    X_train, y_train, test_size=0.25, random_state=42
+)
+
+X_train.shape, X_val.shape, X_test.shape
+```
+
+# K-Fold Cross-Validation
+
+## Motivation
+
+### Why Do We Need Cross-Validation?
+
+- Goal: **estimate generalization performance**
+- Training error is **optimistically biased**
+- Single train/test split:
+  - High variance
+  - Sensitive to random split
+
+**Cross-validation reduces uncertainty in model evaluation**
+
+---
+
+## The Core Idea
+
+### What Is k-Fold Cross-Validation?
+
+1. Split data into **k approximately equal folds**
+2. For each fold:
+   - Train on `k−1` folds
+   - Test on the remaining fold
+3. Aggregate performance metrics
+
+$$
+\text{CV score} = \frac{1}{k} \sum_{i=1}^{k} \text{Score}_i
+$$
+
+---
+
+## Choosing k
+
+### Bias–Variance Trade-off
+
+| k | Characteristics |
+|--|--|
+| 2–5 | Higher bias, lower variance |
+| 5–10 | Common practical choice |
+| n (LOOCV) | Minimal bias, high variance & cost |
+
+::: {.callout-tip icon="false" title="Rule of thumb"}
+- k = 5 or 10 for most problems
+:::
+
+---
+
+## Formal Perspective
+
+### Expected Error Estimation
+
+k-fold CV estimates:
+
+$$
+\mathbb{E}_{(X,Y)}[L(f_{\mathscr{D}}, (X,Y))]
+$$
+
+with:
+
+- Different training sets $\mathscr{D}$
+- Same learning algorithm
+- Same data distribution
+
+---
+
+## Regression vs Classification
+
+### Key Differences
+
+| Aspect | Regression | Classification |
+|--|--|--|
+| Metrics | MSE, MAE, R² | Accuracy, F1, AUC |
+| Splits | Random OK | Must preserve class balance |
+| CV variant | KFold | Stratified k-Fold |
+
+---
+
+## Regression: k-Fold CV
+
+### Typical Metrics
+
+- Mean Squared Error (MSE)
+- Mean Absolute Error (MAE)
+- $R^2$
+
+::: {.callout-note}
+Scores may be **negative** in scikit-learn (loss convention)
+:::
+
+---
+
+## Regression Example (scikit-learn)
+
+```{python}
+import numpy as np
+from sklearn.datasets import make_regression
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import KFold, cross_val_score
+
+X, y = make_regression(n_samples=100, n_features=5, noise=10, random_state=42)
+
+model = LinearRegression()
+cv = KFold(n_splits=5, shuffle=True, random_state=42)
+
+scores = cross_val_score(
+    model, X, y,
+    cv=cv,
+    scoring="neg_mean_squared_error"
+)
+
+mse_scores = -scores
+print("MSE per fold:", mse_scores)
+print("Mean MSE:", mse_scores.mean())
+```

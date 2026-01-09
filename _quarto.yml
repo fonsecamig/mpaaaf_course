@@ -1,0 +1,37 @@
+project:
+  type: website
+  # output-dir: docs
+
+format:
+  revealjs:
+    theme: sky
+    slide-number: true
+    code-copy: true
+    chalkboard: true
+    toc: false
+    toc-depth: 1
+    transition: slide
+    embed-resources: false
+  html:
+    theme: cosmo
+    toc: true
+
+execute:
+  freeze: auto
+  echo: true
+  warning: false
+  message: false
+
+website:
+  title: "MPAAAF"
+  navbar:
+    left:
+      - text: "Start"
+        href: start.qmd
+      - text: "Slides"
+        menu:
+          - text: "Introduction to Machine Learning"
+            href: slides/intro_ml.qmd
+          - text: "Decision Trees"
+            href: slides/decision_trees.qmd
+            
