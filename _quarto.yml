@@ -36,6 +36,9 @@ website:
             href: slides/intro_ml.qmd
           - text: "Decision Trees"
             href: slides/decision_trees.qmd
-    right:
-      - text: Cross-Validation
-        href: notebooks/cross-validation.ipynb"
+  sidebar:
+    contents:
+      - section: "Notebooks"
+        contents: 
+          - notebooks/cross-validation.ipynb
+
