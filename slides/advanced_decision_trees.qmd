@@ -7,7 +7,7 @@ format:
     toc: true
 ---
 
-## Motivation: Why Ensembles in Finance?
+## Motivation: Why Ensembles in Finance? {.scrollable}
 
 - Financial data are:
   - Noisy
@@ -21,7 +21,7 @@ format:
 
 ---
 
-## Typical Financial Use Cases
+## Typical Financial Use Cases {.scrollable}
 
 - Equity return prediction (regression)
 - Market direction (up/down) classification
@@ -32,7 +32,7 @@ format:
 
 ---
 
-## Bias–Variance Tradeoff (Finance Perspective)
+## Bias–Variance Tradeoff (Finance Perspective) {.scrollable}
 
 $$
 \mathbb{E}[(Y - \hat{f}(X))^2]
@@ -52,7 +52,7 @@ $$
 
 ---
 
-## Bagging (Bootstrap Aggregating)
+## Bagging (Bootstrap Aggregating) {.scrollable}
 
 ### Core idea
 
@@ -71,7 +71,7 @@ Finance intuition:
 
 ---
 
-## Bagging for Financial Returns
+## Bagging for Financial Returns {.scrollable}
 
 ### Example
 - Target: next-day return
@@ -88,7 +88,7 @@ Why bagging helps:
 
 ---
 
-## Random Forests
+## Random Forests {.scrollable}
 
 ### Key idea
 
@@ -105,7 +105,7 @@ Effect:
 
 ---
 
-## Random Forest Algorithm
+## Random Forest Algorithm {.scrollable}
 
 For $b = 1,...,B$:
 
@@ -146,7 +146,7 @@ Handles:
 
 ---
 
-## Out-of-Bag (OOB) Error
+## Out-of-Bag (OOB) Error {.scrollable}
 
 ~36% of observations are excluded from each bootstrap sample
 
@@ -165,7 +165,7 @@ Dataset is small
 
 ---
 
-## Boosting: The Big Idea
+## Boosting: The Big Idea {.scrollable}
 
 Sequentially fit models that correct previous errors
 
@@ -179,7 +179,7 @@ Sequentially fit models that correct previous errors
 
 ---
 
-## Why Boosting Works Well in Finance
+## Why Boosting Works Well in Finance {.scrollable}
 
 - Many weak predictors
 - Small individual signal-to-noise ratio
@@ -192,7 +192,7 @@ Boosting:
 
 ---
 
-## AdaBoost (Conceptual View)
+## AdaBoost (Conceptual View) {.scrollable}
 
 - Often uses decision stumps
 - Reweights observations:
@@ -205,7 +205,7 @@ Finance analogy:
 
 ---
 
-## Gradient Boosting (GBDT)
+## Gradient Boosting (GBDT) {.scrollable}
 
 ### Functional gradient descent
 
@@ -227,7 +227,7 @@ Key parameters:
 
 ---
 
-## Boosting for Market Prediction
+## Boosting for Market Prediction {.scrollable}
 
 Typical setup:
 
@@ -247,7 +247,7 @@ Risks:
 
 ---
 
-## Random Forest vs Boosting (Finance)
+## Random Forest vs Boosting (Finance) {.scrollable}
 
 | Aspect               | Random Forest      | Boosting       |
 | -------------------- | ------------------ | -------------- |
@@ -259,7 +259,7 @@ Risks:
 
 ---
 
-## Rule of Thumb for Finance
+## Rule of Thumb for Finance Applications {.scrollable}
 
 - *Baseline / noisy signals* → Random Forest
 - *Alpha extraction* → Boosting
@@ -268,7 +268,7 @@ Risks:
 
 ---
 
-Python Example: Financial Regression
+## Python Example: Financial Regression {.scrollable}
 
 ```{python}
 from sklearn.ensemble import (
