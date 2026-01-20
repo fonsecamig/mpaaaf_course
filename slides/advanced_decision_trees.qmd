@@ -1,0 +1,310 @@
+---
+title: "Advanced Decision Trees"
+subtitle: "Bagging, Random Forests, and Boosting in Market Data"
+author: "Miguel Fonseca"
+format:
+  revealjs:
+    toc: true
+---
+
+## Motivation: Why Ensembles in Finance?
+
+- Financial data are:
+  - Noisy
+  - Non-stationary
+  - High-dimensional
+- Single models:
+  - Overfit easily
+  - Are unstable to small data changes
+
+**Ensembles = robustness + better generalization**
+
+---
+
+## Typical Financial Use Cases
+
+- Equity return prediction (regression)
+- Market direction (up/down) classification
+- Volatility forecasting
+- Credit risk & default prediction
+- Fraud detection
+- Portfolio signal aggregation
+
+---
+
+## Bias–Variance Tradeoff (Finance Perspective)
+
+$$
+\mathbb{E}[(Y - \hat{f}(X))^2]
+=
+\text{Bias}^2 + \text{Variance} + \text{Noise}
+$$
+
+- Markets have **high noise**
+- Variance reduction is often more valuable than bias reduction
+
+| Model | Bias | Variance |
+|------|------|----------|
+| Single tree | Low | High |
+| Bagging | Same | ↓ |
+| Random Forest | Same | ↓↓ |
+| Boosting | ↓ | ↑ (controlled) |
+
+---
+
+## Bagging (Bootstrap Aggregating)
+
+### Core idea
+
+> Train many trees on resampled data and average predictions
+
+Algorithm:
+
+1. Draw $B$ bootstrap samples
+2. Train a tree on each sample
+3. Aggregate predictions
+
+Finance intuition:
+
+- Reduces sensitivity to **outliers**
+- Stabilizes signals from noisy indicators
+
+---
+
+## Bagging for Financial Returns
+
+### Example
+- Target: next-day return
+- Features:
+  - Lagged returns
+  - Moving averages
+  - Volatility measures
+  - Volume indicators
+
+Why bagging helps:
+
+- One bad split $\neq$ one bad model
+- Averaging smooths extreme forecasts
+
+---
+
+## Random Forests
+
+### Key idea
+
+> Bagging + feature randomness
+
+At each split:
+
+- Only a random subset of features is considered
+
+Effect:
+
+- Trees become **less correlated**
+- Variance decreases further
+
+---
+
+## Random Forest Algorithm
+
+For $b = 1,...,B$:
+
+  1. Bootstrap the data
+  2. Grow a deep tree
+     - At each split, sample m features
+     - Choose best split among them
+Aggregate predictions
+
+Typical defaults:
+
+- Classification: $m = \sqrt{p}$
+- Regression: $m = \frac{p}{3}$
+
+---
+
+## Random Forests in Finance {.scrollable}
+
+### Strengths
+
+Excellent baseline for:
+
+- Cross-sectional stock selection
+- Credit scoring
+- Fraud detection
+
+Handles:
+
+- Non-linearities
+- Interactions
+- Mixed feature types
+
+### Limitations
+
+- Poor extrapolation
+- Weak for regime shifts
+- Limited interpretability
+
+---
+
+## Out-of-Bag (OOB) Error
+
+~36% of observations are excluded from each bootstrap sample
+
+Can be used as a validation set
+
+Useful when:
+
+Time-series CV is expensive
+
+Dataset is small
+
+::: {.callout-warning title="In finance:"}
+- Still respect time ordering
+- OOB $\neq$ time-aware validation
+:::
+
+---
+
+## Boosting: The Big Idea
+
+Sequentially fit models that correct previous errors
+
+### Difference vs bagging:
+
+| Bagging         | Boosting           |
+| --------------- | ------------------ |
+| Parallel        | Sequential         |
+| Reduce variance | Reduce bias        |
+| Robust to noise | Sensitive to noise |
+
+---
+
+## Why Boosting Works Well in Finance
+
+- Many weak predictors
+- Small individual signal-to-noise ratio
+- Additive effects dominate
+
+Boosting:
+
+- Extracts small, consistent edges
+- Aggregates them into a strong signal
+
+---
+
+## AdaBoost (Conceptual View)
+
+- Often uses decision stumps
+- Reweights observations:
+    - Hard-to-predict points get more weight
+
+Finance analogy:
+
+- Difficult market conditions get more emphasis
+- Model focuses on rare but important patterns
+
+---
+
+## Gradient Boosting (GBDT)
+
+### Functional gradient descent
+
+At step $m$:
+
+- Compute residuals
+- Fit a shallow tree
+- Update the model
+
+$$
+F_m(x) = F_{m-1}(x) + \nu h_m(x)
+$$
+
+Key parameters:
+
+- `n_estimators`
+- `learning_rate`
+- `max_depth`
+
+---
+
+## Boosting for Market Prediction
+
+Typical setup:
+
+- Shallow trees (max_depth = 2–4)
+- Small learning rate (0.01–0.1)
+- Many estimators
+
+Advantages:
+
+- High predictive accuracy
+- Captures subtle patterns
+
+Risks:
+
+- Overfitting
+- Regime sensitivity
+
+---
+
+## Random Forest vs Boosting (Finance)
+
+| Aspect               | Random Forest      | Boosting       |
+| -------------------- | ------------------ | -------------- |
+| Training             | Parallel           | Sequential     |
+| Main benefit         | Variance reduction | Bias reduction |
+| Noise robustness     | High               | Medium         |
+| Tuning effort        | Low                | High           |
+| Production stability | High               | Medium         |
+
+---
+
+## Rule of Thumb for Finance
+
+- *Baseline / noisy signals* → Random Forest
+- *Alpha extraction* → Boosting
+- *Risk / credit scoring* → Random Forest
+- *Competitions / benchmarks* → Boosting
+
+---
+
+Python Example: Financial Regression
+
+```{python}
+from sklearn.ensemble import (
+    BaggingRegressor,
+    RandomForestRegressor,
+    GradientBoostingRegressor
+)
+from sklearn.tree import DecisionTreeRegressor
+
+bag = BaggingRegressor(
+    DecisionTreeRegressor(),
+    n_estimators=200,
+    random_state=42
+)
+
+rf = RandomForestRegressor(
+    n_estimators=500,
+    max_features="sqrt",
+    random_state=42
+)
+
+gb = GradientBoostingRegressor(
+    n_estimators=500,
+    learning_rate=0.05,
+    max_depth=3,
+    random_state=42
+)
+```
+
+---
+
+## Time-Series Validation (Important!)
+
+- Never use random CV
+- Prefer:
+  - Rolling windows
+  - Expanding windows
+  - Purged CV (finance)
+- Ensembles do not fix data leakage

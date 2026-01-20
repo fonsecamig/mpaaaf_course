@@ -14,6 +14,8 @@ format:
     toc-depth: 1
     transition: slide
     embed-resources: false
+    footer: |
+      <a href="/"> Start </a>
   html:
     theme: cosmo
     toc: true
@@ -36,4 +38,6 @@ website:
             href: slides/intro_ml.qmd
           - text: "Decision Trees"
             href: slides/decision_trees.qmd
+          - text: "Advanced Decision Trees"
+            href: slides/advanced_decision_trees.qmd
 
