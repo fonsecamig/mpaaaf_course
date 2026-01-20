@@ -212,7 +212,7 @@ Miguel Fonseca
 <h1>Definition</h1>
 
 </section>
-<section id="what-is-machine-learning" class="slide level2">
+<section id="what-is-machine-learning" class="slide level2 scrollable">
 <h2>What is Machine Learning?</h2>
 <!-- **Machine Learning (ML)** -->
 <!-- is a branch of Artificial Intelligence that focuses on: -->
@@ -293,7 +293,7 @@ Machine learning:
 <!-- | **Typical methods**   | Linear regression, hypothesis testing, ANOVA            | Trees, random forests, neural networks                   | -->
 <div class="line-block"><strong>Philosophy</strong> | Model the data-generating process | Optimize performance on unseen data |</div>
 </section>
-<section id="main-categories-of-machine-learning" class="slide level2">
+<section id="main-categories-of-machine-learning" class="slide level2 scrollable">
 <h2>Main Categories of Machine Learning</h2>
 <h3 id="supervised-learning">1. Supervised Learning</h3>
 <ul>
@@ -329,7 +329,7 @@ f(X) \approx y
 <h1>Supervised Learning</h1>
 
 </section>
-<section id="supervised-learning-tasks" class="slide level2">
+<section id="supervised-learning-tasks" class="slide level2 scrollable">
 <h2>Supervised Learning Tasks</h2>
 <h3 id="two-main-task-types">Two main task types:</h3>
 <table class="caption-top">
@@ -351,7 +351,7 @@ f(X) \approx y
 </tbody>
 </table>
 </section>
-<section id="regression" class="slide level2">
+<section id="regression" class="slide level2 scrollable">
 <h2>Regression</h2>
 <p><strong>Regression</strong> predicts a numerical value.</p>
 <p>Examples:</p>
@@ -389,7 +389,7 @@ f(X) \approx y
 <h1>Unsupervised Learning</h1>
 
 </section>
-<section id="unsupervised-learning-2" class="slide level2">
+<section id="unsupervised-learning-2" class="slide level2 scrollable">
 <h2>Unsupervised Learning</h2>
 <p>No labeled output variable.</p>
 <p>Goals:</p>
@@ -405,7 +405,7 @@ f(X) \approx y
 <li>Data visualization</li>
 </ul>
 </section>
-<section id="unsupervised-learning-tasks" class="slide level2">
+<section id="unsupervised-learning-tasks" class="slide level2 scrollable">
 <h2>Unsupervised Learning Tasks</h2>
 <p>Common tasks:</p>
 <ul>
@@ -427,7 +427,7 @@ f(X) \approx y
 <h1>Machine Learning Workflow</h1>
 
 </section>
-<section id="the-machine-learning-workflow" class="slide level2">
+<section id="the-machine-learning-workflow" class="slide level2 scrollable">
 <h2>The Machine Learning Workflow</h2>
 <ol type="1">
 <li>Collect data<br>
@@ -448,7 +448,7 @@ f(X) \approx y
 <h1>Train, Validation &amp; Test</h1>
 
 </section>
-<section id="data-splitting" class="slide level2">
+<section id="data-splitting" class="slide level2 scrollable">
 <h2>Data Splitting</h2>
 <p>We typically split data into:</p>
 <ul>
@@ -459,7 +459,7 @@ f(X) \approx y
 <li><strong>Test set</strong> – used for final evaluation</li>
 </ul>
 </section>
-<section id="why-not-train-on-all-data" class="slide level2">
+<section id="why-not-train-on-all-data" class="slide level2 scrollable">
 <h2>Why Not Train on all Data?</h2>
 <p>If we train and evaluate on the same data:</p>
 <ul>
@@ -468,8 +468,8 @@ f(X) \approx y
 </ul>
 <p>This is called <strong>overfitting</strong>.</p>
 </section>
-<section id="train-validation-test-1" class="slide level2">
-<h2>Train / Validation / Test</h2>
+<section id="train-validation-test-split" class="slide level2 scrollable">
+<h2>Train / Validation / Test Split</h2>
 <p>Typical split ratios:</p>
 <ul>
 <li>60% train / 20% validation / 20% test</li>
@@ -488,9 +488,9 @@ f(X) \approx y
 </div>
 </div>
 </section>
-<section id="example-data-splitting-in-python" class="slide level2">
+<section id="example-data-splitting-in-python" class="slide level2 scrollable">
 <h2>Example: Data Splitting in Python</h2>
-<div id="a9cdb156" class="cell" data-execution_count="1">
+<div id="256e5f5b" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
 <span id="cb1-2"><a></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a></a></span>
@@ -519,7 +519,7 @@ f(X) \approx y
 <h1>K-Fold Cross-Validation</h1>
 
 </section>
-<section id="motivation" class="slide level2">
+<section id="motivation" class="slide level2 scrollable">
 <h2>Motivation</h2>
 <h3 id="why-do-we-need-cross-validation">Why Do We Need Cross-Validation?</h3>
 <ul>
@@ -533,7 +533,7 @@ f(X) \approx y
 </ul>
 <p><strong>Cross-validation reduces uncertainty in model evaluation</strong></p>
 </section>
-<section id="the-core-idea" class="slide level2">
+<section id="the-core-idea" class="slide level2 scrollable">
 <h2>The Core Idea</h2>
 <h3 id="what-is-k-fold-cross-validation">What Is k-Fold Cross-Validation?</h3>
 <ol type="1">
@@ -549,7 +549,7 @@ f(X) \approx y
 \text{CV score} = \frac{1}{k} \sum_{i=1}^{k} \text{Score}_i
 \]</span></p>
 </section>
-<section id="choosing-k" class="slide level2">
+<section id="choosing-k" class="slide level2 scrollable">
 <h2>Choosing k</h2>
 <h3 id="biasvariance-trade-off">Bias–Variance Trade-off</h3>
 <table class="caption-top">
@@ -589,8 +589,8 @@ f(X) \approx y
 </div>
 </div>
 </section>
-<section id="formal-perspective" class="slide level2">
-<h2>Formal Perspective</h2>
+<section id="formal-perspective-tens-disponibilidade-para-conversarmos-hoje-ao-final-da-tarde-ou-amanhã" class="slide level2 scrollable">
+<h2>Formal Perspective Tens disponibilidade para conversarmos hoje ao final da tarde, ou amanhã?</h2>
 <h3 id="expected-error-estimation">Expected Error Estimation</h3>
 <p>k-fold CV estimates:</p>
 <p><span class="math display">\[
@@ -603,7 +603,7 @@ f(X) \approx y
 <li>Same data distribution</li>
 </ul>
 </section>
-<section id="regression-vs-classification" class="slide level2">
+<section id="regression-vs-classification" class="slide level2 scrollable">
 <h2>Regression vs Classification</h2>
 <h3 id="key-differences">Key Differences</h3>
 <table class="caption-top">
@@ -633,7 +633,7 @@ f(X) \approx y
 </tbody>
 </table>
 </section>
-<section id="regression-k-fold-cv" class="slide level2">
+<section id="regression-k-fold-cv" class="slide level2 scrollable">
 <h2>Regression: k-Fold CV</h2>
 <h3 id="typical-metrics">Typical Metrics</h3>
 <ul>
@@ -655,9 +655,9 @@ f(X) \approx y
 </div>
 </div>
 </section>
-<section id="regression-example-scikit-learn" class="slide level2">
+<section id="regression-example-scikit-learn" class="slide level2 scrollable">
 <h2>Regression Example (scikit-learn)</h2>
-<div id="5615ae07" class="cell" data-execution_count="2">
+<div id="4f1b7368" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb3-2"><a></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> make_regression</span>
 <span id="cb3-3"><a></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression</span>

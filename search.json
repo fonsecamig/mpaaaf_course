@@ -84,11 +84,11 @@
     "text": "Why Not Train on all Data?\nIf we train and evaluate on the same data:\n\nModel may memorize the data\nPerformance estimate becomes optimistic\n\nThis is called overfitting."
   },
   {
-    "objectID": "slides/intro_ml.html#train-validation-test-1",
-    "href": "slides/intro_ml.html#train-validation-test-1",
+    "objectID": "slides/intro_ml.html#train-validation-test-split",
+    "href": "slides/intro_ml.html#train-validation-test-split",
     "title": "Introduction to Machine Learning",
-    "section": "Train / Validation / Test",
-    "text": "Train / Validation / Test\nTypical split ratios:\n\n60% train / 20% validation / 20% test\nor 70% / 15% / 15%\n\n\n\n\n\nKey principle:\n\n\nThe test set must remain untouched until the very end."
+    "section": "Train / Validation / Test Split",
+    "text": "Train / Validation / Test Split\nTypical split ratios:\n\n60% train / 20% validation / 20% test\nor 70% / 15% / 15%\n\n\n\n\n\nKey principle:\n\n\nThe test set must remain untouched until the very end."
   },
   {
     "objectID": "slides/intro_ml.html#example-data-splitting-in-python",
@@ -119,11 +119,11 @@
     "text": "Choosing k\nBias–Variance Trade-off\n\n\n\nk\nCharacteristics\n\n\n\n\n2–5\nHigher bias, lower variance\n\n\n5–10\nCommon practical choice\n\n\nn (LOOCV)\nMinimal bias, high variance & cost\n\n\n\n\n\n\n\nRule of thumb\n\n\n\nk = 5 or 10 for most problems"
   },
   {
-    "objectID": "slides/intro_ml.html#formal-perspective",
-    "href": "slides/intro_ml.html#formal-perspective",
+    "objectID": "slides/intro_ml.html#formal-perspective-tens-disponibilidade-para-conversarmos-hoje-ao-final-da-tarde-ou-amanhã",
+    "href": "slides/intro_ml.html#formal-perspective-tens-disponibilidade-para-conversarmos-hoje-ao-final-da-tarde-ou-amanhã",
     "title": "Introduction to Machine Learning",
-    "section": "Formal Perspective",
-    "text": "Formal Perspective\nExpected Error Estimation\nk-fold CV estimates:\n\\[\n\\mathbb{E}_{(X,Y)}[L(f_{\\mathscr{D}}, (X,Y))]\n\\]\nwith:\n\nDifferent training sets \\(\\mathscr{D}\\)\nSame learning algorithm\nSame data distribution"
+    "section": "Formal Perspective Tens disponibilidade para conversarmos hoje ao final da tarde, ou amanhã?",
+    "text": "Formal Perspective Tens disponibilidade para conversarmos hoje ao final da tarde, ou amanhã?\nExpected Error Estimation\nk-fold CV estimates:\n\\[\n\\mathbb{E}_{(X,Y)}[L(f_{\\mathscr{D}}, (X,Y))]\n\\]\nwith:\n\nDifferent training sets \\(\\mathscr{D}\\)\nSame learning algorithm\nSame data distribution"
   },
   {
     "objectID": "slides/intro_ml.html#regression-vs-classification",
@@ -315,11 +315,11 @@
     "text": "Splitting Criteria (Classification)\n\nGini Impurity \\[\nG = 1 - \\sum_{c} p_c^2\n\\]\nEntropy \\[\nH = -\\sum_c p_c \\log (p_c)\n\\]\nInformation Gain \\[\nIG = H(\\text{parent}) - \\sum_k \\frac{n_k}{n} H(\\text{child}_k)\n\\]"
   },
   {
-    "objectID": "slides/decision_trees.html#splitting-criteria-regression",
-    "href": "slides/decision_trees.html#splitting-criteria-regression",
+    "objectID": "slides/decision_trees.html#splitting-criteria-regression-.scrollable",
+    "href": "slides/decision_trees.html#splitting-criteria-regression-.scrollable",
     "title": "Decision Trees for Financial Data",
-    "section": "Splitting Criteria (Regression)",
-    "text": "Splitting Criteria (Regression)\nVariance Reduction\n\\[\n\\mathrm{Var}(y) = \\frac{1}{n} \\sum (y_i - \\bar{y})^2\n\\]\nThe optimal split minimizes weighted variance across child nodes."
+    "section": "Splitting Criteria (Regression) {.scrollable}",
+    "text": "Splitting Criteria (Regression) {.scrollable}\nVariance Reduction\n\\[\n\\mathrm{Var}(y) = \\frac{1}{n} \\sum (y_i - \\bar{y})^2\n\\]\nThe optimal split minimizes weighted variance across child nodes."
   },
   {
     "objectID": "slides/decision_trees.html#continuous-vs-categorical-features",
@@ -431,6 +431,6 @@
     "href": "slides/decision_trees.html#financial-application-3-trading-rules",
     "title": "Decision Trees for Financial Data",
     "section": "Financial Application 3: Trading Rules",
-    "text": "Financial Application 3: Trading Rules\nExample learned rule:\n```text IF momentum &gt; 0.02 AND volatility &lt; 0.15 THEN Buy ELSE Hold"
+    "text": "Financial Application 3: Trading Rules\nExample learned rule:\nIF momentum &gt; 0.02 AND volatility &lt; 0.15\nTHEN Buy\nELSE Hold"
   }
 ]
