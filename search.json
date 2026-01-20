@@ -252,11 +252,18 @@
     "text": "Random Forest vs Boosting (Finance)\n\n\n\nAspect\nRandom Forest\nBoosting\n\n\n\n\nTraining\nParallel\nSequential\n\n\nMain benefit\nVariance reduction\nBias reduction\n\n\nNoise robustness\nHigh\nMedium\n\n\nTuning effort\nLow\nHigh\n\n\nProduction stability\nHigh\nMedium"
   },
   {
-    "objectID": "slides/advanced_decision_trees.html#rule-of-thumb-for-finance",
-    "href": "slides/advanced_decision_trees.html#rule-of-thumb-for-finance",
+    "objectID": "slides/advanced_decision_trees.html#rule-of-thumb-for-finance-applications",
+    "href": "slides/advanced_decision_trees.html#rule-of-thumb-for-finance-applications",
     "title": "Advanced Decision Trees",
-    "section": "Rule of Thumb for Finance",
-    "text": "Rule of Thumb for Finance\n\nBaseline / noisy signals → Random Forest\nAlpha extraction → Boosting\nRisk / credit scoring → Random Forest\nCompetitions / benchmarks → Boosting"
+    "section": "Rule of Thumb for Finance Applications",
+    "text": "Rule of Thumb for Finance Applications\n\nBaseline / noisy signals → Random Forest\nAlpha extraction → Boosting\nRisk / credit scoring → Random Forest\nCompetitions / benchmarks → Boosting"
+  },
+  {
+    "objectID": "slides/advanced_decision_trees.html#python-example-financial-regression",
+    "href": "slides/advanced_decision_trees.html#python-example-financial-regression",
+    "title": "Advanced Decision Trees",
+    "section": "Python Example: Financial Regression",
+    "text": "Python Example: Financial Regression\n\nfrom sklearn.ensemble import (\n    BaggingRegressor,\n    RandomForestRegressor,\n    GradientBoostingRegressor\n)\nfrom sklearn.tree import DecisionTreeRegressor\n\nbag = BaggingRegressor(\n    DecisionTreeRegressor(),\n    n_estimators=200,\n    random_state=42\n)\n\nrf = RandomForestRegressor(\n    n_estimators=500,\n    max_features=\"sqrt\",\n    random_state=42\n)\n\ngb = GradientBoostingRegressor(\n    n_estimators=500,\n    learning_rate=0.05,\n    max_depth=3,\n    random_state=42\n)"
   },
   {
     "objectID": "slides/advanced_decision_trees.html#time-series-validation-important",

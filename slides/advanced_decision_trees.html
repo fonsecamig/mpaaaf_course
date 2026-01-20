@@ -207,7 +207,7 @@ Miguel Fonseca
 </div>
 
 </section>
-<section id="motivation-why-ensembles-in-finance" class="slide level2">
+<section id="motivation-why-ensembles-in-finance" class="slide level2 scrollable">
 <h2>Motivation: Why Ensembles in Finance?</h2>
 <ul>
 <li>Financial data are:
@@ -224,7 +224,7 @@ Miguel Fonseca
 </ul>
 <p><strong>Ensembles = robustness + better generalization</strong></p>
 </section>
-<section id="typical-financial-use-cases" class="slide level2">
+<section id="typical-financial-use-cases" class="slide level2 scrollable">
 <h2>Typical Financial Use Cases</h2>
 <ul>
 <li>Equity return prediction (regression)</li>
@@ -235,7 +235,7 @@ Miguel Fonseca
 <li>Portfolio signal aggregation</li>
 </ul>
 </section>
-<section id="biasvariance-tradeoff-finance-perspective" class="slide level2">
+<section id="biasvariance-tradeoff-finance-perspective" class="slide level2 scrollable">
 <h2>Bias–Variance Tradeoff (Finance Perspective)</h2>
 <p><span class="math display">\[
 \mathbb{E}[(Y - \hat{f}(X))^2]
@@ -278,7 +278,7 @@ Miguel Fonseca
 </tbody>
 </table>
 </section>
-<section id="bagging-bootstrap-aggregating" class="slide level2">
+<section id="bagging-bootstrap-aggregating" class="slide level2 scrollable">
 <h2>Bagging (Bootstrap Aggregating)</h2>
 <h3 id="core-idea">Core idea</h3>
 <blockquote>
@@ -296,7 +296,7 @@ Miguel Fonseca
 <li>Stabilizes signals from noisy indicators</li>
 </ul>
 </section>
-<section id="bagging-for-financial-returns" class="slide level2">
+<section id="bagging-for-financial-returns" class="slide level2 scrollable">
 <h2>Bagging for Financial Returns</h2>
 <h3 id="example">Example</h3>
 <ul>
@@ -315,7 +315,7 @@ Miguel Fonseca
 <li>Averaging smooths extreme forecasts</li>
 </ul>
 </section>
-<section id="random-forests" class="slide level2">
+<section id="random-forests" class="slide level2 scrollable">
 <h2>Random Forests</h2>
 <h3 id="key-idea">Key idea</h3>
 <blockquote>
@@ -331,7 +331,7 @@ Miguel Fonseca
 <li>Variance decreases further</li>
 </ul>
 </section>
-<section id="random-forest-algorithm" class="slide level2">
+<section id="random-forest-algorithm" class="slide level2 scrollable">
 <h2>Random Forest Algorithm</h2>
 <p>For <span class="math inline">\(b = 1,...,B\)</span>:</p>
 <ol type="1">
@@ -370,7 +370,7 @@ Miguel Fonseca
 <li>Limited interpretability</li>
 </ul>
 </section>
-<section id="out-of-bag-oob-error" class="slide level2">
+<section id="out-of-bag-oob-error" class="slide level2 scrollable">
 <h2>Out-of-Bag (OOB) Error</h2>
 <p>~36% of observations are excluded from each bootstrap sample</p>
 <p>Can be used as a validation set</p>
@@ -396,7 +396,7 @@ Miguel Fonseca
 </div>
 </div>
 </section>
-<section id="boosting-the-big-idea" class="slide level2">
+<section id="boosting-the-big-idea" class="slide level2 scrollable">
 <h2>Boosting: The Big Idea</h2>
 <p>Sequentially fit models that correct previous errors</p>
 <h3 id="difference-vs-bagging">Difference vs bagging:</h3>
@@ -423,7 +423,7 @@ Miguel Fonseca
 </tbody>
 </table>
 </section>
-<section id="why-boosting-works-well-in-finance" class="slide level2">
+<section id="why-boosting-works-well-in-finance" class="slide level2 scrollable">
 <h2>Why Boosting Works Well in Finance</h2>
 <ul>
 <li>Many weak predictors</li>
@@ -436,7 +436,7 @@ Miguel Fonseca
 <li>Aggregates them into a strong signal</li>
 </ul>
 </section>
-<section id="adaboost-conceptual-view" class="slide level2">
+<section id="adaboost-conceptual-view" class="slide level2 scrollable">
 <h2>AdaBoost (Conceptual View)</h2>
 <ul>
 <li>Often uses decision stumps</li>
@@ -451,7 +451,7 @@ Miguel Fonseca
 <li>Model focuses on rare but important patterns</li>
 </ul>
 </section>
-<section id="gradient-boosting-gbdt" class="slide level2">
+<section id="gradient-boosting-gbdt" class="slide level2 scrollable">
 <h2>Gradient Boosting (GBDT)</h2>
 <h3 id="functional-gradient-descent">Functional gradient descent</h3>
 <p>At step <span class="math inline">\(m\)</span>:</p>
@@ -470,7 +470,7 @@ F_m(x) = F_{m-1}(x) + \nu h_m(x)
 <li><code>max_depth</code></li>
 </ul>
 </section>
-<section id="boosting-for-market-prediction" class="slide level2">
+<section id="boosting-for-market-prediction" class="slide level2 scrollable">
 <h2>Boosting for Market Prediction</h2>
 <p>Typical setup:</p>
 <ul>
@@ -489,7 +489,7 @@ F_m(x) = F_{m-1}(x) + \nu h_m(x)
 <li>Regime sensitivity</li>
 </ul>
 </section>
-<section id="random-forest-vs-boosting-finance" class="slide level2">
+<section id="random-forest-vs-boosting-finance" class="slide level2 scrollable">
 <h2>Random Forest vs Boosting (Finance)</h2>
 <table class="caption-top">
 <thead>
@@ -528,8 +528,8 @@ F_m(x) = F_{m-1}(x) + \nu h_m(x)
 </tbody>
 </table>
 </section>
-<section id="rule-of-thumb-for-finance" class="slide level2">
-<h2>Rule of Thumb for Finance</h2>
+<section id="rule-of-thumb-for-finance-applications" class="slide level2 scrollable">
+<h2>Rule of Thumb for Finance Applications</h2>
 <ul>
 <li><em>Baseline / noisy signals</em> → Random Forest</li>
 <li><em>Alpha extraction</em> → Boosting</li>
@@ -537,10 +537,9 @@ F_m(x) = F_{m-1}(x) + \nu h_m(x)
 <li><em>Competitions / benchmarks</em> → Boosting</li>
 </ul>
 </section>
-<section class="slide level2">
-
-<p>Python Example: Financial Regression</p>
-<div id="b70eebaa" class="cell" data-execution_count="1">
+<section id="python-example-financial-regression" class="slide level2 scrollable">
+<h2>Python Example: Financial Regression</h2>
+<div id="bbce7d6e" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> (</span>
 <span id="cb1-2"><a></a>    BaggingRegressor,</span>
 <span id="cb1-3"><a></a>    RandomForestRegressor,</span>
