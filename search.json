@@ -147,6 +147,125 @@
     "text": "Regression Example (scikit-learn)\n\nimport numpy as np\nfrom sklearn.datasets import make_regression\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.model_selection import KFold, cross_val_score\n\nX, y = make_regression(n_samples=100, n_features=5, noise=10, random_state=42)\n\nmodel = LinearRegression()\ncv = KFold(n_splits=5, shuffle=True, random_state=42)\n\nscores = cross_val_score(\n    model, X, y,\n    cv=cv,\n    scoring=\"neg_mean_squared_error\"\n)\n\nmse_scores = -scores\nprint(\"MSE per fold:\", mse_scores)\nprint(\"Mean MSE:\", mse_scores.mean())\n\nMSE per fold: [113.44800318  81.16181775  88.22981966  85.52522476 102.8583864 ]\nMean MSE: 94.2446503511611"
   },
   {
+    "objectID": "slides/advanced_decision_trees.html#motivation-why-ensembles-in-finance",
+    "href": "slides/advanced_decision_trees.html#motivation-why-ensembles-in-finance",
+    "title": "Advanced Decision Trees",
+    "section": "Motivation: Why Ensembles in Finance?",
+    "text": "Motivation: Why Ensembles in Finance?\n\nFinancial data are:\n\nNoisy\nNon-stationary\nHigh-dimensional\n\nSingle models:\n\nOverfit easily\nAre unstable to small data changes\n\n\nEnsembles = robustness + better generalization"
+  },
+  {
+    "objectID": "slides/advanced_decision_trees.html#typical-financial-use-cases",
+    "href": "slides/advanced_decision_trees.html#typical-financial-use-cases",
+    "title": "Advanced Decision Trees",
+    "section": "Typical Financial Use Cases",
+    "text": "Typical Financial Use Cases\n\nEquity return prediction (regression)\nMarket direction (up/down) classification\nVolatility forecasting\nCredit risk & default prediction\nFraud detection\nPortfolio signal aggregation"
+  },
+  {
+    "objectID": "slides/advanced_decision_trees.html#biasvariance-tradeoff-finance-perspective",
+    "href": "slides/advanced_decision_trees.html#biasvariance-tradeoff-finance-perspective",
+    "title": "Advanced Decision Trees",
+    "section": "Bias–Variance Tradeoff (Finance Perspective)",
+    "text": "Bias–Variance Tradeoff (Finance Perspective)\n\\[\n\\mathbb{E}[(Y - \\hat{f}(X))^2]\n=\n\\text{Bias}^2 + \\text{Variance} + \\text{Noise}\n\\]\n\nMarkets have high noise\nVariance reduction is often more valuable than bias reduction\n\n\n\n\nModel\nBias\nVariance\n\n\n\n\nSingle tree\nLow\nHigh\n\n\nBagging\nSame\n↓\n\n\nRandom Forest\nSame\n↓↓\n\n\nBoosting\n↓\n↑ (controlled)"
+  },
+  {
+    "objectID": "slides/advanced_decision_trees.html#bagging-bootstrap-aggregating",
+    "href": "slides/advanced_decision_trees.html#bagging-bootstrap-aggregating",
+    "title": "Advanced Decision Trees",
+    "section": "Bagging (Bootstrap Aggregating)",
+    "text": "Bagging (Bootstrap Aggregating)\nCore idea\n\nTrain many trees on resampled data and average predictions\n\nAlgorithm:\n\nDraw \\(B\\) bootstrap samples\nTrain a tree on each sample\nAggregate predictions\n\nFinance intuition:\n\nReduces sensitivity to outliers\nStabilizes signals from noisy indicators"
+  },
+  {
+    "objectID": "slides/advanced_decision_trees.html#bagging-for-financial-returns",
+    "href": "slides/advanced_decision_trees.html#bagging-for-financial-returns",
+    "title": "Advanced Decision Trees",
+    "section": "Bagging for Financial Returns",
+    "text": "Bagging for Financial Returns\nExample\n\nTarget: next-day return\nFeatures:\n\nLagged returns\nMoving averages\nVolatility measures\nVolume indicators\n\n\nWhy bagging helps:\n\nOne bad split \\(\\neq\\) one bad model\nAveraging smooths extreme forecasts"
+  },
+  {
+    "objectID": "slides/advanced_decision_trees.html#random-forests",
+    "href": "slides/advanced_decision_trees.html#random-forests",
+    "title": "Advanced Decision Trees",
+    "section": "Random Forests",
+    "text": "Random Forests\nKey idea\n\nBagging + feature randomness\n\nAt each split:\n\nOnly a random subset of features is considered\n\nEffect:\n\nTrees become less correlated\nVariance decreases further"
+  },
+  {
+    "objectID": "slides/advanced_decision_trees.html#random-forest-algorithm",
+    "href": "slides/advanced_decision_trees.html#random-forest-algorithm",
+    "title": "Advanced Decision Trees",
+    "section": "Random Forest Algorithm",
+    "text": "Random Forest Algorithm\nFor \\(b = 1,...,B\\):\n\nBootstrap the data\nGrow a deep tree\n\nAt each split, sample m features\nChoose best split among them Aggregate predictions\n\n\nTypical defaults:\n\nClassification: \\(m = \\sqrt{p}\\)\nRegression: \\(m = \\frac{p}{3}\\)"
+  },
+  {
+    "objectID": "slides/advanced_decision_trees.html#random-forests-in-finance",
+    "href": "slides/advanced_decision_trees.html#random-forests-in-finance",
+    "title": "Advanced Decision Trees",
+    "section": "Random Forests in Finance",
+    "text": "Random Forests in Finance\nStrengths\nExcellent baseline for:\n\nCross-sectional stock selection\nCredit scoring\nFraud detection\n\nHandles:\n\nNon-linearities\nInteractions\nMixed feature types\n\nLimitations\n\nPoor extrapolation\nWeak for regime shifts\nLimited interpretability"
+  },
+  {
+    "objectID": "slides/advanced_decision_trees.html#out-of-bag-oob-error",
+    "href": "slides/advanced_decision_trees.html#out-of-bag-oob-error",
+    "title": "Advanced Decision Trees",
+    "section": "Out-of-Bag (OOB) Error",
+    "text": "Out-of-Bag (OOB) Error\n~36% of observations are excluded from each bootstrap sample\nCan be used as a validation set\nUseful when:\nTime-series CV is expensive\nDataset is small\n\n\n\n\n\n\n\nIn finance:\n\n\n\nStill respect time ordering\nOOB \\(\\neq\\) time-aware validation"
+  },
+  {
+    "objectID": "slides/advanced_decision_trees.html#boosting-the-big-idea",
+    "href": "slides/advanced_decision_trees.html#boosting-the-big-idea",
+    "title": "Advanced Decision Trees",
+    "section": "Boosting: The Big Idea",
+    "text": "Boosting: The Big Idea\nSequentially fit models that correct previous errors\nDifference vs bagging:\n\n\n\nBagging\nBoosting\n\n\n\n\nParallel\nSequential\n\n\nReduce variance\nReduce bias\n\n\nRobust to noise\nSensitive to noise"
+  },
+  {
+    "objectID": "slides/advanced_decision_trees.html#why-boosting-works-well-in-finance",
+    "href": "slides/advanced_decision_trees.html#why-boosting-works-well-in-finance",
+    "title": "Advanced Decision Trees",
+    "section": "Why Boosting Works Well in Finance",
+    "text": "Why Boosting Works Well in Finance\n\nMany weak predictors\nSmall individual signal-to-noise ratio\nAdditive effects dominate\n\nBoosting:\n\nExtracts small, consistent edges\nAggregates them into a strong signal"
+  },
+  {
+    "objectID": "slides/advanced_decision_trees.html#adaboost-conceptual-view",
+    "href": "slides/advanced_decision_trees.html#adaboost-conceptual-view",
+    "title": "Advanced Decision Trees",
+    "section": "AdaBoost (Conceptual View)",
+    "text": "AdaBoost (Conceptual View)\n\nOften uses decision stumps\nReweights observations:\n\nHard-to-predict points get more weight\n\n\nFinance analogy:\n\nDifficult market conditions get more emphasis\nModel focuses on rare but important patterns"
+  },
+  {
+    "objectID": "slides/advanced_decision_trees.html#gradient-boosting-gbdt",
+    "href": "slides/advanced_decision_trees.html#gradient-boosting-gbdt",
+    "title": "Advanced Decision Trees",
+    "section": "Gradient Boosting (GBDT)",
+    "text": "Gradient Boosting (GBDT)\nFunctional gradient descent\nAt step \\(m\\):\n\nCompute residuals\nFit a shallow tree\nUpdate the model\n\n\\[\nF_m(x) = F_{m-1}(x) + \\nu h_m(x)\n\\]\nKey parameters:\n\nn_estimators\nlearning_rate\nmax_depth"
+  },
+  {
+    "objectID": "slides/advanced_decision_trees.html#boosting-for-market-prediction",
+    "href": "slides/advanced_decision_trees.html#boosting-for-market-prediction",
+    "title": "Advanced Decision Trees",
+    "section": "Boosting for Market Prediction",
+    "text": "Boosting for Market Prediction\nTypical setup:\n\nShallow trees (max_depth = 2–4)\nSmall learning rate (0.01–0.1)\nMany estimators\n\nAdvantages:\n\nHigh predictive accuracy\nCaptures subtle patterns\n\nRisks:\n\nOverfitting\nRegime sensitivity"
+  },
+  {
+    "objectID": "slides/advanced_decision_trees.html#random-forest-vs-boosting-finance",
+    "href": "slides/advanced_decision_trees.html#random-forest-vs-boosting-finance",
+    "title": "Advanced Decision Trees",
+    "section": "Random Forest vs Boosting (Finance)",
+    "text": "Random Forest vs Boosting (Finance)\n\n\n\nAspect\nRandom Forest\nBoosting\n\n\n\n\nTraining\nParallel\nSequential\n\n\nMain benefit\nVariance reduction\nBias reduction\n\n\nNoise robustness\nHigh\nMedium\n\n\nTuning effort\nLow\nHigh\n\n\nProduction stability\nHigh\nMedium"
+  },
+  {
+    "objectID": "slides/advanced_decision_trees.html#rule-of-thumb-for-finance",
+    "href": "slides/advanced_decision_trees.html#rule-of-thumb-for-finance",
+    "title": "Advanced Decision Trees",
+    "section": "Rule of Thumb for Finance",
+    "text": "Rule of Thumb for Finance\n\nBaseline / noisy signals → Random Forest\nAlpha extraction → Boosting\nRisk / credit scoring → Random Forest\nCompetitions / benchmarks → Boosting"
+  },
+  {
+    "objectID": "slides/advanced_decision_trees.html#time-series-validation-important",
+    "href": "slides/advanced_decision_trees.html#time-series-validation-important",
+    "title": "Advanced Decision Trees",
+    "section": "Time-Series Validation (Important!)",
+    "text": "Time-Series Validation (Important!)\n\nNever use random CV\nPrefer:\n\nRolling windows\nExpanding windows\nPurged CV (finance)\n\nEnsembles do not fix data leakage"
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "MPAAAF",

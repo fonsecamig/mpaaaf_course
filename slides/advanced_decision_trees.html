@@ -1,22 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"><head>
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-c1fac2584b48ed01fb6e278e36375074.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-html/tabby.min.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -25,7 +9,8 @@
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.7.32">
 
-  <title>MPAAAF – cross-validation</title>
+  <meta name="author" content="Miguel Fonseca">
+  <title>MPAAAF – Advanced Decision Trees</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -209,22 +194,399 @@
   <div class="reveal">
     <div class="slides">
 
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Advanced Decision Trees</h1>
+  <p class="subtitle">Bagging, Random Forests, and Boosting in Market Data</p>
 
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Miguel Fonseca 
+</div>
+</div>
+</div>
+
+</section>
+<section id="motivation-why-ensembles-in-finance" class="slide level2">
+<h2>Motivation: Why Ensembles in Finance?</h2>
+<ul>
+<li>Financial data are:
+<ul>
+<li>Noisy</li>
+<li>Non-stationary</li>
+<li>High-dimensional</li>
+</ul></li>
+<li>Single models:
+<ul>
+<li>Overfit easily</li>
+<li>Are unstable to small data changes</li>
+</ul></li>
+</ul>
+<p><strong>Ensembles = robustness + better generalization</strong></p>
+</section>
+<section id="typical-financial-use-cases" class="slide level2">
+<h2>Typical Financial Use Cases</h2>
+<ul>
+<li>Equity return prediction (regression)</li>
+<li>Market direction (up/down) classification</li>
+<li>Volatility forecasting</li>
+<li>Credit risk &amp; default prediction</li>
+<li>Fraud detection</li>
+<li>Portfolio signal aggregation</li>
+</ul>
+</section>
+<section id="biasvariance-tradeoff-finance-perspective" class="slide level2">
+<h2>Bias–Variance Tradeoff (Finance Perspective)</h2>
+<p><span class="math display">\[
+\mathbb{E}[(Y - \hat{f}(X))^2]
+=
+\text{Bias}^2 + \text{Variance} + \text{Noise}
+\]</span></p>
+<ul>
+<li>Markets have <strong>high noise</strong></li>
+<li>Variance reduction is often more valuable than bias reduction</li>
+</ul>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>Bias</th>
+<th>Variance</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Single tree</td>
+<td>Low</td>
+<td>High</td>
+</tr>
+<tr class="even">
+<td>Bagging</td>
+<td>Same</td>
+<td>↓</td>
+</tr>
+<tr class="odd">
+<td>Random Forest</td>
+<td>Same</td>
+<td>↓↓</td>
+</tr>
+<tr class="even">
+<td>Boosting</td>
+<td>↓</td>
+<td>↑ (controlled)</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="bagging-bootstrap-aggregating" class="slide level2">
+<h2>Bagging (Bootstrap Aggregating)</h2>
+<h3 id="core-idea">Core idea</h3>
+<blockquote>
+<p>Train many trees on resampled data and average predictions</p>
+</blockquote>
+<p>Algorithm:</p>
+<ol type="1">
+<li>Draw <span class="math inline">\(B\)</span> bootstrap samples</li>
+<li>Train a tree on each sample</li>
+<li>Aggregate predictions</li>
+</ol>
+<p>Finance intuition:</p>
+<ul>
+<li>Reduces sensitivity to <strong>outliers</strong></li>
+<li>Stabilizes signals from noisy indicators</li>
+</ul>
+</section>
+<section id="bagging-for-financial-returns" class="slide level2">
+<h2>Bagging for Financial Returns</h2>
+<h3 id="example">Example</h3>
+<ul>
+<li>Target: next-day return</li>
+<li>Features:
+<ul>
+<li>Lagged returns</li>
+<li>Moving averages</li>
+<li>Volatility measures</li>
+<li>Volume indicators</li>
+</ul></li>
+</ul>
+<p>Why bagging helps:</p>
+<ul>
+<li>One bad split <span class="math inline">\(\neq\)</span> one bad model</li>
+<li>Averaging smooths extreme forecasts</li>
+</ul>
+</section>
+<section id="random-forests" class="slide level2">
+<h2>Random Forests</h2>
+<h3 id="key-idea">Key idea</h3>
+<blockquote>
+<p>Bagging + feature randomness</p>
+</blockquote>
+<p>At each split:</p>
+<ul>
+<li>Only a random subset of features is considered</li>
+</ul>
+<p>Effect:</p>
+<ul>
+<li>Trees become <strong>less correlated</strong></li>
+<li>Variance decreases further</li>
+</ul>
+</section>
+<section id="random-forest-algorithm" class="slide level2">
+<h2>Random Forest Algorithm</h2>
+<p>For <span class="math inline">\(b = 1,...,B\)</span>:</p>
+<ol type="1">
+<li>Bootstrap the data</li>
+<li>Grow a deep tree
+<ul>
+<li>At each split, sample m features</li>
+<li>Choose best split among them Aggregate predictions</li>
+</ul></li>
+</ol>
+<p>Typical defaults:</p>
+<ul>
+<li>Classification: <span class="math inline">\(m = \sqrt{p}\)</span></li>
+<li>Regression: <span class="math inline">\(m = \frac{p}{3}\)</span></li>
+</ul>
+</section>
+<section id="random-forests-in-finance" class="slide level2 scrollable">
+<h2>Random Forests in Finance</h2>
+<h3 id="strengths">Strengths</h3>
+<p>Excellent baseline for:</p>
+<ul>
+<li>Cross-sectional stock selection</li>
+<li>Credit scoring</li>
+<li>Fraud detection</li>
+</ul>
+<p>Handles:</p>
+<ul>
+<li>Non-linearities</li>
+<li>Interactions</li>
+<li>Mixed feature types</li>
+</ul>
+<h3 id="limitations">Limitations</h3>
+<ul>
+<li>Poor extrapolation</li>
+<li>Weak for regime shifts</li>
+<li>Limited interpretability</li>
+</ul>
+</section>
+<section id="out-of-bag-oob-error" class="slide level2">
+<h2>Out-of-Bag (OOB) Error</h2>
+<p>~36% of observations are excluded from each bootstrap sample</p>
+<p>Can be used as a validation set</p>
+<p>Useful when:</p>
+<p>Time-series CV is expensive</p>
+<p>Dataset is small</p>
+<div title="In finance:">
+<div class="callout callout-warning callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>In finance:</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>Still respect time ordering</li>
+<li>OOB <span class="math inline">\(\neq\)</span> time-aware validation</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="boosting-the-big-idea" class="slide level2">
+<h2>Boosting: The Big Idea</h2>
+<p>Sequentially fit models that correct previous errors</p>
+<h3 id="difference-vs-bagging">Difference vs bagging:</h3>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Bagging</th>
+<th>Boosting</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Parallel</td>
+<td>Sequential</td>
+</tr>
+<tr class="even">
+<td>Reduce variance</td>
+<td>Reduce bias</td>
+</tr>
+<tr class="odd">
+<td>Robust to noise</td>
+<td>Sensitive to noise</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="why-boosting-works-well-in-finance" class="slide level2">
+<h2>Why Boosting Works Well in Finance</h2>
+<ul>
+<li>Many weak predictors</li>
+<li>Small individual signal-to-noise ratio</li>
+<li>Additive effects dominate</li>
+</ul>
+<p>Boosting:</p>
+<ul>
+<li>Extracts small, consistent edges</li>
+<li>Aggregates them into a strong signal</li>
+</ul>
+</section>
+<section id="adaboost-conceptual-view" class="slide level2">
+<h2>AdaBoost (Conceptual View)</h2>
+<ul>
+<li>Often uses decision stumps</li>
+<li>Reweights observations:
+<ul>
+<li>Hard-to-predict points get more weight</li>
+</ul></li>
+</ul>
+<p>Finance analogy:</p>
+<ul>
+<li>Difficult market conditions get more emphasis</li>
+<li>Model focuses on rare but important patterns</li>
+</ul>
+</section>
+<section id="gradient-boosting-gbdt" class="slide level2">
+<h2>Gradient Boosting (GBDT)</h2>
+<h3 id="functional-gradient-descent">Functional gradient descent</h3>
+<p>At step <span class="math inline">\(m\)</span>:</p>
+<ul>
+<li>Compute residuals</li>
+<li>Fit a shallow tree</li>
+<li>Update the model</li>
+</ul>
+<p><span class="math display">\[
+F_m(x) = F_{m-1}(x) + \nu h_m(x)
+\]</span></p>
+<p>Key parameters:</p>
+<ul>
+<li><code>n_estimators</code></li>
+<li><code>learning_rate</code></li>
+<li><code>max_depth</code></li>
+</ul>
+</section>
+<section id="boosting-for-market-prediction" class="slide level2">
+<h2>Boosting for Market Prediction</h2>
+<p>Typical setup:</p>
+<ul>
+<li>Shallow trees (max_depth = 2–4)</li>
+<li>Small learning rate (0.01–0.1)</li>
+<li>Many estimators</li>
+</ul>
+<p>Advantages:</p>
+<ul>
+<li>High predictive accuracy</li>
+<li>Captures subtle patterns</li>
+</ul>
+<p>Risks:</p>
+<ul>
+<li>Overfitting</li>
+<li>Regime sensitivity</li>
+</ul>
+</section>
+<section id="random-forest-vs-boosting-finance" class="slide level2">
+<h2>Random Forest vs Boosting (Finance)</h2>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Aspect</th>
+<th>Random Forest</th>
+<th>Boosting</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Training</td>
+<td>Parallel</td>
+<td>Sequential</td>
+</tr>
+<tr class="even">
+<td>Main benefit</td>
+<td>Variance reduction</td>
+<td>Bias reduction</td>
+</tr>
+<tr class="odd">
+<td>Noise robustness</td>
+<td>High</td>
+<td>Medium</td>
+</tr>
+<tr class="even">
+<td>Tuning effort</td>
+<td>Low</td>
+<td>High</td>
+</tr>
+<tr class="odd">
+<td>Production stability</td>
+<td>High</td>
+<td>Medium</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="rule-of-thumb-for-finance" class="slide level2">
+<h2>Rule of Thumb for Finance</h2>
+<ul>
+<li><em>Baseline / noisy signals</em> → Random Forest</li>
+<li><em>Alpha extraction</em> → Boosting</li>
+<li><em>Risk / credit scoring</em> → Random Forest</li>
+<li><em>Competitions / benchmarks</em> → Boosting</li>
+</ul>
+</section>
 <section class="slide level2">
 
-<div id="f83f887f" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="bu">print</span>(<span class="st">'Hrllo, World!'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Hrllo, World!</code></pre>
+<p>Python Example: Financial Regression</p>
+<div id="9c8bac85" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> (</span>
+<span id="cb1-2"><a></a>    BaggingRegressor,</span>
+<span id="cb1-3"><a></a>    RandomForestRegressor,</span>
+<span id="cb1-4"><a></a>    GradientBoostingRegressor</span>
+<span id="cb1-5"><a></a>)</span>
+<span id="cb1-6"><a></a><span class="im">from</span> sklearn.tree <span class="im">import</span> DecisionTreeRegressor</span>
+<span id="cb1-7"><a></a></span>
+<span id="cb1-8"><a></a>bag <span class="op">=</span> BaggingRegressor(</span>
+<span id="cb1-9"><a></a>    DecisionTreeRegressor(),</span>
+<span id="cb1-10"><a></a>    n_estimators<span class="op">=</span><span class="dv">200</span>,</span>
+<span id="cb1-11"><a></a>    random_state<span class="op">=</span><span class="dv">42</span></span>
+<span id="cb1-12"><a></a>)</span>
+<span id="cb1-13"><a></a></span>
+<span id="cb1-14"><a></a>rf <span class="op">=</span> RandomForestRegressor(</span>
+<span id="cb1-15"><a></a>    n_estimators<span class="op">=</span><span class="dv">500</span>,</span>
+<span id="cb1-16"><a></a>    max_features<span class="op">=</span><span class="st">"sqrt"</span>,</span>
+<span id="cb1-17"><a></a>    random_state<span class="op">=</span><span class="dv">42</span></span>
+<span id="cb1-18"><a></a>)</span>
+<span id="cb1-19"><a></a></span>
+<span id="cb1-20"><a></a>gb <span class="op">=</span> GradientBoostingRegressor(</span>
+<span id="cb1-21"><a></a>    n_estimators<span class="op">=</span><span class="dv">500</span>,</span>
+<span id="cb1-22"><a></a>    learning_rate<span class="op">=</span><span class="fl">0.05</span>,</span>
+<span id="cb1-23"><a></a>    max_depth<span class="op">=</span><span class="dv">3</span>,</span>
+<span id="cb1-24"><a></a>    random_state<span class="op">=</span><span class="dv">42</span></span>
+<span id="cb1-25"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
+</section>
+<section id="time-series-validation-important" class="slide level2">
+<h2>Time-Series Validation (Important!)</h2>
+<ul>
+<li>Never use random CV</li>
+<li>Prefer:
+<ul>
+<li>Rolling windows</li>
+<li>Expanding windows</li>
+<li>Purged CV (finance)</li>
+</ul></li>
+<li>Ensembles do not fix data leakage</li>
+</ul>
 
 
 </section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">
-
+<p><a href="../"> Start </a></p>
 </div>
 </div></div>
 
