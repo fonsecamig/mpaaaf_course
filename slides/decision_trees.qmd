@@ -18,7 +18,7 @@ format:
 - Financial applications  
 - Practical considerations  -->
 
-## Why Decision Trees?
+## Why Decision Trees? {.scrollable}
 
 :::{.non-incremental}
 - Non-linear models  
@@ -39,7 +39,7 @@ format:
 
 ---
 
-## Intuition
+## Intuition {.scrollable}
 
 A decision tree:
 
@@ -53,7 +53,7 @@ A decision tree:
 
 <!-- --- -->
 
-# Decision tree theory
+# Decision tree theory {.scrollable}
 
 ## Tree Structure
 
@@ -70,7 +70,7 @@ Predictions:
 
 ---
 
-## Mathematical View
+## Mathematical View {.scrollable}
 
 Given data $(X, y)$:
 
@@ -107,7 +107,7 @@ $$
 
 ---
 
-## Splitting Criteria (Regression)
+## Splitting Criteria (Regression) {.scrollable} {.scrollable}
 
 ### Variance Reduction
 
@@ -119,7 +119,7 @@ The optimal split minimizes **weighted variance** across child nodes.
 
 ---
 
-## Continuous vs Categorical Features
+## Continuous vs Categorical Features {.scrollable}
 
 - Continuous: threshold splits (e.g. return > 0.01)  
 - Categorical: subset splits  
@@ -134,7 +134,7 @@ Financial data characteristics:
 
 ---
 
-## Stopping Criteria
+## Stopping Criteria {.scrollable}
 
 Trees stop growing when:
 
@@ -149,7 +149,7 @@ Trees stop growing when:
 
 # Overfitting & regularization
 
-## Overfitting Problem
+## Overfitting Problem {.scrollable}
 
 Decision trees:
 
@@ -167,7 +167,7 @@ Unrestricted trees:
 
 ---
 
-## Regularization (Pruning)
+## Regularization (Pruning) {.scrollable}
 
 Key hyperparameters:
 
@@ -184,7 +184,7 @@ Controls the **bias–variance tradeoff**.
 
 ---
 
-## Cost-Complexity Pruning
+## Cost-Complexity Pruning {.scrollable}
 
 Objective function:
 
@@ -224,7 +224,7 @@ Used in **CART**.
 
 ---
 
-## Evaluation Metrics (Finance-Aware)
+## Evaluation Metrics (Finance-Aware) {.scrollable}
 
 Accuracy is often misleading.
 
@@ -239,7 +239,7 @@ Prefer:
 
 ---
 
-## Evaluation Metrics (Regression)
+## Evaluation Metrics (Regression) {.scrollable}
 
 ::: {.non-incremental}
 - MAE  
@@ -257,7 +257,7 @@ For trading:
 
 ---
 
-## Cross-Validation
+## Cross-Validation {.scrollable}
 
 Essential due to high variance:
 
@@ -274,7 +274,7 @@ Never shuffle time series data.
 
 # Feature importance
 
-## Feature Importance: Concept
+## Feature Importance: Concept {.scrollable}
 
 Decision tree importance is based on:
 - Reduction in impurity
@@ -286,7 +286,7 @@ $$
 
 ---
 
-## Impurity-Based Importance
+## Impurity-Based Importance {.scrollable}
 
 **Pros**
 - Fast
@@ -299,7 +299,7 @@ $$
 
 ---
 
-## Permutation Importance
+## Permutation Importance {.scrollable}
 
 Idea:
 - Shuffle one feature at a time  
@@ -311,7 +311,7 @@ Advantages:
 
 ---
 
-## Feature Importance in Finance
+## Feature Importance in Finance {.scrollable}
 
 Interpret carefully:
 - Correlated predictors  
@@ -326,7 +326,7 @@ Best practice:
 
 # Financial applications
 
-## Financial Application 1: Credit Scoring
+## Financial Application 1: Credit Scoring {.scrollable}
 
 **Inputs**
 - Income  
@@ -342,7 +342,7 @@ Decision trees:
 
 ---
 
-## Financial Application 2: Fraud Detection
+## Financial Application 2: Fraud Detection {.scrollable}
 
 Characteristics:
 - Highly imbalanced data  
@@ -354,11 +354,12 @@ Trees:
 
 ---
 
-## Financial Application 3: Trading Rules
+## Financial Application 3: Trading Rules {.scrollable}
 
 Example learned rule:
 
-```text
+```{text}
 IF momentum > 0.02 AND volatility < 0.15
 THEN Buy
 ELSE Hold
+```

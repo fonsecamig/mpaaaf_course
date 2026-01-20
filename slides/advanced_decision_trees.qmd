@@ -300,7 +300,7 @@ gb = GradientBoostingRegressor(
 
 ---
 
-## Time-Series Validation (Important!)
+## Time-Series Validation (Important!) {.scrollable}
 
 - Never use random CV
 - Prefer:

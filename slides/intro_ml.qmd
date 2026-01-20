@@ -16,7 +16,7 @@ format:
 
 # Definition
 
-## What is Machine Learning?
+## What is Machine Learning? {.scrollable}
 
 <!-- **Machine Learning (ML)** -->
 <!-- is a branch of Artificial Intelligence that focuses on: -->
@@ -46,7 +46,7 @@ Machine learning:
 - Adapts as more data becomes available
 
 --- -->
-## Machine Learning vs. Statistics {.scrollable}
+## Machine Learning vs. Statistics {.scrollable} 
 
 | Aspect                | Statistics                                              | Machine Learning                                         |
 | --------------------- | ------------------------------------------------------- | -------------------------------------------------------- |
@@ -60,7 +60,7 @@ Machine learning:
 | **Philosophy**        | Model the data-generating process                       | Optimize performance on unseen data                      |
 
 
-## Main Categories of Machine Learning
+## Main Categories of Machine Learning {.scrollable}
 
 ### 1. Supervised Learning
 - Data with **labels**
@@ -94,7 +94,7 @@ Typical applications:
 
 # Supervised Learning
 
-## Supervised Learning Tasks
+## Supervised Learning Tasks {.scrollable}
 
 ### Two main task types:
 
@@ -105,7 +105,7 @@ Typical applications:
 
 ---
 
-## Regression
+## Regression {.scrollable}
 
 **Regression** predicts a numerical value.
 
@@ -140,9 +140,9 @@ Typical models:
 - Decision Trees
 - Support Vector Machines
 
-# Unsupervised Learning
+# Unsupervised Learning 
 
-## Unsupervised Learning
+## Unsupervised Learning {.scrollable}
 
 No labeled output variable.
 
@@ -160,7 +160,7 @@ Examples:
 
 ---
 
-## Unsupervised Learning Tasks
+## Unsupervised Learning Tasks {.scrollable}
 
 Common tasks:
 
@@ -177,7 +177,7 @@ Typical use cases:
 
 # Machine Learning Workflow
 
-## The Machine Learning Workflow
+## The Machine Learning Workflow {.scrollable}
 
 1. Collect data  
 2. Clean and preprocess  
@@ -188,7 +188,7 @@ Typical use cases:
 
 # Train, Validation & Test
 
-## Data Splitting
+## Data Splitting {.scrollable}
 
 We typically split data into:
 
@@ -198,7 +198,7 @@ We typically split data into:
 
 ---
 
-## Why Not Train on all Data?
+## Why Not Train on all Data? {.scrollable}
 
 If we train and evaluate on the same data:
 
@@ -209,7 +209,7 @@ This is called **overfitting**.
 
 ---
 
-## Train / Validation / Test
+## Train / Validation / Test Split {.scrollable}
 
 Typical split ratios:
 
@@ -222,7 +222,7 @@ The test set must remain untouched until the very end.
 
 ---
 
-## Example: Data Splitting in Python
+## Example: Data Splitting in Python {.scrollable}
 
 ```{python}
 from sklearn.model_selection import train_test_split
@@ -247,7 +247,7 @@ X_train.shape, X_val.shape, X_test.shape
 
 # K-Fold Cross-Validation
 
-## Motivation
+## Motivation {.scrollable}
 
 ### Why Do We Need Cross-Validation?
 
@@ -261,7 +261,7 @@ X_train.shape, X_val.shape, X_test.shape
 
 ---
 
-## The Core Idea
+## The Core Idea {.scrollable}
 
 ### What Is k-Fold Cross-Validation?
 
@@ -277,7 +277,7 @@ $$
 
 ---
 
-## Choosing k
+## Choosing k {.scrollable}
 
 ### Bias–Variance Trade-off
 
@@ -293,7 +293,7 @@ $$
 
 ---
 
-## Formal Perspective
+## Formal Perspective Tens disponibilidade para conversarmos hoje ao final da tarde, ou amanhã? {.scrollable}
 
 ### Expected Error Estimation
 
@@ -311,7 +311,7 @@ with:
 
 ---
 
-## Regression vs Classification
+## Regression vs Classification {.scrollable}
 
 ### Key Differences
 
@@ -323,7 +323,7 @@ with:
 
 ---
 
-## Regression: k-Fold CV
+## Regression: k-Fold CV {.scrollable}
 
 ### Typical Metrics
 
@@ -337,7 +337,7 @@ Scores may be **negative** in scikit-learn (loss convention)
 
 ---
 
-## Regression Example (scikit-learn)
+## Regression Example (scikit-learn) {.scrollable}
 
 ```{python}
 import numpy as np
