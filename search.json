@@ -1,150 +1,234 @@
 [
   {
-    "objectID": "slides/intro_ml.html#what-is-machine-learning",
-    "href": "slides/intro_ml.html#what-is-machine-learning",
-    "title": "Introduction to Machine Learning",
-    "section": "What is Machine Learning?",
-    "text": "What is Machine Learning?\n\n\n\n\n\n\nMachine Learning (ML)\n\n\nAlgorithms that learn patterns from data and make predictions or decisions without being explicitly programmed.\n\n\n\n\nExamples:\n\nEmail spam detection\nCredit risk assessment\nImage and speech recognition\nRecommendation systems"
+    "objectID": "slides/intro_tensorflow2.html#what-is-tensorflow",
+    "href": "slides/intro_tensorflow2.html#what-is-tensorflow",
+    "title": "TensorFlow 2 — The Basics",
+    "section": "What is TensorFlow?",
+    "text": "What is TensorFlow?\n\nOpen-source machine learning framework\nDeveloped by Google\nDesigned for:\n\nResearch\nProduction\nScalability (CPU / GPU / TPU)"
   },
   {
-    "objectID": "slides/intro_ml.html#machine-learning-vs.-statistics",
-    "href": "slides/intro_ml.html#machine-learning-vs.-statistics",
-    "title": "Introduction to Machine Learning",
-    "section": "Machine Learning vs. Statistics",
-    "text": "Machine Learning vs. Statistics\n\n\n\n\n\n\n\n\nAspect\nStatistics\nMachine Learning\n\n\n\n\nPrimary goal\nInference, explanation, uncertainty quantification\nPrediction, pattern discovery, automation\n\n\nTypical questions\nWhy does this happen?Is the effect significant?\nWhat will happen next?Can we predict accurately?\n\n\nModel assumptions\nStrong (distributional forms, linearity, independence)\nOften weak or implicit\n\n\nData size\nSmall to moderate datasets\nLarge, high-dimensional datasets\n\n\n\n\nEvaluation | Hypothesis tests, confidence intervals | Train/validation/test split, predictive metrics |\n\nPhilosophy | Model the data-generating process | Optimize performance on unseen data |"
+    "objectID": "slides/intro_tensorflow2.html#tensorflow-vs-others",
+    "href": "slides/intro_tensorflow2.html#tensorflow-vs-others",
+    "title": "TensorFlow 2 — The Basics",
+    "section": "TensorFlow vs Others",
+    "text": "TensorFlow vs Others\n\n\n\nFramework\nFocus\nStrength\n\n\n\n\nscikit-learn\nClassical ML\nSimplicity\n\n\nPyTorch\nResearch\nFlexibility\n\n\nTensorFlow 2\nResearch + Prod\nEnd-to-end pipelines"
   },
   {
-    "objectID": "slides/intro_ml.html#main-categories-of-machine-learning",
-    "href": "slides/intro_ml.html#main-categories-of-machine-learning",
-    "title": "Introduction to Machine Learning",
-    "section": "Main Categories of Machine Learning",
-    "text": "Main Categories of Machine Learning\n1. Supervised Learning\n\nData with labels\nLearn input → output mapping\n\n2. Unsupervised Learning\n\nData without labels\nDiscover hidden structure\n\n(We will focus mainly on supervised learning.)"
+    "objectID": "slides/intro_tensorflow2.html#what-is-a-tensor",
+    "href": "slides/intro_tensorflow2.html#what-is-a-tensor",
+    "title": "TensorFlow 2 — The Basics",
+    "section": "What is a tensor?",
+    "text": "What is a tensor?\n\nGeneralization of:\n\nScalar (rank 0)\nVector (rank 1)\nMatrix (rank 2)\nHigher dimensions (rank ≥ 3)"
   },
   {
-    "objectID": "slides/intro_ml.html#supervised-learning-1",
-    "href": "slides/intro_ml.html#supervised-learning-1",
-    "title": "Introduction to Machine Learning",
-    "section": "Supervised Learning",
-    "text": "Supervised Learning\nEach observation consists of:\n\nFeatures \\(X\\)\nTarget \\(y\\)\n\nGoal: \\[\nf(X) \\approx y\n\\]\nTypical applications:\n\nPredict prices\nClassify emails\nDiagnose diseases"
+    "objectID": "slides/intro_tensorflow2.html#creating-tensors",
+    "href": "slides/intro_tensorflow2.html#creating-tensors",
+    "title": "TensorFlow 2 — The Basics",
+    "section": "Creating Tensors",
+    "text": "Creating Tensors\n\nimport numpy as np\nimport tensorflow as tf\n\na = tf.constant(3)\nb = tf.constant([1, 2, 3])\nc = tf.constant([[1., 2.], [3., 4.]])"
   },
   {
-    "objectID": "slides/intro_ml.html#supervised-learning-tasks",
-    "href": "slides/intro_ml.html#supervised-learning-tasks",
-    "title": "Introduction to Machine Learning",
-    "section": "Supervised Learning Tasks",
-    "text": "Supervised Learning Tasks\nTwo main task types:\n\n\n\nTask\nOutput\n\n\n\n\nRegression\nContinuous value\n\n\nClassification\nDiscrete class"
+    "objectID": "slides/intro_tensorflow2.html#tensor-properties",
+    "href": "slides/intro_tensorflow2.html#tensor-properties",
+    "title": "TensorFlow 2 — The Basics",
+    "section": "Tensor Properties",
+    "text": "Tensor Properties\n\nc.shape\nc.dtype\ntf.rank(c)\n\n&lt;tf.Tensor: shape=(), dtype=int32, numpy=2&gt;\n\n\n\n\n\n\n\n\n\nKey Idea\n\n\nTensors have shape, dtype, and rank"
   },
   {
-    "objectID": "slides/intro_ml.html#regression",
-    "href": "slides/intro_ml.html#regression",
-    "title": "Introduction to Machine Learning",
-    "section": "Regression",
-    "text": "Regression\nRegression predicts a numerical value.\nExamples:\n\nHouse price prediction\nStock return forecasting\nTemperature prediction\n\nTypical models:\n\nLinear Regression\nRidge / Lasso\nRandom Forest Regressor"
+    "objectID": "slides/intro_tensorflow2.html#tensor-operations",
+    "href": "slides/intro_tensorflow2.html#tensor-operations",
+    "title": "TensorFlow 2 — The Basics",
+    "section": "Tensor Operations",
+    "text": "Tensor Operations\nTensorFlow feels like NumPy:\n\nx = tf.random.normal((3, 2))\ny = tf.ones((3, 2))\n\nx + y\nx * y\n\n&lt;tf.Tensor: shape=(3, 2), dtype=float32, numpy=\narray([[-0.36148682,  0.96846837],\n       [-0.13048282,  0.267554  ],\n       [-0.7810959 ,  0.9396643 ]], dtype=float32)&gt;\n\n\nMatrix multiplication:\n\ntf.matmul(x, tf.transpose(y))\n\n&lt;tf.Tensor: shape=(3, 3), dtype=float32, numpy=\narray([[0.6069815 , 0.6069815 , 0.6069815 ],\n       [0.13707116, 0.13707116, 0.13707116],\n       [0.15856838, 0.15856838, 0.15856838]], dtype=float32)&gt;"
   },
   {
-    "objectID": "slides/intro_ml.html#classification",
-    "href": "slides/intro_ml.html#classification",
-    "title": "Introduction to Machine Learning",
-    "section": "Classification",
-    "text": "Classification\nClassification predicts a category or label.\nExamples:\n\nSpam vs non-spam\nFraud vs non-fraud\nDisease vs healthy\n\nTypical models:\n\nLogistic Regression\nk-Nearest Neighbors\nDecision Trees\nSupport Vector Machines"
+    "objectID": "slides/intro_tensorflow2.html#important-tensor-rules",
+    "href": "slides/intro_tensorflow2.html#important-tensor-rules",
+    "title": "TensorFlow 2 — The Basics",
+    "section": "Important Tensor Rules",
+    "text": "Important Tensor Rules\n\nTensors are immutable\nOperations are GPU-aware\nBroadcasting rules apply (like NumPy)"
   },
   {
-    "objectID": "slides/intro_ml.html#unsupervised-learning-2",
-    "href": "slides/intro_ml.html#unsupervised-learning-2",
-    "title": "Introduction to Machine Learning",
-    "section": "Unsupervised Learning",
-    "text": "Unsupervised Learning\nNo labeled output variable.\nGoals:\n\nDiscover structure\nGroup similar observations\nReduce dimensionality\n\nExamples:\n\nCustomer segmentation\nTopic modeling\nData visualization"
+    "objectID": "slides/intro_tensorflow2.html#why-keras",
+    "href": "slides/intro_tensorflow2.html#why-keras",
+    "title": "TensorFlow 2 — The Basics",
+    "section": "Why Keras?",
+    "text": "Why Keras?\n\nReduces boilerplate\nEnforces best practices\nIntegrated into TensorFlow 2"
   },
   {
-    "objectID": "slides/intro_ml.html#unsupervised-learning-tasks",
-    "href": "slides/intro_ml.html#unsupervised-learning-tasks",
-    "title": "Introduction to Machine Learning",
-    "section": "Unsupervised Learning Tasks",
-    "text": "Unsupervised Learning Tasks\nCommon tasks:\n\nClustering (e.g. k-means)\nDimensionality reduction (e.g. PCA)\n\nTypical use cases:\n\nExploratory data analysis\nPreprocessing\nFeature engineering"
+    "objectID": "slides/intro_tensorflow2.html#building-a-model-sequential",
+    "href": "slides/intro_tensorflow2.html#building-a-model-sequential",
+    "title": "TensorFlow 2 — The Basics",
+    "section": "Building a Model (Sequential)",
+    "text": "Building a Model (Sequential)\n\nmodel = tf.keras.Sequential([\n    tf.keras.layers.Dense(32, activation=\"relu\"),\n    tf.keras.layers.Dense(1)\n])\n\nModel Summary\n\nmodel.summary()\n\nModel: \"sequential\"\n\n\n\n┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓\n┃ Layer (type)                    ┃ Output Shape           ┃       Param # ┃\n┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩\n│ dense (Dense)                   │ ?                      │   0 (unbuilt) │\n├─────────────────────────────────┼────────────────────────┼───────────────┤\n│ dense_1 (Dense)                 │ ?                      │   0 (unbuilt) │\n└─────────────────────────────────┴────────────────────────┴───────────────┘\n\n\n\n Total params: 0 (0.00 B)\n\n\n\n Trainable params: 0 (0.00 B)\n\n\n\n Non-trainable params: 0 (0.00 B)\n\n\n\nConcepts: - Layers - Parameters - Trainable weights"
   },
   {
-    "objectID": "slides/intro_ml.html#the-machine-learning-workflow",
-    "href": "slides/intro_ml.html#the-machine-learning-workflow",
-    "title": "Introduction to Machine Learning",
-    "section": "The Machine Learning Workflow",
-    "text": "The Machine Learning Workflow\n\nCollect data\n\nClean and preprocess\n\nSplit data\n\nTrain model\n\nEvaluate model\n\nImprove / deploy"
+    "objectID": "slides/intro_tensorflow2.html#functional-api",
+    "href": "slides/intro_tensorflow2.html#functional-api",
+    "title": "TensorFlow 2 — The Basics",
+    "section": "Functional API",
+    "text": "Functional API\n\ninputs = tf.keras.Input(shape=(10,))\nx = tf.keras.layers.Dense(32, activation=\"relu\")(inputs)\noutputs = tf.keras.layers.Dense(1)(x)\n\nmodel = tf.keras.Model(inputs, outputs)\n\nUse when:\n\nMultiple inputs / outputs\nComplex architectures"
   },
   {
-    "objectID": "slides/intro_ml.html#data-splitting",
-    "href": "slides/intro_ml.html#data-splitting",
-    "title": "Introduction to Machine Learning",
-    "section": "Data Splitting",
-    "text": "Data Splitting\nWe typically split data into:\n\nTraining set – used to fit the model\n\nValidation set – used for model selection / tuning\n\nTest set – used for final evaluation"
+    "objectID": "slides/intro_tensorflow2.html#the-3-step-pattern",
+    "href": "slides/intro_tensorflow2.html#the-3-step-pattern",
+    "title": "TensorFlow 2 — The Basics",
+    "section": "The 3-Step Pattern",
+    "text": "The 3-Step Pattern\n\ncompile\nfit\nevaluate / predict\n\n\nThis pattern appears everywhere in TF2."
   },
   {
-    "objectID": "slides/intro_ml.html#why-not-train-on-all-data",
-    "href": "slides/intro_ml.html#why-not-train-on-all-data",
-    "title": "Introduction to Machine Learning",
-    "section": "Why Not Train on all Data?",
-    "text": "Why Not Train on all Data?\nIf we train and evaluate on the same data:\n\nModel may memorize the data\nPerformance estimate becomes optimistic\n\nThis is called overfitting."
+    "objectID": "slides/intro_tensorflow2.html#compile-step",
+    "href": "slides/intro_tensorflow2.html#compile-step",
+    "title": "TensorFlow 2 — The Basics",
+    "section": "Compile Step",
+    "text": "Compile Step\n\nmodel.compile(\n    optimizer=\"adam\",\n    loss=\"mse\",\n    metrics=[\"mae\"]\n)\n\n\nOptimizer → how parameters change\nLoss → what we minimize\nMetrics → what we monitor"
   },
   {
-    "objectID": "slides/intro_ml.html#train-validation-test-split",
-    "href": "slides/intro_ml.html#train-validation-test-split",
-    "title": "Introduction to Machine Learning",
-    "section": "Train / Validation / Test Split",
-    "text": "Train / Validation / Test Split\nTypical split ratios:\n\n60% train / 20% validation / 20% test\nor 70% / 15% / 15%\n\n\n\n\n\nKey principle:\n\n\nThe test set must remain untouched until the very end."
+    "objectID": "slides/intro_tensorflow2.html#fit-the-model",
+    "href": "slides/intro_tensorflow2.html#fit-the-model",
+    "title": "TensorFlow 2 — The Basics",
+    "section": "Fit the Model",
+    "text": "Fit the Model\n\nX_train, y_train = np.random.rand(100, 10), np.random.rand(100, 1)  # Training data\nhistory = model.fit(\n    X_train,\n    y_train,\n    epochs=5,\n    batch_size=32,\n    validation_split=0.2\n)\n\n\nEpoch 1/5\n\n\n1/3 ━━━━━━━━━━━━━━━━━━━━ 0s 245ms/step - loss: 0.3680 - mae: 0.5135\n\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\n3/3 ━━━━━━━━━━━━━━━━━━━━ 0s 29ms/step - loss: 0.3469 - mae: 0.5077 - val_loss: 0.2606 - val_mae: 0.4272\n\nEpoch 2/5\n\n\n1/3 ━━━━━━━━━━━━━━━━━━━━ 0s 6ms/step - loss: 0.3703 - mae: 0.5147\n\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\n3/3 ━━━━━━━━━━━━━━━━━━━━ 0s 8ms/step - loss: 0.2721 - mae: 0.4336 - val_loss: 0.2020 - val_mae: 0.3647\n\nEpoch 3/5\n\n\n1/3 ━━━━━━━━━━━━━━━━━━━━ 0s 6ms/step - loss: 0.2131 - mae: 0.3826\n\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\n3/3 ━━━━━━━━━━━━━━━━━━━━ 0s 12ms/step - loss: 0.2068 - mae: 0.3709 - val_loss: 0.1590 - val_mae: 0.3252\n\nEpoch 4/5\n\n\n1/3 ━━━━━━━━━━━━━━━━━━━━ 0s 14ms/step - loss: 0.1569 - mae: 0.3314\n\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\n3/3 ━━━━━━━━━━━━━━━━━━━━ 0s 11ms/step - loss: 0.1636 - mae: 0.3273 - val_loss: 0.1294 - val_mae: 0.2949\n\nEpoch 5/5\n\n\n1/3 ━━━━━━━━━━━━━━━━━━━━ 0s 6ms/step - loss: 0.1502 - mae: 0.3120\n\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\n3/3 ━━━━━━━━━━━━━━━━━━━━ 0s 8ms/step - loss: 0.1333 - mae: 0.2923 - val_loss: 0.1121 - val_mae: 0.2787\n\n\n\n\nTraining concepts:\n\nEpoch\nBatch\nValidation set"
   },
   {
-    "objectID": "slides/intro_ml.html#example-data-splitting-in-python",
-    "href": "slides/intro_ml.html#example-data-splitting-in-python",
-    "title": "Introduction to Machine Learning",
-    "section": "Example: Data Splitting in Python",
-    "text": "Example: Data Splitting in Python\n\nfrom sklearn.model_selection import train_test_split\nimport numpy as np\n\n# Dummy data\nX = np.random.rand(100, 2)\ny = np.random.rand(100)\n\n# Train + test split\nX_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.2, random_state=42\n)\n\n# Train + validation split\nX_train, X_val, y_train, y_val = train_test_split(\n    X_train, y_train, test_size=0.25, random_state=42\n)\n\nX_train.shape, X_val.shape, X_test.shape\n\n((60, 2), (20, 2), (20, 2))"
+    "objectID": "slides/intro_tensorflow2.html#evaluate-and-predict",
+    "href": "slides/intro_tensorflow2.html#evaluate-and-predict",
+    "title": "TensorFlow 2 — The Basics",
+    "section": "Evaluate and Predict",
+    "text": "Evaluate and Predict\n\nX_test, y_test = np.random.rand(20, 10), np.random.rand(20, 1)  # Test data\nmodel.evaluate(X_test, y_test)\n\n\n1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 6ms/step - loss: 0.0922 - mae: 0.2344\n\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\n1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 12ms/step - loss: 0.0922 - mae: 0.2344\n\n\n\n\n[0.09216944128274918, 0.23438318073749542]\n\n\n\nX_new = np.random.rand(5, 10)  # New data for prediction\nmodel.predict(X_new)\n\n\n1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 12ms/step\n\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\n1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 17ms/step\n\n\n\n\narray([[0.41935465],\n       [0.29805505],\n       [0.31255642],\n       [0.49967656],\n       [0.15230194]], dtype=float32)"
   },
   {
-    "objectID": "slides/intro_ml.html#motivation",
-    "href": "slides/intro_ml.html#motivation",
-    "title": "Introduction to Machine Learning",
-    "section": "Motivation",
-    "text": "Motivation\nWhy Do We Need Cross-Validation?\n\nGoal: estimate generalization performance\nTraining error is optimistically biased\nSingle train/test split:\n\nHigh variance\nSensitive to random split\n\n\nCross-validation reduces uncertainty in model evaluation"
+    "objectID": "slides/feed_forward_neural_networks.html#why-neural-networks-in-finance",
+    "href": "slides/feed_forward_neural_networks.html#why-neural-networks-in-finance",
+    "title": "Feed-Forward Neural Networks in Finance",
+    "section": "Why Neural Networks in Finance?",
+    "text": "Why Neural Networks in Finance?\n\nFinancial relationships are non-linear\nClassical linear models have limited expressiveness\nNeural networks can approximate any continuous function\n\nUsed in:\n\nCredit scoring\nReturn prediction\nVolatility forecasting\nFraud detection"
   },
   {
-    "objectID": "slides/intro_ml.html#the-core-idea",
-    "href": "slides/intro_ml.html#the-core-idea",
-    "title": "Introduction to Machine Learning",
-    "section": "The Core Idea",
-    "text": "The Core Idea\nWhat Is k-Fold Cross-Validation?\n\nSplit data into k approximately equal folds\nFor each fold:\n\nTrain on k−1 folds\nTest on the remaining fold\n\nAggregate performance metrics\n\n\\[\n\\text{CV score} = \\frac{1}{k} \\sum_{i=1}^{k} \\text{Score}_i\n\\]"
+    "objectID": "slides/feed_forward_neural_networks.html#what-is-a-feed-forward-network",
+    "href": "slides/feed_forward_neural_networks.html#what-is-a-feed-forward-network",
+    "title": "Feed-Forward Neural Networks in Finance",
+    "section": "What is a Feed-Forward Network?",
+    "text": "What is a Feed-Forward Network?\n\nInformation flows one direction only\nNo cycles, no memory\n\nComposed of:\n\nInput layer\nHidden layers\nOutput layer\n\n\\[\\widehat{y} = F(x;\\theta)\\]"
   },
   {
-    "objectID": "slides/intro_ml.html#choosing-k",
-    "href": "slides/intro_ml.html#choosing-k",
-    "title": "Introduction to Machine Learning",
-    "section": "Choosing k",
-    "text": "Choosing k\nBias–Variance Trade-off\n\n\n\nk\nCharacteristics\n\n\n\n\n2–5\nHigher bias, lower variance\n\n\n5–10\nCommon practical choice\n\n\nn (LOOCV)\nMinimal bias, high variance & cost\n\n\n\n\n\n\n\nRule of thumb\n\n\n\nk = 5 or 10 for most problems"
+    "objectID": "slides/feed_forward_neural_networks.html#single-neuron-model",
+    "href": "slides/feed_forward_neural_networks.html#single-neuron-model",
+    "title": "Feed-Forward Neural Networks in Finance",
+    "section": "Single Neuron Model",
+    "text": "Single Neuron Model\n\\[z = w^\\top x + b\\] \\[\\widehat{y} = \\phi(z)\\]\nWhere:\n\n\\(x\\): features\n\\(w\\): weights\n\\(b\\): bias\n\\(\\phi\\): activation function"
   },
   {
-    "objectID": "slides/intro_ml.html#formal-perspective-tens-disponibilidade-para-conversarmos-hoje-ao-final-da-tarde-ou-amanhã",
-    "href": "slides/intro_ml.html#formal-perspective-tens-disponibilidade-para-conversarmos-hoje-ao-final-da-tarde-ou-amanhã",
-    "title": "Introduction to Machine Learning",
-    "section": "Formal Perspective Tens disponibilidade para conversarmos hoje ao final da tarde, ou amanhã?",
-    "text": "Formal Perspective Tens disponibilidade para conversarmos hoje ao final da tarde, ou amanhã?\nExpected Error Estimation\nk-fold CV estimates:\n\\[\n\\mathbb{E}_{(X,Y)}[L(f_{\\mathscr{D}}, (X,Y))]\n\\]\nwith:\n\nDifferent training sets \\(\\mathscr{D}\\)\nSame learning algorithm\nSame data distribution"
+    "objectID": "slides/feed_forward_neural_networks.html#perceptron-as-a-classifier",
+    "href": "slides/feed_forward_neural_networks.html#perceptron-as-a-classifier",
+    "title": "Feed-Forward Neural Networks in Finance",
+    "section": "Perceptron as a Classifier",
+    "text": "Perceptron as a Classifier\n\nBinary classifier\nLinear decision boundary\nCannot solve XOR\n\n\\[\\widehat{y} = \\mathbb{1}(w^\\top x + b &gt; 0)\\]"
   },
   {
-    "objectID": "slides/intro_ml.html#regression-vs-classification",
-    "href": "slides/intro_ml.html#regression-vs-classification",
-    "title": "Introduction to Machine Learning",
+    "objectID": "slides/feed_forward_neural_networks.html#why-hidden-layers",
+    "href": "slides/feed_forward_neural_networks.html#why-hidden-layers",
+    "title": "Feed-Forward Neural Networks in Finance",
+    "section": "Why Hidden Layers?",
+    "text": "Why Hidden Layers?\n\nComposition of linear + non-linear maps\nEnables non-linear decision boundaries\n\n\\[h^{(1)} = \\phi(W^{(1)} x + b^{(1)})\\] \\[\\widehat{y} = \\phi(W^{(2)} h^{(1)} + b^{(2)})\\]"
+  },
+  {
+    "objectID": "slides/feed_forward_neural_networks.html#universal-approximation-theorem",
+    "href": "slides/feed_forward_neural_networks.html#universal-approximation-theorem",
+    "title": "Feed-Forward Neural Networks in Finance",
+    "section": "Universal Approximation Theorem",
+    "text": "Universal Approximation Theorem\n\nA feed-forward network with one hidden layer can approximate any continuous function on a compact domain.\n\nExpressiveness grows with:\n\nNumber of neurons\nDepth\nChoice of activation"
+  },
+  {
+    "objectID": "slides/feed_forward_neural_networks.html#why-activations-matter",
+    "href": "slides/feed_forward_neural_networks.html#why-activations-matter",
+    "title": "Feed-Forward Neural Networks in Finance",
+    "section": "Why Activations Matter",
+    "text": "Why Activations Matter\n\n\nWithout activations\n\nNetwork collapses to a linear model\n\n\nWith activations\n\nIntroduce non-linearity\nControl gradient flow"
+  },
+  {
+    "objectID": "slides/feed_forward_neural_networks.html#logistic-regression-vs-neural-networks",
+    "href": "slides/feed_forward_neural_networks.html#logistic-regression-vs-neural-networks",
+    "title": "Feed-Forward Neural Networks in Finance",
+    "section": "Logistic Regression vs Neural Networks",
+    "text": "Logistic Regression vs Neural Networks\n\n\nLogistic Regression\n\\[\nP(y=1 \\mid x) = \\sigma(w^\\top x)\n\\]\n\nLinear decision boundary\nConvex optimization\nInterpretable coefficients\nStrong statistical grounding\n\nTypical finance uses\n\nCredit scoring\nDefault probability\nRisk classification\n\n\nNeural Networks (MLP)\n\\[\nP(y=1 \\mid x) = \\sigma\\big(W^{(2)} \\phi(W^{(1)}x)\\big)\n\\]\n\nNon-linear decision boundary\nNon-convex optimization\nHigh expressive power\nRequires tuning & regularization\n\nTypical finance uses\n\nFraud detection\nComplex behavioral patterns\nHigh-dimensional signals"
+  },
+  {
+    "objectID": "slides/feed_forward_neural_networks.html#decision-boundary-intuition",
+    "href": "slides/feed_forward_neural_networks.html#decision-boundary-intuition",
+    "title": "Feed-Forward Neural Networks in Finance",
+    "section": "Decision Boundary Intuition",
+    "text": "Decision Boundary Intuition\n\nLogistic regression ⇒ straight line / hyperplane\nNeural networks ⇒ curved, flexible boundaries\n\n\nCurved NN boundary"
+  },
+  {
+    "objectID": "slides/feed_forward_neural_networks.html#common-activation-functions",
+    "href": "slides/feed_forward_neural_networks.html#common-activation-functions",
+    "title": "Feed-Forward Neural Networks in Finance",
+    "section": "Common Activation Functions",
+    "text": "Common Activation Functions\n\n\n\nFunction\nFormula\nTypical Use\n\n\n\n\nSigmoid\n\\(\\frac{1}{1+e^{-z}}\\)\nProbabilities\n\n\nTanh\n\\(\\tanh(z)\\)\nCentered data\n\n\nReLU\n\\(\\max(0,z)\\)\nDefault hidden layers\n\n\nSoftmax\n\\(\\frac{e^z}{\\sum e^z}\\)\nMulticlass"
+  },
+  {
+    "objectID": "slides/feed_forward_neural_networks.html#relu-vs-sigmoid-finance-insight",
+    "href": "slides/feed_forward_neural_networks.html#relu-vs-sigmoid-finance-insight",
+    "title": "Feed-Forward Neural Networks in Finance",
+    "section": "ReLU vs Sigmoid (Finance Insight)",
+    "text": "ReLU vs Sigmoid (Finance Insight)\nSigmoid:\n\nVanishing gradients\nSaturation\n\nReLU:\n\nSparse activation\nFaster convergence\nIndustry standard"
+  },
+  {
+    "objectID": "slides/feed_forward_neural_networks.html#regression-vs-classification",
+    "href": "slides/feed_forward_neural_networks.html#regression-vs-classification",
+    "title": "Feed-Forward Neural Networks in Finance",
     "section": "Regression vs Classification",
-    "text": "Regression vs Classification\nKey Differences\n\n\n\nAspect\nRegression\nClassification\n\n\n\n\nMetrics\nMSE, MAE, R²\nAccuracy, F1, AUC\n\n\nSplits\nRandom OK\nMust preserve class balance\n\n\nCV variant\nKFold\nStratified k-Fold"
+    "text": "Regression vs Classification\nRegression (returns, volatility):\n\\[\\mathscr{L}_{MSE} = \\frac{1}{n}\\sum (y - \\widehat{y})^2\\]\nClassification (default, fraud):\n\\[\\mathscr{L}_{CE} = -\\frac{1}{n}\\sum y \\log(\\widehat{y}) + (1-y)\\log(1-\\widehat{y})\\]"
   },
   {
-    "objectID": "slides/intro_ml.html#regression-k-fold-cv",
-    "href": "slides/intro_ml.html#regression-k-fold-cv",
-    "title": "Introduction to Machine Learning",
-    "section": "Regression: k-Fold CV",
-    "text": "Regression: k-Fold CV\nTypical Metrics\n\nMean Squared Error (MSE)\nMean Absolute Error (MAE)\n\\(R^2\\)\n\n\n\n\n\n\n\nNote\n\n\nScores may be negative in scikit-learn (loss convention)"
+    "objectID": "slides/feed_forward_neural_networks.html#gradient-descent",
+    "href": "slides/feed_forward_neural_networks.html#gradient-descent",
+    "title": "Feed-Forward Neural Networks in Finance",
+    "section": "Gradient Descent",
+    "text": "Gradient Descent\nGoal:\n\\[\\min_\\theta \\mathscr{L}(\\theta)\\]\nUpdate:\n\\[\\theta_{t+1} = \\theta_t - \\eta \\nabla_\\theta \\mathscr{L}(\\theta)\\]"
   },
   {
-    "objectID": "slides/intro_ml.html#regression-example-scikit-learn",
-    "href": "slides/intro_ml.html#regression-example-scikit-learn",
-    "title": "Introduction to Machine Learning",
-    "section": "Regression Example (scikit-learn)",
-    "text": "Regression Example (scikit-learn)\n\nimport numpy as np\nfrom sklearn.datasets import make_regression\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.model_selection import KFold, cross_val_score\n\nX, y = make_regression(n_samples=100, n_features=5, noise=10, random_state=42)\n\nmodel = LinearRegression()\ncv = KFold(n_splits=5, shuffle=True, random_state=42)\n\nscores = cross_val_score(\n    model, X, y,\n    cv=cv,\n    scoring=\"neg_mean_squared_error\"\n)\n\nmse_scores = -scores\nprint(\"MSE per fold:\", mse_scores)\nprint(\"Mean MSE:\", mse_scores.mean())\n\nMSE per fold: [113.44800318  81.16181775  88.22981966  85.52522476 102.8583864 ]\nMean MSE: 94.2446503511611"
+    "objectID": "slides/feed_forward_neural_networks.html#stochastic-gradient-descent-sgd",
+    "href": "slides/feed_forward_neural_networks.html#stochastic-gradient-descent-sgd",
+    "title": "Feed-Forward Neural Networks in Finance",
+    "section": "Stochastic Gradient Descent (SGD)",
+    "text": "Stochastic Gradient Descent (SGD)\n\nUses mini-batches\nNoisy but efficient\nScales to large financial datasets\n\nVariants:\n\nSGD\nMomentum\nAdam (default in practice)"
+  },
+  {
+    "objectID": "slides/feed_forward_neural_networks.html#backpropagation-intuition",
+    "href": "slides/feed_forward_neural_networks.html#backpropagation-intuition",
+    "title": "Feed-Forward Neural Networks in Finance",
+    "section": "Backpropagation — Intuition",
+    "text": "Backpropagation — Intuition\nGoal:\nEfficiently compute how each weight affects the loss.\n\nNeural networks are compositions of functions\nLoss depends on outputs\nOutputs depend on weights\nUse the chain rule to propagate errors backward\n\n\n\n\n\n\n\nTip\n\n\n💡 Backpropagation is not an optimizer.\nIt is a gradient computation algorithm.\n\n\n\nKey idea\n\nErrors flow backwards\nInformation flows forwards"
+  },
+  {
+    "objectID": "slides/feed_forward_neural_networks.html#backpropagation-mathematical-view",
+    "href": "slides/feed_forward_neural_networks.html#backpropagation-mathematical-view",
+    "title": "Feed-Forward Neural Networks in Finance",
+    "section": "Backpropagation — Mathematical View",
+    "text": "Backpropagation — Mathematical View\nConsider a 2-layer network:\n\\[\nz^{(1)} = W^{(1)}x,\\quad\nh = \\phi(z^{(1)}),\\quad\n\\widehat{y} = W^{(2)}h\n\\]\nLoss: \\[\n\\mathscr{L} = \\ell(y, \\widehat{y})\n\\]\nGradients (chain rule):\n\\[\n\\frac{\\partial \\mathscr{L}}{\\partial W^{(2)}} =\n\\frac{\\partial \\mathscr{L}}{\\partial \\widehat{y}}\n\\frac{\\partial \\widehat{y}}{\\partial W^{(2)}}\n\\]\n\\[\n\\frac{\\partial \\mathscr{L}}{\\partial W^{(1)}} =\n\\frac{\\partial \\mathscr{L}}{\\partial \\widehat{y}}\n\\frac{\\partial \\widehat{y}}{\\partial h}\n\\frac{\\partial h}{\\partial z^{(1)}}\n\\frac{\\partial z^{(1)}}{\\partial W^{(1)}}\n\\]\n\nGradients are reused → computational efficiency"
+  },
+  {
+    "objectID": "slides/feed_forward_neural_networks.html#example-1-stock-return-prediction",
+    "href": "slides/feed_forward_neural_networks.html#example-1-stock-return-prediction",
+    "title": "Feed-Forward Neural Networks in Finance",
+    "section": "Example 1: Stock Return Prediction",
+    "text": "Example 1: Stock Return Prediction\nFeatures:\n\nLagged returns\nTechnical indicators\nVolatility measures\n\nTarget:\n\\[y_t = r_{t+1}\\]"
+  },
+  {
+    "objectID": "slides/feed_forward_neural_networks.html#example-2-credit-scoring",
+    "href": "slides/feed_forward_neural_networks.html#example-2-credit-scoring",
+    "title": "Feed-Forward Neural Networks in Finance",
+    "section": "Example 2: Credit Scoring",
+    "text": "Example 2: Credit Scoring\n\nBinary classification\nNon-linear interactions between:\n\nIncome\nDebt\nCredit history\n\n\nOutput:\n\\[P(\\text{default} \\mid x)\\]"
+  },
+  {
+    "objectID": "slides/feed_forward_neural_networks.html#example-3-volatility-forecasting",
+    "href": "slides/feed_forward_neural_networks.html#example-3-volatility-forecasting",
+    "title": "Feed-Forward Neural Networks in Finance",
+    "section": "Example 3: Volatility Forecasting",
+    "text": "Example 3: Volatility Forecasting\n\nNon-linear alternative to GARCH\nInputs:\n\nReturns\nSquared returns\nMacro variables"
   },
   {
     "objectID": "slides/advanced_decision_trees.html#motivation-why-ensembles-in-finance",
@@ -168,11 +252,11 @@
     "text": "Bias–Variance Tradeoff (Finance Perspective)\n\\[\n\\mathbb{E}[(Y - \\hat{f}(X))^2]\n=\n\\text{Bias}^2 + \\text{Variance} + \\text{Noise}\n\\]\n\nMarkets have high noise\nVariance reduction is often more valuable than bias reduction\n\n\n\n\nModel\nBias\nVariance\n\n\n\n\nSingle tree\nLow\nHigh\n\n\nBagging\nSame\n↓\n\n\nRandom Forest\nSame\n↓↓\n\n\nBoosting\n↓\n↑ (controlled)"
   },
   {
-    "objectID": "slides/advanced_decision_trees.html#bagging-bootstrap-aggregating",
-    "href": "slides/advanced_decision_trees.html#bagging-bootstrap-aggregating",
+    "objectID": "slides/advanced_decision_trees.html#core-idea",
+    "href": "slides/advanced_decision_trees.html#core-idea",
     "title": "Advanced Decision Trees",
-    "section": "Bagging (Bootstrap Aggregating)",
-    "text": "Bagging (Bootstrap Aggregating)\nCore idea\n\nTrain many trees on resampled data and average predictions\n\nAlgorithm:\n\nDraw \\(B\\) bootstrap samples\nTrain a tree on each sample\nAggregate predictions\n\nFinance intuition:\n\nReduces sensitivity to outliers\nStabilizes signals from noisy indicators"
+    "section": "Core idea",
+    "text": "Core idea\n\nTrain many trees on resampled data and average predictions\n\nAlgorithm:\n\nDraw \\(B\\) bootstrap samples\nTrain a tree on each sample\nAggregate predictions\n\nFinance intuition:\n\nReduces sensitivity to outliers\nStabilizes signals from noisy indicators"
   },
   {
     "objectID": "slides/advanced_decision_trees.html#bagging-for-financial-returns",
@@ -182,11 +266,11 @@
     "text": "Bagging for Financial Returns\nExample\n\nTarget: next-day return\nFeatures:\n\nLagged returns\nMoving averages\nVolatility measures\nVolume indicators\n\n\nWhy bagging helps:\n\nOne bad split \\(\\neq\\) one bad model\nAveraging smooths extreme forecasts"
   },
   {
-    "objectID": "slides/advanced_decision_trees.html#random-forests",
-    "href": "slides/advanced_decision_trees.html#random-forests",
+    "objectID": "slides/advanced_decision_trees.html#key-idea",
+    "href": "slides/advanced_decision_trees.html#key-idea",
     "title": "Advanced Decision Trees",
-    "section": "Random Forests",
-    "text": "Random Forests\nKey idea\n\nBagging + feature randomness\n\nAt each split:\n\nOnly a random subset of features is considered\n\nEffect:\n\nTrees become less correlated\nVariance decreases further"
+    "section": "Key idea",
+    "text": "Key idea\n\nBagging + feature randomness\n\nAt each split:\n\nOnly a random subset of features is considered\n\nEffect:\n\nTrees become less correlated\nVariance decreases further"
   },
   {
     "objectID": "slides/advanced_decision_trees.html#random-forest-algorithm",
@@ -207,7 +291,7 @@
     "href": "slides/advanced_decision_trees.html#out-of-bag-oob-error",
     "title": "Advanced Decision Trees",
     "section": "Out-of-Bag (OOB) Error",
-    "text": "Out-of-Bag (OOB) Error\n~36% of observations are excluded from each bootstrap sample\nCan be used as a validation set\nUseful when:\nTime-series CV is expensive\nDataset is small\n\n\n\n\n\n\n\nIn finance:\n\n\n\nStill respect time ordering\nOOB \\(\\neq\\) time-aware validation"
+    "text": "Out-of-Bag (OOB) Error\n\n~36% of observations are excluded from each bootstrap sample\nCan be used as a validation set\n\nUseful when:\n\nTime-series CV is expensive\nDataset is small\n\n\n\n\n\n\n\n\nIn finance:\n\n\n\nStill respect time ordering\nOOB \\(\\neq\\) time-aware validation"
   },
   {
     "objectID": "slides/advanced_decision_trees.html#boosting-the-big-idea",
@@ -231,11 +315,32 @@
     "text": "AdaBoost (Conceptual View)\n\nOften uses decision stumps\nReweights observations:\n\nHard-to-predict points get more weight\n\n\nFinance analogy:\n\nDifficult market conditions get more emphasis\nModel focuses on rare but important patterns"
   },
   {
-    "objectID": "slides/advanced_decision_trees.html#gradient-boosting-gbdt",
-    "href": "slides/advanced_decision_trees.html#gradient-boosting-gbdt",
+    "objectID": "slides/advanced_decision_trees.html#gradient-boosting-the-core-idea",
+    "href": "slides/advanced_decision_trees.html#gradient-boosting-the-core-idea",
     "title": "Advanced Decision Trees",
-    "section": "Gradient Boosting (GBDT)",
-    "text": "Gradient Boosting (GBDT)\nFunctional gradient descent\nAt step \\(m\\):\n\nCompute residuals\nFit a shallow tree\nUpdate the model\n\n\\[\nF_m(x) = F_{m-1}(x) + \\nu h_m(x)\n\\]\nKey parameters:\n\nn_estimators\nlearning_rate\nmax_depth"
+    "section": "Gradient Boosting: The Core Idea",
+    "text": "Gradient Boosting: The Core Idea\n\nGradient Boosting builds an additive model\nModels are trained sequentially\nEach new tree:\n\nCorrects the errors of the current model\n\n\nGeneral form: \\[\nF_M(x) = \\sum_{m=1}^M \\nu \\cdot h_m(x)\n\\]\nWhere: - \\(h_m(x)\\): weak learner (tree) - \\(\\nu\\): learning rate (shrinkage)\nKey idea: &gt; Improve the model step by step, not all at once"
+  },
+  {
+    "objectID": "slides/advanced_decision_trees.html#gradient-boosting-for-regression",
+    "href": "slides/advanced_decision_trees.html#gradient-boosting-for-regression",
+    "title": "Advanced Decision Trees",
+    "section": "Gradient Boosting for Regression",
+    "text": "Gradient Boosting for Regression\n\nStart with a constant model: \\[\nF_0(x) = \\arg\\min_c \\sum_i (y_i - c)^2\n\\]\nCompute residuals: \\[\nr_i = y_i - F_{m-1}(x_i)\n\\]\nFit a tree to the residuals: \\[\nh_m(x) \\approx r\n\\]\nUpdate the model: \\[\nF_m(x) = F_{m-1}(x) + \\nu h_m(x)\n\\]\n\nFinance intuition:\n\nEach tree explains what the previous model missed\nUseful for returns, spreads, volatility"
+  },
+  {
+    "objectID": "slides/advanced_decision_trees.html#gradient-boosting-for-classification",
+    "href": "slides/advanced_decision_trees.html#gradient-boosting-for-classification",
+    "title": "Advanced Decision Trees",
+    "section": "Gradient Boosting for Classification",
+    "text": "Gradient Boosting for Classification\n\nTargets are class labels\nModel predicts log-odds / scores\nUses a classification loss (e.g. logistic loss)\n\nAt each step:\n\nCompute the negative gradient of the loss\nFit a tree to this gradient\nUpdate prediction scores\n\nInterpretation:\n\nTrees correct probability errors, not labels directly\nFinal output → probabilities via sigmoid\n\nFinance examples:\n\nMarket direction (up/down)\nDefault vs non-default\nFraud detection"
+  },
+  {
+    "objectID": "slides/advanced_decision_trees.html#general-principles-of-boosting",
+    "href": "slides/advanced_decision_trees.html#general-principles-of-boosting",
+    "title": "Advanced Decision Trees",
+    "section": "General Principles of Boosting",
+    "text": "General Principles of Boosting\nKey hyperparameters:\n\nn_estimators → number of correction steps\nlearning_rate → step size\nmax_depth → interaction complexity\nsubsample → stochastic boosting\n\nTrade-offs:\n\nSmall learning rate + many trees → stable, slow\nLarge learning rate → fast, overfitting\n\nFinance rule of thumb:\n\nPrefer shallow trees\nUse small learning rates\nValidate with time-aware CV\n\n\n\n\n\n\n\nImportant\n\n\n\nGradient Boosting = controlled, incremental learning"
   },
   {
     "objectID": "slides/advanced_decision_trees.html#boosting-for-market-prediction",
@@ -266,11 +371,32 @@
     "text": "Python Example: Financial Regression\n\nfrom sklearn.ensemble import (\n    BaggingRegressor,\n    RandomForestRegressor,\n    GradientBoostingRegressor\n)\nfrom sklearn.tree import DecisionTreeRegressor\n\nbag = BaggingRegressor(\n    DecisionTreeRegressor(),\n    n_estimators=200,\n    random_state=42\n)\n\nrf = RandomForestRegressor(\n    n_estimators=500,\n    max_features=\"sqrt\",\n    random_state=42\n)\n\ngb = GradientBoostingRegressor(\n    n_estimators=500,\n    learning_rate=0.05,\n    max_depth=3,\n    random_state=42\n)"
   },
   {
-    "objectID": "slides/advanced_decision_trees.html#time-series-validation-important",
-    "href": "slides/advanced_decision_trees.html#time-series-validation-important",
+    "objectID": "slides/advanced_decision_trees.html#xgboost-extreme-gradient-boosting",
+    "href": "slides/advanced_decision_trees.html#xgboost-extreme-gradient-boosting",
     "title": "Advanced Decision Trees",
-    "section": "Time-Series Validation (Important!)",
-    "text": "Time-Series Validation (Important!)\n\nNever use random CV\nPrefer:\n\nRolling windows\nExpanding windows\nPurged CV (finance)\n\nEnsembles do not fix data leakage"
+    "section": "XGBoost (Extreme Gradient Boosting)",
+    "text": "XGBoost (Extreme Gradient Boosting)\n\nGradient Boosting + engineering optimisations\nDesigned for performance and scalability\nWidely used in finance and competitions\n\nCore strengths\n\nOptimises loss + regularisation\nUses second-order gradients (Hessian)\nStrong control of overfitting\n\n\nPower increases the risk of overfitting."
+  },
+  {
+    "objectID": "slides/advanced_decision_trees.html#lightgbm-light-gradient-boosting-machine",
+    "href": "slides/advanced_decision_trees.html#lightgbm-light-gradient-boosting-machine",
+    "title": "Advanced Decision Trees",
+    "section": "LightGBM (Light Gradient Boosting Machine)",
+    "text": "LightGBM (Light Gradient Boosting Machine)\n\nAlso Gradient Boosting\nDesigned for speed and memory efficiency\nDeveloped by Microsoft\n\nKey innovation:\n\nLeaf-wise tree growth\n(instead of level-wise)\n\nResult:\n\nFaster training\nOften better accuracy on large datasets"
+  },
+  {
+    "objectID": "slides/advanced_decision_trees.html#xgboost-vs-lightgbm",
+    "href": "slides/advanced_decision_trees.html#xgboost-vs-lightgbm",
+    "title": "Advanced Decision Trees",
+    "section": "XGBoost vs LightGBM",
+    "text": "XGBoost vs LightGBM\n\n\n\nAspect\nXGBoost\nLightGBM\n\n\n\n\nTree growth\nLevel-wise\nLeaf-wise\n\n\nSpeed\nFast\nVery fast\n\n\nMemory\nModerate\nLow\n\n\nSmall data\nVery stable\nCan overfit\n\n\nLarge data\nStrong\nExcellent"
+  },
+  {
+    "objectID": "slides/advanced_decision_trees.html#hyperparameters",
+    "href": "slides/advanced_decision_trees.html#hyperparameters",
+    "title": "Advanced Decision Trees",
+    "section": "Hyperparameters",
+    "text": "Hyperparameters\n\nn_estimators \\(\\rightarrow\\) number of trees\nlearning_rate \\(\\rightarrow\\) step size\nmax_depth / num_leaves \\(\\rightarrow\\) complexity\nsubsample \\(\\rightarrow\\) row sampling\ncolsample_bytree \\(\\rightarrow\\) feature sampling Golden rule:\n\n\n\n\n\n\n\nTip\n\n\nLower learning rate \\(\\implies\\) more trees \\(\\implies\\) more stability"
   },
   {
     "objectID": "index.html",
@@ -439,5 +565,173 @@
     "title": "Decision Trees for Financial Data",
     "section": "Financial Application 3: Trading Rules",
     "text": "Financial Application 3: Trading Rules\nExample learned rule:\nIF momentum &gt; 0.02 AND volatility &lt; 0.15\nTHEN Buy\nELSE Hold"
+  },
+  {
+    "objectID": "slides/intro_ml.html#what-is-machine-learning",
+    "href": "slides/intro_ml.html#what-is-machine-learning",
+    "title": "Introduction to Machine Learning",
+    "section": "What is Machine Learning?",
+    "text": "What is Machine Learning?\n\n\n\n\n\n\nMachine Learning (ML)\n\n\nAlgorithms that learn patterns from data and make predictions or decisions without being explicitly programmed.\n\n\n\n\nExamples:\n\nEmail spam detection\nCredit risk assessment\nImage and speech recognition\nRecommendation systems"
+  },
+  {
+    "objectID": "slides/intro_ml.html#machine-learning-vs.-statistics",
+    "href": "slides/intro_ml.html#machine-learning-vs.-statistics",
+    "title": "Introduction to Machine Learning",
+    "section": "Machine Learning vs. Statistics",
+    "text": "Machine Learning vs. Statistics\n\n\n\n\n\n\n\n\nAspect\nStatistics\nMachine Learning\n\n\n\n\nPrimary goal\nInference, explanation, uncertainty quantification\nPrediction, pattern discovery, automation\n\n\nTypical questions\nWhy does this happen?Is the effect significant?\nWhat will happen next?Can we predict accurately?\n\n\nModel assumptions\nStrong (distributional forms, linearity, independence)\nOften weak or implicit\n\n\nData size\nSmall to moderate datasets\nLarge, high-dimensional datasets\n\n\n\n\nEvaluation | Hypothesis tests, confidence intervals | Train/validation/test split, predictive metrics |\n\nPhilosophy | Model the data-generating process | Optimize performance on unseen data |"
+  },
+  {
+    "objectID": "slides/intro_ml.html#main-categories-of-machine-learning",
+    "href": "slides/intro_ml.html#main-categories-of-machine-learning",
+    "title": "Introduction to Machine Learning",
+    "section": "Main Categories of Machine Learning",
+    "text": "Main Categories of Machine Learning\n1. Supervised Learning\n\nData with labels\nLearn input → output mapping\n\n2. Unsupervised Learning\n\nData without labels\nDiscover hidden structure\n\n(We will focus mainly on supervised learning.)"
+  },
+  {
+    "objectID": "slides/intro_ml.html#supervised-learning-1",
+    "href": "slides/intro_ml.html#supervised-learning-1",
+    "title": "Introduction to Machine Learning",
+    "section": "Supervised Learning",
+    "text": "Supervised Learning\nEach observation consists of:\n\nFeatures \\(X\\)\nTarget \\(y\\)\n\nGoal: \\[\nf(X) \\approx y\n\\]\nTypical applications:\n\nPredict prices\nClassify emails\nDiagnose diseases"
+  },
+  {
+    "objectID": "slides/intro_ml.html#supervised-learning-tasks",
+    "href": "slides/intro_ml.html#supervised-learning-tasks",
+    "title": "Introduction to Machine Learning",
+    "section": "Supervised Learning Tasks",
+    "text": "Supervised Learning Tasks\nTwo main task types:\n\n\n\nTask\nOutput\n\n\n\n\nRegression\nContinuous value\n\n\nClassification\nDiscrete class"
+  },
+  {
+    "objectID": "slides/intro_ml.html#regression",
+    "href": "slides/intro_ml.html#regression",
+    "title": "Introduction to Machine Learning",
+    "section": "Regression",
+    "text": "Regression\nRegression predicts a numerical value.\nExamples:\n\nHouse price prediction\nStock return forecasting\nTemperature prediction\n\nTypical models:\n\nLinear Regression\nRidge / Lasso\nRandom Forest Regressor"
+  },
+  {
+    "objectID": "slides/intro_ml.html#classification",
+    "href": "slides/intro_ml.html#classification",
+    "title": "Introduction to Machine Learning",
+    "section": "Classification",
+    "text": "Classification\nClassification predicts a category or label.\nExamples:\n\nSpam vs non-spam\nFraud vs non-fraud\nDisease vs healthy\n\nTypical models:\n\nLogistic Regression\nk-Nearest Neighbors\nDecision Trees\nSupport Vector Machines"
+  },
+  {
+    "objectID": "slides/intro_ml.html#unsupervised-learning-2",
+    "href": "slides/intro_ml.html#unsupervised-learning-2",
+    "title": "Introduction to Machine Learning",
+    "section": "Unsupervised Learning",
+    "text": "Unsupervised Learning\nNo labeled output variable.\nGoals:\n\nDiscover structure\nGroup similar observations\nReduce dimensionality\n\nExamples:\n\nCustomer segmentation\nTopic modeling\nData visualization"
+  },
+  {
+    "objectID": "slides/intro_ml.html#unsupervised-learning-tasks",
+    "href": "slides/intro_ml.html#unsupervised-learning-tasks",
+    "title": "Introduction to Machine Learning",
+    "section": "Unsupervised Learning Tasks",
+    "text": "Unsupervised Learning Tasks\nCommon tasks:\n\nClustering (e.g. k-means)\nDimensionality reduction (e.g. PCA)\n\nTypical use cases:\n\nExploratory data analysis\nPreprocessing\nFeature engineering"
+  },
+  {
+    "objectID": "slides/intro_ml.html#the-machine-learning-workflow",
+    "href": "slides/intro_ml.html#the-machine-learning-workflow",
+    "title": "Introduction to Machine Learning",
+    "section": "The Machine Learning Workflow",
+    "text": "The Machine Learning Workflow\n\nCollect data\n\nClean and preprocess\n\nSplit data\n\nTrain model\n\nEvaluate model\n\nImprove / deploy"
+  },
+  {
+    "objectID": "slides/intro_ml.html#data-splitting",
+    "href": "slides/intro_ml.html#data-splitting",
+    "title": "Introduction to Machine Learning",
+    "section": "Data Splitting",
+    "text": "Data Splitting\nWe typically split data into:\n\nTraining set – used to fit the model\n\nValidation set – used for model selection / tuning\n\nTest set – used for final evaluation"
+  },
+  {
+    "objectID": "slides/intro_ml.html#why-not-train-on-all-data",
+    "href": "slides/intro_ml.html#why-not-train-on-all-data",
+    "title": "Introduction to Machine Learning",
+    "section": "Why Not Train on all Data?",
+    "text": "Why Not Train on all Data?\nIf we train and evaluate on the same data:\n\nModel may memorize the data\nPerformance estimate becomes optimistic\n\nThis is called overfitting."
+  },
+  {
+    "objectID": "slides/intro_ml.html#train-validation-test-split",
+    "href": "slides/intro_ml.html#train-validation-test-split",
+    "title": "Introduction to Machine Learning",
+    "section": "Train / Validation / Test Split",
+    "text": "Train / Validation / Test Split\nTypical split ratios:\n\n60% train / 20% validation / 20% test\nor 70% / 15% / 15%\n\n\n\n\n\nKey principle:\n\n\nThe test set must remain untouched until the very end."
+  },
+  {
+    "objectID": "slides/intro_ml.html#example-data-splitting-in-python",
+    "href": "slides/intro_ml.html#example-data-splitting-in-python",
+    "title": "Introduction to Machine Learning",
+    "section": "Example: Data Splitting in Python",
+    "text": "Example: Data Splitting in Python\n\nfrom sklearn.model_selection import train_test_split\nimport numpy as np\n\n# Dummy data\nX = np.random.rand(100, 2)\ny = np.random.rand(100)\n\n# Train + test split\nX_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.2, random_state=42\n)\n\n# Train + validation split\nX_train, X_val, y_train, y_val = train_test_split(\n    X_train, y_train, test_size=0.25, random_state=42\n)\n\nX_train.shape, X_val.shape, X_test.shape\n\n((60, 2), (20, 2), (20, 2))"
+  },
+  {
+    "objectID": "slides/intro_ml.html#motivation",
+    "href": "slides/intro_ml.html#motivation",
+    "title": "Introduction to Machine Learning",
+    "section": "Motivation",
+    "text": "Motivation\nWhy Do We Need Cross-Validation?\n\nGoal: estimate generalization performance\nTraining error is optimistically biased\nSingle train/test split:\n\nHigh variance\nSensitive to random split\n\n\nCross-validation reduces uncertainty in model evaluation"
+  },
+  {
+    "objectID": "slides/intro_ml.html#the-core-idea",
+    "href": "slides/intro_ml.html#the-core-idea",
+    "title": "Introduction to Machine Learning",
+    "section": "The Core Idea",
+    "text": "The Core Idea\nWhat Is k-Fold Cross-Validation?\n\nSplit data into k approximately equal folds\nFor each fold:\n\nTrain on k−1 folds\nTest on the remaining fold\n\nAggregate performance metrics\n\n\\[\n\\text{CV score} = \\frac{1}{k} \\sum_{i=1}^{k} \\text{Score}_i\n\\]"
+  },
+  {
+    "objectID": "slides/intro_ml.html#choosing-k",
+    "href": "slides/intro_ml.html#choosing-k",
+    "title": "Introduction to Machine Learning",
+    "section": "Choosing k",
+    "text": "Choosing k\nBias–Variance Trade-off\n\n\n\nk\nCharacteristics\n\n\n\n\n2–5\nHigher bias, lower variance\n\n\n5–10\nCommon practical choice\n\n\nn (LOOCV)\nMinimal bias, high variance & cost\n\n\n\n\n\n\n\nRule of thumb\n\n\n\nk = 5 or 10 for most problems"
+  },
+  {
+    "objectID": "slides/intro_ml.html#formal-perspective",
+    "href": "slides/intro_ml.html#formal-perspective",
+    "title": "Introduction to Machine Learning",
+    "section": "Formal Perspective",
+    "text": "Formal Perspective\nExpected Error Estimation\nk-fold CV estimates:\n\\[\n\\mathbb{E}_{(X,Y)}[L(f_{\\mathscr{D}}, (X,Y))]\n\\]\nwith:\n\nDifferent training sets \\(\\mathscr{D}\\)\nSame learning algorithm\nSame data distribution"
+  },
+  {
+    "objectID": "slides/intro_ml.html#regression-vs-classification",
+    "href": "slides/intro_ml.html#regression-vs-classification",
+    "title": "Introduction to Machine Learning",
+    "section": "Regression vs Classification",
+    "text": "Regression vs Classification\nKey Differences\n\n\n\nAspect\nRegression\nClassification\n\n\n\n\nMetrics\nMSE, MAE, R²\nAccuracy, F1, AUC\n\n\nSplits\nRandom OK\nMust preserve class balance\n\n\nCV variant\nKFold\nStratified k-Fold"
+  },
+  {
+    "objectID": "slides/intro_ml.html#regression-k-fold-cv",
+    "href": "slides/intro_ml.html#regression-k-fold-cv",
+    "title": "Introduction to Machine Learning",
+    "section": "Regression: k-Fold CV",
+    "text": "Regression: k-Fold CV\nTypical Metrics\n\nMean Squared Error (MSE)\nMean Absolute Error (MAE)\n\\(R^2\\)\n\n\n\n\n\n\n\nNote\n\n\nScores may be negative in scikit-learn (loss convention)"
+  },
+  {
+    "objectID": "slides/intro_ml.html#regression-example-scikit-learn",
+    "href": "slides/intro_ml.html#regression-example-scikit-learn",
+    "title": "Introduction to Machine Learning",
+    "section": "Regression Example (scikit-learn)",
+    "text": "Regression Example (scikit-learn)\n\nimport numpy as np\nfrom sklearn.datasets import make_regression\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.model_selection import KFold, cross_val_score\n\nX, y = make_regression(n_samples=100, n_features=5, noise=10, random_state=42)\n\nmodel = LinearRegression()\ncv = KFold(n_splits=5, shuffle=True, random_state=42)\n\nscores = cross_val_score(\n    model, X, y,\n    cv=cv,\n    scoring=\"neg_mean_squared_error\"\n)\n\nmse_scores = -scores\nprint(\"MSE per fold:\", mse_scores)\nprint(\"Mean MSE:\", mse_scores.mean())\n\nMSE per fold: [113.44800318  81.16181775  88.22981966  85.52522476 102.8583864 ]\nMean MSE: 94.2446503511611"
+  },
+  {
+    "objectID": "slides/intro_ml.html#classification-stratified-k-fold-cv",
+    "href": "slides/intro_ml.html#classification-stratified-k-fold-cv",
+    "title": "Introduction to Machine Learning",
+    "section": "Classification: Stratified k-Fold CV",
+    "text": "Classification: Stratified k-Fold CV\nWhy Stratified k-Fold?\nIn classification:\n\nPreserves class proportions in each fold\nEspecially important for imbalanced datasets\n\nUse:\n\nKFold → regression\nStratifiedKFold → classification"
+  },
+  {
+    "objectID": "slides/intro_ml.html#classification-example",
+    "href": "slides/intro_ml.html#classification-example",
+    "title": "Introduction to Machine Learning",
+    "section": "Classification Example",
+    "text": "Classification Example\n\nfrom sklearn.datasets import make_classification\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.model_selection import StratifiedKFold, cross_val_score\n\nX, y = make_classification(\n    n_samples=500,\n    n_features=5,\n    n_classes=2,\n    random_state=42\n)\n\nmodel = LogisticRegression(max_iter=1000)\n\nskf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)\n\nscores = cross_val_score(\n    model, X, y,\n    cv=skf,\n    scoring=\"accuracy\"\n)\n\nscores\n\narray([0.92, 0.89, 0.87, 0.85, 0.9 ])"
+  },
+  {
+    "objectID": "slides/intro_ml.html#best-practices-in-cv",
+    "href": "slides/intro_ml.html#best-practices-in-cv",
+    "title": "Introduction to Machine Learning",
+    "section": "Best Practices in CV",
+    "text": "Best Practices in CV\nCross-validation is often used to:\n\nCompare models\nTune hyperparameters\n\n\n\n\n\n\n\nWarning\n\n\nCross-Validation \\(\\neq\\) Test Set\n\n\n\n\n\n\n\n\n\n\nImportant Rule\n\n\nNever touch the test set until the very end\n\n\n\n\n\nCV is for model selection\nTest set is for final evaluation"
   }
 ]

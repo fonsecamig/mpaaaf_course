@@ -10,7 +10,7 @@
   <meta name="generator" content="quarto-1.7.32">
 
   <meta name="author" content="Miguel Fonseca">
-  <title>MPAAAF – Advanced Decision Trees</title>
+  <title>MPAAAF – Feed-Forward Neural Networks in Finance</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -28,72 +28,6 @@
       margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
-    /* CSS for syntax highlighting */
-    html { -webkit-text-size-adjust: 100%; }
-    pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-    pre > code.sourceCode > span:empty { height: 1.2em; }
-    .sourceCode { overflow: visible; }
-    code.sourceCode > span { color: inherit; text-decoration: inherit; }
-    div.sourceCode { margin: 1em 0; }
-    pre.sourceCode { margin: 0; }
-    @media screen {
-    div.sourceCode { overflow: auto; }
-    }
-    @media print {
-    pre > code.sourceCode { white-space: pre-wrap; }
-    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-    }
-    pre.numberSource code
-      { counter-reset: source-line 0; }
-    pre.numberSource code > span
-      { position: relative; left: -4em; counter-increment: source-line; }
-    pre.numberSource code > span > a:first-child::before
-      { content: counter(source-line);
-        position: relative; left: -1em; text-align: right; vertical-align: baseline;
-        border: none; display: inline-block;
-        -webkit-touch-callout: none; -webkit-user-select: none;
-        -khtml-user-select: none; -moz-user-select: none;
-        -ms-user-select: none; user-select: none;
-        padding: 0 4px; width: 4em;
-        color: #aaaaaa;
-      }
-    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-    div.sourceCode
-      { color: #003b4f; background-color: #f1f3f5; }
-    @media screen {
-    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-    }
-    code span { color: #003b4f; } /* Normal */
-    code span.al { color: #ad0000; } /* Alert */
-    code span.an { color: #5e5e5e; } /* Annotation */
-    code span.at { color: #657422; } /* Attribute */
-    code span.bn { color: #ad0000; } /* BaseN */
-    code span.bu { } /* BuiltIn */
-    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
-    code span.ch { color: #20794d; } /* Char */
-    code span.cn { color: #8f5902; } /* Constant */
-    code span.co { color: #5e5e5e; } /* Comment */
-    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
-    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
-    code span.dt { color: #ad0000; } /* DataType */
-    code span.dv { color: #ad0000; } /* DecVal */
-    code span.er { color: #ad0000; } /* Error */
-    code span.ex { } /* Extension */
-    code span.fl { color: #ad0000; } /* Float */
-    code span.fu { color: #4758ab; } /* Function */
-    code span.im { color: #00769e; } /* Import */
-    code span.in { color: #5e5e5e; } /* Information */
-    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
-    code span.op { color: #5e5e5e; } /* Operator */
-    code span.ot { color: #003b4f; } /* Other */
-    code span.pp { color: #ad0000; } /* Preprocessor */
-    code span.sc { color: #5e5e5e; } /* SpecialChar */
-    code span.ss { color: #20794d; } /* SpecialString */
-    code span.st { color: #20794d; } /* String */
-    code span.va { color: #111111; } /* Variable */
-    code span.vs { color: #20794d; } /* VerbatimString */
-    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-7f656d197a6d4d458420565151872bca.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
@@ -195,8 +129,8 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">Advanced Decision Trees</h1>
-  <p class="subtitle">Bagging, Random Forests, and Boosting in Market Data</p>
+  <h1 class="title">Feed-Forward Neural Networks in Finance</h1>
+  <p class="subtitle">Perceptrons, MLPs, SGD and Financial Applications</p>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -211,10 +145,13 @@ Miguel Fonseca
 <h2 id="toc-title">Table of contents</h2>
 <ul>
 <li><a href="#/motivation" id="/toc-motivation">Motivation</a></li>
-<li><a href="#/bagging" id="/toc-bagging">Bagging</a></li>
-<li><a href="#/random-forests" id="/toc-random-forests">Random Forests</a></li>
-<li><a href="#/boosting" id="/toc-boosting">Boosting</a></li>
-<li><a href="#/extensions" id="/toc-extensions">Extensions</a></li>
+<li><a href="#/feed-forward-neural-networks" id="/toc-feed-forward-neural-networks">Feed-Forward Neural Networks</a></li>
+<li><a href="#/the-perceptron" id="/toc-the-perceptron">The Perceptron</a></li>
+<li><a href="#/multi-layer-perceptron-mlp" id="/toc-multi-layer-perceptron-mlp">Multi-Layer Perceptron (MLP)</a></li>
+<li><a href="#/activation-functions" id="/toc-activation-functions">Activation Functions</a></li>
+<li><a href="#/loss-functions" id="/toc-loss-functions">Loss Functions</a></li>
+<li><a href="#/optimization" id="/toc-optimization">Optimization</a></li>
+<li><a href="#/financial-applications" id="/toc-financial-applications">Financial Applications</a></li>
 </ul>
 </nav>
 </section>
@@ -223,562 +160,270 @@ Miguel Fonseca
 <h1>Motivation</h1>
 
 </section>
-<section id="motivation-why-ensembles-in-finance" class="slide level2 scrollable">
-<h2>Motivation: Why Ensembles in Finance?</h2>
+<section id="why-neural-networks-in-finance" class="slide level2 scrollable">
+<h2>Why Neural Networks in Finance?</h2>
 <ul>
-<li>Financial data are:
-<ul>
-<li>Noisy</li>
-<li>Non-stationary</li>
-<li>High-dimensional</li>
-</ul></li>
-<li>Single models:
-<ul>
-<li>Overfit easily</li>
-<li>Are unstable to small data changes</li>
-</ul></li>
+<li>Financial relationships are non-linear</li>
+<li>Classical linear models have limited expressiveness</li>
+<li>Neural networks can approximate any continuous function</li>
 </ul>
-<p><strong>Ensembles = robustness + better generalization</strong></p>
-</section>
-<section id="typical-financial-use-cases" class="slide level2 scrollable">
-<h2>Typical Financial Use Cases</h2>
+<p>Used in:</p>
 <ul>
-<li>Equity return prediction (regression)</li>
-<li>Market direction (up/down) classification</li>
-<li>Volatility forecasting</li>
-<li>Credit risk &amp; default prediction</li>
-<li>Fraud detection</li>
-<li>Portfolio signal aggregation</li>
-</ul>
-</section>
-<section id="biasvariance-tradeoff-finance-perspective" class="slide level2 scrollable">
-<h2>Bias–Variance Tradeoff (Finance Perspective)</h2>
-<p><span class="math display">\[
-\mathbb{E}[(Y - \hat{f}(X))^2]
-=
-\text{Bias}^2 + \text{Variance} + \text{Noise}
-\]</span></p>
-<ul>
-<li>Markets have <strong>high noise</strong></li>
-<li>Variance reduction is often more valuable than bias reduction</li>
-</ul>
-<table class="caption-top">
-<thead>
-<tr class="header">
-<th>Model</th>
-<th>Bias</th>
-<th>Variance</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Single tree</td>
-<td>Low</td>
-<td>High</td>
-</tr>
-<tr class="even">
-<td>Bagging</td>
-<td>Same</td>
-<td>↓</td>
-</tr>
-<tr class="odd">
-<td>Random Forest</td>
-<td>Same</td>
-<td>↓↓</td>
-</tr>
-<tr class="even">
-<td>Boosting</td>
-<td>↓</td>
-<td>↑ (controlled)</td>
-</tr>
-</tbody>
-</table>
-</section></section>
-<section>
-<section id="bagging" class="title-slide slide level1 center">
-<h1>Bagging</h1>
-
-</section>
-<section id="core-idea" class="slide level2 scrollable">
-<h2>Core idea</h2>
-<blockquote>
-<p>Train many trees on resampled data and average predictions</p>
-</blockquote>
-<p><strong>Algorithm:</strong></p>
-<ol type="1">
-<li>Draw <span class="math inline">\(B\)</span> bootstrap samples</li>
-<li>Train a tree on each sample</li>
-<li>Aggregate predictions</li>
-</ol>
-<p><strong>Finance intuition:</strong></p>
-<ul>
-<li>Reduces sensitivity to <strong>outliers</strong></li>
-<li>Stabilizes signals from noisy indicators</li>
-</ul>
-</section>
-<section id="bagging-for-financial-returns" class="slide level2 scrollable">
-<h2>Bagging for Financial Returns</h2>
-<h3 id="example">Example</h3>
-<ul>
-<li>Target: next-day return</li>
-<li>Features:
-<ul>
-<li>Lagged returns</li>
-<li>Moving averages</li>
-<li>Volatility measures</li>
-<li>Volume indicators</li>
-</ul></li>
-</ul>
-<p><strong>Why bagging helps:</strong></p>
-<ul>
-<li>One bad split <span class="math inline">\(\neq\)</span> one bad model</li>
-<li>Averaging smooths extreme forecasts</li>
-</ul>
-</section></section>
-<section>
-<section id="random-forests" class="title-slide slide level1 center">
-<h1>Random Forests</h1>
-
-</section>
-<section id="key-idea" class="slide level2 scrollable">
-<h2>Key idea</h2>
-<blockquote>
-<p>Bagging + feature randomness</p>
-</blockquote>
-<p><strong>At each split:</strong></p>
-<ul>
-<li>Only a random subset of features is considered</li>
-</ul>
-<p><strong>Effect:</strong></p>
-<ul>
-<li>Trees become <strong>less correlated</strong></li>
-<li>Variance decreases further</li>
-</ul>
-</section>
-<section id="random-forest-algorithm" class="slide level2 scrollable">
-<h2>Random Forest Algorithm</h2>
-<p>For <span class="math inline">\(b = 1,...,B\)</span>:</p>
-<ol type="1">
-<li>Bootstrap the data</li>
-<li>Grow a deep tree
-<ul>
-<li>At each split, sample m features</li>
-<li>Choose best split among them Aggregate predictions</li>
-</ul></li>
-</ol>
-<p>Typical defaults:</p>
-<ul>
-<li>Classification: <span class="math inline">\(m = \sqrt{p}\)</span></li>
-<li>Regression: <span class="math inline">\(m = \frac{p}{3}\)</span></li>
-</ul>
-</section>
-<section id="random-forests-in-finance" class="slide level2 scrollable">
-<h2>Random Forests in Finance</h2>
-<h3 id="strengths">Strengths</h3>
-<p>Excellent baseline for:</p>
-<ul>
-<li>Cross-sectional stock selection</li>
 <li>Credit scoring</li>
+<li>Return prediction</li>
+<li>Volatility forecasting</li>
 <li>Fraud detection</li>
 </ul>
-<p>Handles:</p>
-<ul>
-<li>Non-linearities</li>
-<li>Interactions</li>
-<li>Mixed feature types</li>
-</ul>
-<h3 id="limitations">Limitations</h3>
-<ul>
-<li>Poor extrapolation</li>
-<li>Weak for regime shifts</li>
-<li>Limited interpretability</li>
-</ul>
-</section>
-<section id="out-of-bag-oob-error" class="slide level2 scrollable">
-<h2>Out-of-Bag (OOB) Error</h2>
-<ul>
-<li>~36% of observations are excluded from each bootstrap sample</li>
-<li>Can be used as a validation set</li>
-</ul>
-<p>Useful when:</p>
-<ul>
-<li>Time-series CV is expensive</li>
-<li>Dataset is small</li>
-</ul>
-<div title="In finance:">
-<div class="callout callout-warning callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>In finance:</strong></p>
-</div>
-<div class="callout-content">
-<ul>
-<li>Still respect time ordering</li>
-<li>OOB <span class="math inline">\(\neq\)</span> time-aware validation</li>
-</ul>
-</div>
-</div>
-</div>
-</div>
 </section></section>
 <section>
-<section id="boosting" class="title-slide slide level1 center">
-<h1>Boosting</h1>
+<section id="feed-forward-neural-networks" class="title-slide slide level1 center">
+<h1>Feed-Forward Neural Networks</h1>
 
 </section>
-<section id="boosting-the-big-idea" class="slide level2 scrollable">
-<h2>Boosting: The Big Idea</h2>
-<p>Sequentially fit models that correct previous errors</p>
-<h3 id="difference-vs-bagging">Difference vs bagging:</h3>
-<table class="caption-top">
-<thead>
-<tr class="header">
-<th>Bagging</th>
-<th>Boosting</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Parallel</td>
-<td>Sequential</td>
-</tr>
-<tr class="even">
-<td>Reduce variance</td>
-<td>Reduce bias</td>
-</tr>
-<tr class="odd">
-<td>Robust to noise</td>
-<td>Sensitive to noise</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="why-boosting-works-well-in-finance" class="slide level2 scrollable">
-<h2>Why Boosting Works Well in Finance</h2>
+<section id="what-is-a-feed-forward-network" class="slide level2 scrollable">
+<h2>What is a Feed-Forward Network?</h2>
 <ul>
-<li>Many weak predictors</li>
-<li>Small individual signal-to-noise ratio</li>
-<li>Additive effects dominate</li>
+<li>Information flows one direction only</li>
+<li>No cycles, no memory</li>
 </ul>
-<p>Boosting:</p>
+<p>Composed of:</p>
 <ul>
-<li>Extracts small, consistent edges</li>
-<li>Aggregates them into a strong signal</li>
+<li>Input layer</li>
+<li>Hidden layers</li>
+<li>Output layer</li>
 </ul>
-</section>
-<section id="adaboost-conceptual-view" class="slide level2 scrollable">
-<h2>AdaBoost (Conceptual View)</h2>
-<ul>
-<li>Often uses decision stumps</li>
-<li>Reweights observations:
-<ul>
-<li>Hard-to-predict points get more weight</li>
-</ul></li>
-</ul>
-<p>Finance analogy:</p>
-<ul>
-<li>Difficult market conditions get more emphasis</li>
-<li>Model focuses on rare but important patterns</li>
-</ul>
-</section>
-<section id="gradient-boosting-the-core-idea" class="slide level2 scrollable">
-<h2>Gradient Boosting: The Core Idea</h2>
-<ul>
-<li>Gradient Boosting builds an <strong>additive model</strong></li>
-<li>Models are trained <strong>sequentially</strong></li>
-<li>Each new tree:
-<ul>
-<li>Corrects the <strong>errors of the current model</strong></li>
-</ul></li>
-</ul>
-<p>General form: <span class="math display">\[
-F_M(x) = \sum_{m=1}^M \nu \cdot h_m(x)
-\]</span></p>
-<p>Where: - <span class="math inline">\(h_m(x)\)</span>: weak learner (tree) - <span class="math inline">\(\nu\)</span>: learning rate (shrinkage)</p>
-<p>Key idea: &gt; <strong>Improve the model step by step, not all at once</strong></p>
-</section>
-<section id="gradient-boosting-for-regression" class="slide level2 scrollable">
-<h2>Gradient Boosting for Regression</h2>
-<ol type="1">
-<li><p>Start with a constant model: <span class="math display">\[
-F_0(x) = \arg\min_c \sum_i (y_i - c)^2
-\]</span></p></li>
-<li><p>Compute <strong>residuals</strong>: <span class="math display">\[
-r_i = y_i - F_{m-1}(x_i)
-\]</span></p></li>
-<li><p>Fit a tree to the residuals: <span class="math display">\[
-h_m(x) \approx r
-\]</span></p></li>
-<li><p>Update the model: <span class="math display">\[
-F_m(x) = F_{m-1}(x) + \nu h_m(x)
-\]</span></p></li>
-</ol>
-<p>Finance intuition:</p>
-<ul>
-<li>Each tree explains <strong>what the previous model missed</strong></li>
-<li>Useful for returns, spreads, volatility</li>
-</ul>
-</section>
-<section id="gradient-boosting-for-classification" class="slide level2 scrollable">
-<h2>Gradient Boosting for Classification</h2>
-<ul>
-<li>Targets are <strong>class labels</strong></li>
-<li>Model predicts <strong>log-odds / scores</strong></li>
-<li>Uses a classification loss (e.g.&nbsp;logistic loss)</li>
-</ul>
-<p>At each step:</p>
-<ul>
-<li>Compute the <strong>negative gradient</strong> of the loss</li>
-<li>Fit a tree to this gradient</li>
-<li>Update prediction scores</li>
-</ul>
-<p>Interpretation:</p>
-<ul>
-<li>Trees correct <strong>probability errors</strong>, not labels directly</li>
-<li>Final output → probabilities via sigmoid</li>
-</ul>
-<p>Finance examples:</p>
-<ul>
-<li>Market direction (up/down)</li>
-<li>Default vs non-default</li>
-<li>Fraud detection</li>
-</ul>
-</section>
-<section id="general-principles-of-boosting" class="slide level2 scrollable">
-<h2>General Principles of Boosting</h2>
-<p><strong>Key hyperparameters:</strong></p>
-<ul>
-<li><code>n_estimators</code> → number of correction steps</li>
-<li><code>learning_rate</code> → step size</li>
-<li><code>max_depth</code> → interaction complexity</li>
-<li><code>subsample</code> → stochastic boosting</li>
-</ul>
-<p><strong>Trade-offs:</strong></p>
-<ul>
-<li>Small learning rate + many trees → stable, slow</li>
-<li>Large learning rate → fast, overfitting</li>
-</ul>
-<p><strong>Finance rule of thumb:</strong></p>
-<ul>
-<li>Prefer <strong>shallow trees</strong></li>
-<li>Use <strong>small learning rates</strong></li>
-<li>Validate with <strong>time-aware CV</strong></li>
-</ul>
-<div class="callout callout-important callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>Important</strong></p>
-</div>
-<div class="callout-content">
-<blockquote>
-<p>Gradient Boosting = controlled, incremental learning</p>
-</blockquote>
-</div>
-</div>
-</div>
-</section>
-<section id="boosting-for-market-prediction" class="slide level2 scrollable">
-<h2>Boosting for Market Prediction</h2>
-<p><strong>Typical setup:</strong></p>
-<ul>
-<li>Shallow trees (max_depth = 2–4)</li>
-<li>Small learning rate (0.01–0.1)</li>
-<li>Many estimators</li>
-</ul>
-<p><strong>Advantages:</strong></p>
-<ul>
-<li>High predictive accuracy</li>
-<li>Captures subtle patterns</li>
-</ul>
-<p><strong>Risks:</strong></p>
-<ul>
-<li>Overfitting</li>
-<li>Regime sensitivity</li>
-</ul>
-</section>
-<section id="random-forest-vs-boosting-finance" class="slide level2 scrollable">
-<h2>Random Forest vs Boosting (Finance)</h2>
-<table class="caption-top">
-<thead>
-<tr class="header">
-<th>Aspect</th>
-<th>Random Forest</th>
-<th>Boosting</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Training</td>
-<td>Parallel</td>
-<td>Sequential</td>
-</tr>
-<tr class="even">
-<td>Main benefit</td>
-<td>Variance reduction</td>
-<td>Bias reduction</td>
-</tr>
-<tr class="odd">
-<td>Noise robustness</td>
-<td>High</td>
-<td>Medium</td>
-</tr>
-<tr class="even">
-<td>Tuning effort</td>
-<td>Low</td>
-<td>High</td>
-</tr>
-<tr class="odd">
-<td>Production stability</td>
-<td>High</td>
-<td>Medium</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="rule-of-thumb-for-finance-applications" class="slide level2 scrollable">
-<h2>Rule of Thumb for Finance Applications</h2>
-<ul>
-<li><em>Baseline / noisy signals</em> → Random Forest</li>
-<li><em>Alpha extraction</em> → Boosting</li>
-<li><em>Risk / credit scoring</em> → Random Forest</li>
-<li><em>Competitions / benchmarks</em> → Boosting</li>
-</ul>
-</section>
-<section id="python-example-financial-regression" class="slide level2 scrollable">
-<h2>Python Example: Financial Regression</h2>
-<div id="f7906739" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> (</span>
-<span id="cb1-2"><a></a>    BaggingRegressor,</span>
-<span id="cb1-3"><a></a>    RandomForestRegressor,</span>
-<span id="cb1-4"><a></a>    GradientBoostingRegressor</span>
-<span id="cb1-5"><a></a>)</span>
-<span id="cb1-6"><a></a><span class="im">from</span> sklearn.tree <span class="im">import</span> DecisionTreeRegressor</span>
-<span id="cb1-7"><a></a></span>
-<span id="cb1-8"><a></a>bag <span class="op">=</span> BaggingRegressor(</span>
-<span id="cb1-9"><a></a>    DecisionTreeRegressor(),</span>
-<span id="cb1-10"><a></a>    n_estimators<span class="op">=</span><span class="dv">200</span>,</span>
-<span id="cb1-11"><a></a>    random_state<span class="op">=</span><span class="dv">42</span></span>
-<span id="cb1-12"><a></a>)</span>
-<span id="cb1-13"><a></a></span>
-<span id="cb1-14"><a></a>rf <span class="op">=</span> RandomForestRegressor(</span>
-<span id="cb1-15"><a></a>    n_estimators<span class="op">=</span><span class="dv">500</span>,</span>
-<span id="cb1-16"><a></a>    max_features<span class="op">=</span><span class="st">"sqrt"</span>,</span>
-<span id="cb1-17"><a></a>    random_state<span class="op">=</span><span class="dv">42</span></span>
-<span id="cb1-18"><a></a>)</span>
-<span id="cb1-19"><a></a></span>
-<span id="cb1-20"><a></a>gb <span class="op">=</span> GradientBoostingRegressor(</span>
-<span id="cb1-21"><a></a>    n_estimators<span class="op">=</span><span class="dv">500</span>,</span>
-<span id="cb1-22"><a></a>    learning_rate<span class="op">=</span><span class="fl">0.05</span>,</span>
-<span id="cb1-23"><a></a>    max_depth<span class="op">=</span><span class="dv">3</span>,</span>
-<span id="cb1-24"><a></a>    random_state<span class="op">=</span><span class="dv">42</span></span>
-<span id="cb1-25"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<p><span class="math display">\[\widehat{y} = F(x;\theta)\]</span></p>
 </section>
 <section class="slide level2">
 
-<!-- 
-## Time-Series Validation (Important!) {.scrollable}
 
-- Never use random CV
-- Prefer:
-  - Rolling windows
-  - Expanding windows
-  - Purged CV (finance)
-- Ensembles do not fix data leakage -->
+<img data-src="../images/hidden_layer_definition_0.png" style="width:70.0%" class="r-stretch quarto-figure-center"><p class="caption">Feed-Forward NN Structure</p></section></section>
+<section>
+<section id="the-perceptron" class="title-slide slide level1 center">
+<h1>The Perceptron</h1>
+
+</section>
+<section id="single-neuron-model" class="slide level2 scrollable">
+<h2>Single Neuron Model</h2>
+<p><span class="math display">\[z = w^\top x + b\]</span> <span class="math display">\[\widehat{y} = \phi(z)\]</span></p>
+<p>Where:</p>
+<ul>
+<li><span class="math inline">\(x\)</span>: features</li>
+<li><span class="math inline">\(w\)</span>: weights</li>
+<li><span class="math inline">\(b\)</span>: bias</li>
+<li><span class="math inline">\(\phi\)</span>: activation function</li>
+</ul>
+</section>
+<section id="perceptron-as-a-classifier" class="slide level2 scrollable">
+<h2>Perceptron as a Classifier</h2>
+<ul>
+<li>Binary classifier</li>
+<li>Linear decision boundary</li>
+<li>Cannot solve XOR</li>
+</ul>
+<p><span class="math display">\[\widehat{y} = \mathbb{1}(w^\top x + b &gt; 0)\]</span></p>
 </section></section>
 <section>
-<section id="extensions" class="title-slide slide level1 scrollable center">
-<h1>Extensions</h1>
+<section id="multi-layer-perceptron-mlp" class="title-slide slide level1 scrollable center">
+<h1>Multi-Layer Perceptron (MLP)</h1>
 
 </section>
-<section id="xgboost-extreme-gradient-boosting" class="slide level2 scrollable">
-<h2>XGBoost (Extreme Gradient Boosting)</h2>
+<section id="why-hidden-layers" class="slide level2 scrollable">
+<h2>Why Hidden Layers?</h2>
 <ul>
-<li>Gradient Boosting + engineering optimisations</li>
-<li>Designed for performance and scalability</li>
-<li>Widely used in finance and competitions</li>
+<li>Composition of linear + non-linear maps</li>
+<li>Enables non-linear decision boundaries</li>
 </ul>
-<p><strong>Core strengths</strong></p>
-<ul>
-<li>Optimises loss + regularisation</li>
-<li>Uses second-order gradients (Hessian)</li>
-<li>Strong control of overfitting</li>
-</ul>
-<div class="callout-nwarning">
-<p>Power increases the risk of overfitting.</p>
-</div>
+<p><span class="math display">\[h^{(1)} = \phi(W^{(1)} x + b^{(1)})\]</span> <span class="math display">\[\widehat{y} = \phi(W^{(2)} h^{(1)} + b^{(2)})\]</span></p>
 </section>
-<section id="lightgbm-light-gradient-boosting-machine" class="slide level2 scrollable">
-<h2>LightGBM (Light Gradient Boosting Machine)</h2>
+<section id="universal-approximation-theorem" class="slide level2 scrollable">
+<h2>Universal Approximation Theorem</h2>
+<blockquote>
+<p>A feed-forward network with one hidden layer can approximate any continuous function on a compact domain.</p>
+</blockquote>
+<p>Expressiveness grows with:</p>
 <ul>
-<li>Also Gradient Boosting</li>
-<li>Designed for speed and memory efficiency</li>
-<li>Developed by Microsoft</li>
+<li>Number of neurons</li>
+<li>Depth</li>
+<li>Choice of activation</li>
 </ul>
-<p><strong>Key innovation:</strong></p>
-<ul>
-<li>Leaf-wise tree growth</li>
-<li>(instead of level-wise)</li>
-</ul>
-<p><strong>Result:</strong></p>
-<ul>
-<li>Faster training</li>
-<li>Often better accuracy on large datasets</li>
-</ul>
+</section></section>
+<section>
+<section id="activation-functions" class="title-slide slide level1 center">
+<h1>Activation Functions</h1>
+
 </section>
-<section id="xgboost-vs-lightgbm" class="slide level2 scrollable">
-<h2>XGBoost vs LightGBM</h2>
+<section id="why-activations-matter" class="slide level2 scrollable">
+<h2>Why Activations Matter</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<h3 id="without-activations">Without activations</h3>
+<ul>
+<li>Network collapses to a linear model</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<h3 id="with-activations">With activations</h3>
+<ul>
+<li>Introduce non-linearity</li>
+<li>Control gradient flow</li>
+</ul>
+</div></div>
+</section>
+<section id="logistic-regression-vs-neural-networks" class="slide level2 scrollable">
+<h2>Logistic Regression vs Neural Networks</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<h3 id="logistic-regression">Logistic Regression</h3>
+<p><span class="math display">\[
+P(y=1 \mid x) = \sigma(w^\top x)
+\]</span></p>
+<ul>
+<li>Linear decision boundary</li>
+<li>Convex optimization</li>
+<li>Interpretable coefficients</li>
+<li>Strong statistical grounding</li>
+</ul>
+<p><strong>Typical finance uses</strong></p>
+<ul>
+<li>Credit scoring</li>
+<li>Default probability</li>
+<li>Risk classification</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<h3 id="neural-networks-mlp">Neural Networks (MLP)</h3>
+<p><span class="math display">\[
+P(y=1 \mid x) = \sigma\big(W^{(2)} \phi(W^{(1)}x)\big)
+\]</span></p>
+<ul>
+<li>Non-linear decision boundary</li>
+<li>Non-convex optimization</li>
+<li>High expressive power</li>
+<li>Requires tuning &amp; regularization</li>
+</ul>
+<p><strong>Typical finance uses</strong></p>
+<ul>
+<li>Fraud detection</li>
+<li>Complex behavioral patterns</li>
+<li>High-dimensional signals</li>
+</ul>
+</div></div>
+</section>
+<section id="decision-boundary-intuition" class="slide level2">
+<h2>Decision Boundary Intuition</h2>
+<ul>
+<li>Logistic regression ⇒ straight line / hyperplane</li>
+<li>Neural networks ⇒ curved, flexible boundaries</li>
+</ul>
+
+<img data-src="../images/logistic_regression_and_decision_boundary.png" style="width:70.0%" class="r-stretch quarto-figure-center"><p class="caption">Curved NN boundary</p></section>
+<section id="common-activation-functions" class="slide level2 scrollable">
+<h2>Common Activation Functions</h2>
 <table class="caption-top">
 <thead>
 <tr class="header">
-<th>Aspect</th>
-<th>XGBoost</th>
-<th>LightGBM</th>
+<th>Function</th>
+<th>Formula</th>
+<th>Typical Use</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>Tree growth</td>
-<td>Level-wise</td>
-<td>Leaf-wise</td>
+<td>Sigmoid</td>
+<td><span class="math inline">\(\frac{1}{1+e^{-z}}\)</span></td>
+<td>Probabilities</td>
 </tr>
 <tr class="even">
-<td>Speed</td>
-<td>Fast</td>
-<td>Very fast</td>
+<td>Tanh</td>
+<td><span class="math inline">\(\tanh(z)\)</span></td>
+<td>Centered data</td>
 </tr>
 <tr class="odd">
-<td>Memory</td>
-<td>Moderate</td>
-<td>Low</td>
+<td>ReLU</td>
+<td><span class="math inline">\(\max(0,z)\)</span></td>
+<td>Default hidden layers</td>
 </tr>
 <tr class="even">
-<td>Small data</td>
-<td>Very stable</td>
-<td>Can overfit</td>
-</tr>
-<tr class="odd">
-<td>Large data</td>
-<td>Strong</td>
-<td>Excellent</td>
+<td>Softmax</td>
+<td><span class="math inline">\(\frac{e^z}{\sum e^z}\)</span></td>
+<td>Multiclass</td>
 </tr>
 </tbody>
 </table>
 </section>
-<section id="hyperparameters" class="slide level2 scrollable">
-<h2>Hyperparameters</h2>
+<section class="slide level2">
+
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><img data-src="../images/sigmoid_tanh_activation_functions.png" style="width:120.0%"></p>
+</div><div class="column" style="width:50%;">
+<p><img data-src="../images/relu_activation_function.png" style="width:90.0%"></p>
+</div></div>
+</section>
+<section id="relu-vs-sigmoid-finance-insight" class="slide level2">
+<h2>ReLU vs Sigmoid (Finance Insight)</h2>
+<p>Sigmoid:</p>
 <ul>
-<li><code>n_estimators</code> <span class="math inline">\(\rightarrow\)</span> number of trees</li>
-<li><code>learning_rate</code> <span class="math inline">\(\rightarrow\)</span> step size</li>
-<li><code>max_depth</code> / <code>num_leaves</code> <span class="math inline">\(\rightarrow\)</span> complexity</li>
-<li><code>subsample</code> <span class="math inline">\(\rightarrow\)</span> row sampling</li>
-<li><code>colsample_bytree</code> <span class="math inline">\(\rightarrow\)</span> feature sampling Golden rule:</li>
+<li>Vanishing gradients</li>
+<li>Saturation</li>
+</ul>
+<p>ReLU:</p>
+<ul>
+<li>Sparse activation</li>
+<li>Faster convergence</li>
+<li>Industry standard</li>
+</ul>
+</section></section>
+<section>
+<section id="loss-functions" class="title-slide slide level1 center">
+<h1>Loss Functions</h1>
+
+</section>
+<section id="regression-vs-classification" class="slide level2">
+<h2>Regression vs Classification</h2>
+<p>Regression (returns, volatility):</p>
+<p><span class="math display">\[\mathscr{L}_{MSE} = \frac{1}{n}\sum (y - \widehat{y})^2\]</span></p>
+<p>Classification (default, fraud):</p>
+<p><span class="math display">\[\mathscr{L}_{CE} = -\frac{1}{n}\sum y \log(\widehat{y}) + (1-y)\log(1-\widehat{y})\]</span></p>
+</section></section>
+<section>
+<section id="optimization" class="title-slide slide level1 center">
+<h1>Optimization</h1>
+
+</section>
+<section id="gradient-descent" class="slide level2">
+<h2>Gradient Descent</h2>
+<p>Goal:</p>
+<p><span class="math display">\[\min_\theta \mathscr{L}(\theta)\]</span></p>
+<p>Update:</p>
+<p><span class="math display">\[\theta_{t+1} = \theta_t - \eta \nabla_\theta \mathscr{L}(\theta)\]</span></p>
+</section>
+<section id="stochastic-gradient-descent-sgd" class="slide level2">
+<h2>Stochastic Gradient Descent (SGD)</h2>
+<ul>
+<li>Uses mini-batches</li>
+<li>Noisy but efficient</li>
+<li>Scales to large financial datasets</li>
+</ul>
+<p>Variants:</p>
+<ul>
+<li>SGD</li>
+<li>Momentum</li>
+<li>Adam (default in practice)</li>
+</ul>
+</section>
+<section class="slide level2">
+
+
+<img data-src="../images/sgd_vs_gd.png" style="width:70.0%" class="r-stretch quarto-figure-center"><p class="caption">SGD Illustration</p></section>
+<section id="backpropagation-intuition" class="slide level2 scrollable">
+<h2>Backpropagation — Intuition</h2>
+<p><strong>Goal:</strong><br>
+Efficiently compute how each weight affects the loss.</p>
+<ul>
+<li class="fragment">Neural networks are compositions of functions</li>
+<li class="fragment">Loss depends on outputs</li>
+<li class="fragment">Outputs depend on weights</li>
+<li class="fragment">Use the <strong>chain rule</strong> to propagate errors backward</li>
 </ul>
 <div class="callout callout-tip callout-titled callout-style-default">
 <div class="callout-body">
@@ -789,10 +434,90 @@ F_m(x) = F_{m-1}(x) + \nu h_m(x)
 <p><strong>Tip</strong></p>
 </div>
 <div class="callout-content">
-<p>Lower learning rate <span class="math inline">\(\implies\)</span> more trees <span class="math inline">\(\implies\)</span> more stability</p>
+<p>💡 Backpropagation is <strong>not</strong> an optimizer.<br>
+It is a <strong>gradient computation algorithm</strong>.</p>
 </div>
 </div>
 </div>
+<p><strong>Key idea</strong></p>
+<ul>
+<li>Errors flow <strong>backwards</strong></li>
+<li>Information flows <strong>forwards</strong></li>
+</ul>
+</section>
+<section id="backpropagation-mathematical-view" class="slide level2 scrollable">
+<h2>Backpropagation — Mathematical View</h2>
+<p>Consider a 2-layer network:</p>
+<p><span class="math display">\[
+z^{(1)} = W^{(1)}x,\quad
+h = \phi(z^{(1)}),\quad
+\widehat{y} = W^{(2)}h
+\]</span></p>
+<p>Loss: <span class="math display">\[
+\mathscr{L} = \ell(y, \widehat{y})
+\]</span></p>
+<p><strong>Gradients (chain rule):</strong></p>
+<p><span class="math display">\[
+\frac{\partial \mathscr{L}}{\partial W^{(2)}} =
+\frac{\partial \mathscr{L}}{\partial \widehat{y}}
+\frac{\partial \widehat{y}}{\partial W^{(2)}}
+\]</span></p>
+<p><span class="math display">\[
+\frac{\partial \mathscr{L}}{\partial W^{(1)}} =
+\frac{\partial \mathscr{L}}{\partial \widehat{y}}
+\frac{\partial \widehat{y}}{\partial h}
+\frac{\partial h}{\partial z^{(1)}}
+\frac{\partial z^{(1)}}{\partial W^{(1)}}
+\]</span></p>
+<div class="{-callout-note}">
+<p>Gradients are reused → <strong>computational efficiency</strong></p>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="../images/backpropagation.png" style="width:70.0%" class="r-stretch quarto-figure-center"><p class="caption">Backpropagation</p></section></section>
+<section>
+<section id="financial-applications" class="title-slide slide level1 center">
+<h1>Financial Applications</h1>
+
+</section>
+<section id="example-1-stock-return-prediction" class="slide level2">
+<h2>Example 1: Stock Return Prediction</h2>
+<p>Features:</p>
+<ul>
+<li>Lagged returns</li>
+<li>Technical indicators</li>
+<li>Volatility measures</li>
+</ul>
+<p>Target:</p>
+<p><span class="math display">\[y_t = r_{t+1}\]</span></p>
+</section>
+<section id="example-2-credit-scoring" class="slide level2">
+<h2>Example 2: Credit Scoring</h2>
+<ul>
+<li>Binary classification</li>
+<li>Non-linear interactions between:
+<ul>
+<li>Income</li>
+<li>Debt</li>
+<li>Credit history</li>
+</ul></li>
+</ul>
+<p>Output:</p>
+<p><span class="math display">\[P(\text{default} \mid x)\]</span></p>
+</section>
+<section id="example-3-volatility-forecasting" class="slide level2">
+<h2>Example 3: Volatility Forecasting</h2>
+<ul>
+<li>Non-linear alternative to GARCH</li>
+<li>Inputs:
+<ul>
+<li>Returns</li>
+<li>Squared returns</li>
+<li>Macro variables</li>
+</ul></li>
+</ul>
 
 
 </section></section>
