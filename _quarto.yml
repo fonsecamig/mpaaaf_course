@@ -40,4 +40,7 @@ website:
             href: slides/decision_trees.qmd
           - text: "Advanced Decision Trees"
             href: slides/advanced_decision_trees.qmd
-
+          - text: "Feed Forward Neural Networks"
+            href: slides/feed_forward_neural_networks.qmd
+          - text: "Introduction to TensorFlow 2"
+            href: slides/intro_tensorflow2.qmd

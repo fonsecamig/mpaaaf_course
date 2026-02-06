@@ -1,0 +1,200 @@
+---
+title: "TensorFlow 2 — The Basics"
+subtitle: "From Tensors to Training Neural Networks"
+author: "Miguel Fonseca"
+format:
+  revealjs:
+    toc: true
+---
+
+
+# Why TensorFlow 2?
+
+## What is TensorFlow? {.scrollable}
+
+- Open-source machine learning framework
+- Developed by Google
+- Designed for:
+  - Research
+  - Production
+  - Scalability (CPU / GPU / TPU)
+
+---
+
+## TensorFlow vs Others {.scrollable}
+
+| Framework | Focus | Strength |
+|--------|------|---------|
+| scikit-learn | Classical ML | Simplicity |
+| PyTorch | Research | Flexibility |
+| **TensorFlow 2** | Research + Prod | End-to-end pipelines |
+
+# Tensors
+
+## What is a tensor? {.scrollable}
+
+- Generalization of:
+  - Scalar (rank 0)
+  - Vector (rank 1)
+  - Matrix (rank 2)
+  - Higher dimensions (rank ≥ 3)
+
+---
+
+## Creating Tensors {.scrollable}
+
+```{python}
+import numpy as np
+import tensorflow as tf
+
+a = tf.constant(3)
+b = tf.constant([1, 2, 3])
+c = tf.constant([[1., 2.], [3., 4.]])
+```
+
+## Tensor Properties {.scrollable}
+
+```{python}
+c.shape
+c.dtype
+tf.rank(c)
+```
+
+:::{.callout-note title="Key Idea"}
+Tensors have shape, dtype, and rank
+:::
+
+## Tensor Operations {.scrollable}
+
+TensorFlow feels like NumPy:
+
+```{python}
+x = tf.random.normal((3, 2))
+y = tf.ones((3, 2))
+
+x + y
+x * y
+```
+
+Matrix multiplication:
+
+```{python}
+tf.matmul(x, tf.transpose(y))
+```
+
+---
+
+## Important Tensor Rules {.scrollable}
+
+- Tensors are immutable
+- Operations are GPU-aware
+- Broadcasting rules apply (like NumPy)
+
+---
+
+# Keras: The High-Level API
+
+## Why Keras?
+
+- Reduces boilerplate
+- Enforces best practices
+- Integrated into TensorFlow 2
+
+---
+
+## Building a Model (Sequential) {.scrollable}
+
+```{python}
+model = tf.keras.Sequential([
+    tf.keras.layers.Dense(32, activation="relu"),
+    tf.keras.layers.Dense(1)
+])
+```
+
+Model Summary
+```{python}
+model.summary()
+```
+
+**Concepts:**
+- Layers
+- Parameters
+- Trainable weights
+
+## Functional API {.scrollable}
+
+```{python}
+inputs = tf.keras.Input(shape=(10,))
+x = tf.keras.layers.Dense(32, activation="relu")(inputs)
+outputs = tf.keras.layers.Dense(1)(x)
+
+model = tf.keras.Model(inputs, outputs)
+```
+
+
+**Use when:**
+
+- Multiple inputs / outputs
+- Complex architectures
+
+---
+
+# Training Workflow
+
+## The 3-Step Pattern {.scrollable}
+
+- compile
+- fit
+- evaluate / predict
+
+> This pattern appears everywhere in TF2.
+
+---
+
+## Compile Step {.scrollable}
+```{python}
+model.compile(
+    optimizer="adam",
+    loss="mse",
+    metrics=["mae"]
+)
+```
+
+- Optimizer → how parameters change
+- Loss → what we minimize
+- Metrics → what we monitor
+
+---
+
+## Fit the Model {.scrollable}
+
+```{python}
+X_train, y_train = np.random.rand(100, 10), np.random.rand(100, 1)  # Training data
+history = model.fit(
+    X_train,
+    y_train,
+    epochs=5,
+    batch_size=32,
+    validation_split=0.2
+)
+```
+
+**Training concepts:**
+
+- Epoch
+- Batch
+- Validation set
+
+---
+
+## Evaluate and Predict {.scrollable}
+
+```{python}
+X_test, y_test = np.random.rand(20, 10), np.random.rand(20, 1)  # Test data
+model.evaluate(X_test, y_test)
+```
+
+```{python}
+X_new = np.random.rand(5, 10)  # New data for prediction
+model.predict(X_new)
+```

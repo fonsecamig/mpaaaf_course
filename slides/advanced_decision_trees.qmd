@@ -7,6 +7,8 @@ format:
     toc: true
 ---
 
+# Motivation 
+
 ## Motivation: Why Ensembles in Finance? {.scrollable}
 
 - Financial data are:
@@ -50,21 +52,19 @@ $$
 | Random Forest | Same | ↓↓ |
 | Boosting | ↓ | ↑ (controlled) |
 
----
+# Bagging
 
-## Bagging (Bootstrap Aggregating) {.scrollable}
-
-### Core idea
+## Core idea {.scrollable}
 
 > Train many trees on resampled data and average predictions
 
-Algorithm:
+**Algorithm:**
 
 1. Draw $B$ bootstrap samples
 2. Train a tree on each sample
 3. Aggregate predictions
 
-Finance intuition:
+**Finance intuition:**
 
 - Reduces sensitivity to **outliers**
 - Stabilizes signals from noisy indicators
@@ -73,7 +73,8 @@ Finance intuition:
 
 ## Bagging for Financial Returns {.scrollable}
 
-### Example
+### Example 
+
 - Target: next-day return
 - Features:
   - Lagged returns
@@ -81,24 +82,22 @@ Finance intuition:
   - Volatility measures
   - Volume indicators
 
-Why bagging helps:
+**Why bagging helps:**
 
 - One bad split $\neq$ one bad model
 - Averaging smooths extreme forecasts
 
----
+# Random Forests
 
-## Random Forests {.scrollable}
-
-### Key idea
+## Key idea {.scrollable}
 
 > Bagging + feature randomness
 
-At each split:
+**At each split:**
 
 - Only a random subset of features is considered
 
-Effect:
+**Effect:**
 
 - Trees become **less correlated**
 - Variance decreases further
@@ -148,22 +147,20 @@ Handles:
 
 ## Out-of-Bag (OOB) Error {.scrollable}
 
-~36% of observations are excluded from each bootstrap sample
-
-Can be used as a validation set
+- ~36% of observations are excluded from each bootstrap sample
+- Can be used as a validation set
 
 Useful when:
 
-Time-series CV is expensive
-
-Dataset is small
+- Time-series CV is expensive
+- Dataset is small
 
 ::: {.callout-warning title="In finance:"}
 - Still respect time ordering
 - OOB $\neq$ time-aware validation
 :::
 
----
+# Boosting
 
 ## Boosting: The Big Idea {.scrollable}
 
@@ -205,42 +202,121 @@ Finance analogy:
 
 ---
 
-## Gradient Boosting (GBDT) {.scrollable}
+## Gradient Boosting: The Core Idea {.scrollable}
 
-### Functional gradient descent
+- Gradient Boosting builds an **additive model**
+- Models are trained **sequentially**
+- Each new tree:
+  - Corrects the **errors of the current model**
 
-At step $m$:
+General form:
+$$
+F_M(x) = \sum_{m=1}^M \nu \cdot h_m(x)
+$$
 
-- Compute residuals
-- Fit a shallow tree
-- Update the model
+Where:
+- $h_m(x)$: weak learner (tree)
+- $\nu$: learning rate (shrinkage)
 
+Key idea:
+> **Improve the model step by step, not all at once**
+
+---
+
+## Gradient Boosting for Regression {.scrollable}
+
+1. Start with a constant model:
+$$
+F_0(x) = \arg\min_c \sum_i (y_i - c)^2
+$$
+
+2. Compute **residuals**:
+$$
+r_i = y_i - F_{m-1}(x_i)
+$$
+
+3. Fit a tree to the residuals:
+$$
+h_m(x) \approx r
+$$
+
+4. Update the model:
 $$
 F_m(x) = F_{m-1}(x) + \nu h_m(x)
 $$
 
-Key parameters:
+Finance intuition:
 
-- `n_estimators`
-- `learning_rate`
-- `max_depth`
+- Each tree explains **what the previous model missed**
+- Useful for returns, spreads, volatility
+
+---
+
+## Gradient Boosting for Classification {.scrollable}
+
+- Targets are **class labels**
+- Model predicts **log-odds / scores**
+- Uses a classification loss (e.g. logistic loss)
+
+At each step:
+
+- Compute the **negative gradient** of the loss
+- Fit a tree to this gradient
+- Update prediction scores
+
+Interpretation:
+
+- Trees correct **probability errors**, not labels directly
+- Final output → probabilities via sigmoid
+
+Finance examples:
+
+- Market direction (up/down)
+- Default vs non-default
+- Fraud detection
+
+---
+
+## General Principles of Boosting {.scrollable}
+
+**Key hyperparameters:**
+
+- `n_estimators` → number of correction steps
+- `learning_rate` → step size
+- `max_depth` → interaction complexity
+- `subsample` → stochastic boosting
+
+**Trade-offs:**
+
+- Small learning rate + many trees → stable, slow
+- Large learning rate → fast, overfitting
+
+**Finance rule of thumb:**
+
+- Prefer **shallow trees**
+- Use **small learning rates**
+- Validate with **time-aware CV**
+
+:::{.callout-important}
+> Gradient Boosting = controlled, incremental learning
+:::
 
 ---
 
 ## Boosting for Market Prediction {.scrollable}
 
-Typical setup:
+**Typical setup:**
 
 - Shallow trees (max_depth = 2–4)
 - Small learning rate (0.01–0.1)
 - Many estimators
 
-Advantages:
+**Advantages:**
 
 - High predictive accuracy
 - Captures subtle patterns
 
-Risks:
+**Risks:**
 
 - Overfitting
 - Regime sensitivity
@@ -299,7 +375,7 @@ gb = GradientBoostingRegressor(
 ```
 
 ---
-
+<!-- 
 ## Time-Series Validation (Important!) {.scrollable}
 
 - Never use random CV
@@ -307,4 +383,64 @@ gb = GradientBoostingRegressor(
   - Rolling windows
   - Expanding windows
   - Purged CV (finance)
-- Ensembles do not fix data leakage
+- Ensembles do not fix data leakage -->
+# Extensions {.scrollable}
+
+## XGBoost (Extreme Gradient Boosting) {.scrollable}
+
+- Gradient Boosting + engineering optimisations
+- Designed for performance and scalability
+- Widely used in finance and competitions
+
+**Core strengths**
+
+- Optimises loss + regularisation
+- Uses second-order gradients (Hessian)
+- Strong control of overfitting
+
+::: {.callout-nwarning}
+Power increases the risk of overfitting.
+:::
+
+---
+
+## LightGBM (Light Gradient Boosting Machine) {.scrollable}
+
+- Also Gradient Boosting
+- Designed for speed and memory efficiency
+- Developed by Microsoft
+
+**Key innovation:**
+
+- Leaf-wise tree growth
+- (instead of level-wise)
+
+**Result:**
+
+- Faster training
+- Often better accuracy on large datasets
+
+## XGBoost vs LightGBM {.scrollable}
+
+| Aspect      | XGBoost     | LightGBM    |
+| ----------- | ----------- | ----------- |
+| Tree growth | Level-wise  | Leaf-wise   |
+| Speed       | Fast        | Very fast   |
+| Memory      | Moderate    | Low         |
+| Small data  | Very stable | Can overfit |
+| Large data  | Strong      | Excellent   |
+
+---
+
+## Hyperparameters {.scrollable}
+
+- `n_estimators` $\rightarrow$ number of trees
+- `learning_rate` $\rightarrow$ step size
+- `max_depth` / `num_leaves` $\rightarrow$ complexity
+- `subsample` $\rightarrow$ row sampling
+- `colsample_bytree` $\rightarrow$ feature sampling
+Golden rule:
+
+:::{.callout-tip}
+Lower learning rate $\implies$ more trees $\implies$ more stability
+:::
