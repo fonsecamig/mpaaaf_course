@@ -1,0 +1,420 @@
+---
+title: "Convolutional Neural Networks (CNNs)"
+author: "Miguel Fonseca"
+format:
+  revealjs:
+    toc: true
+---
+
+# Motivation
+
+## Why not Fully Connected Networks for Images?
+
+- Images: 224×224×3 → 150,528 features
+- Dense layer with 1,000 neurons:
+  
+$$
+150,528 \times 1000 = 150M \text{ parameters}
+$$
+
+Problems:
+
+- Too many parameters
+- No spatial structure
+- No translation invariance
+
+---
+
+## Key Ideas Behind CNNs
+
+::: {.incremental}
+1. **Local connectivity**
+2. **Parameter sharing**
+3. **Translation equivariance**
+4. **Hierarchical feature learning**
+:::
+
+# Convolutions
+
+## Continuous Convolution
+
+$$
+(f * g)(t) = \int_{-\infty}^{\infty} f(\tau) g(t - \tau) d\tau
+$$
+
+Interpretation:
+
+- Flip one function
+- Slide it
+- Compute overlap (inner product)
+
+---
+
+![](/images/continuous_convolution_anim.gif)
+
+---
+
+## Discrete Convolution (1D)
+
+$$
+(y * k)[n] = \sum_{m=-\infty}^{\infty} y[m] \cdot k[n - m]
+$$
+
+In practice (finite signals):
+
+$$
+z[i] = \sum_{j=0}^{K-1} x[i-j] \cdot w[j]
+$$
+
+---
+
+![](/images/discrete_convolution_anim.gif)
+
+---
+
+## Convolution as Sliding Dot Product - Kernel (filter) = small learnable weight matrix - Slide across input
+- Compute dot product
+
+This is:
+
+- A linear operator
+- With shared weights
+
+---
+
+## Convolution vs Cross-Correlation
+
+Deep learning frameworks usually compute:
+
+$$
+z[i] = \sum_{j=0}^{K-1} x[i+j] w[j]
+$$
+
+(No flipping.)
+
+We still call it "convolution".
+
+# 1D Convolutions
+
+## When do we use them?
+
+- Time series
+- Audio
+- Financial data
+- Genomics sequences
+
+---
+
+## 1D Convolution Example
+
+Input:
+
+$$
+x = [1, 2, 3, 4, 5]
+$$
+
+Kernel:
+$$
+w = [1, 0, -1]
+$$
+
+Output (stride 1):
+
+$$
+z[0] = 1*1 + 2*0 + 3*(-1)
+$$
+
+---
+
+## 1D Convolution in TensorFlow
+
+```{python}
+import tensorflow as tf
+
+model = tf.keras.Sequential([
+    tf.keras.layers.Conv1D(
+        filters=32,
+        kernel_size=3,
+        activation='relu',
+        input_shape=(100, 1)
+    )
+])
+```
+
+---
+
+![](/images/1d_convolution.png)
+
+# 2D Convolutions
+
+## 2D Convolutions
+
+Used for:
+
+- Images
+- Video frames
+- Spatial data
+
+---
+
+## 2D Convolution Formula
+
+$$
+Z(i,j) = \sum_m \sum_n X(i+m, j+n) W(m,n)
+$$
+
+Kernel is now a matrix.
+
+---
+
+
+## Convolution Over RGB Images
+
+Input shape:
+
+$$
+H \times W \times C
+$$
+
+Kernel shape:
+
+$$
+k \times k \times C
+$$
+
+Each filter spans all channels.
+
+---
+
+![](/images/2d_convolution_anim.gif)
+
+---
+
+## Multiple Filters
+
+**If we use 64 filters:**
+
+Output depth:
+
+$$
+H' \times W' \times 64
+$$
+
+Each filter learns a feature:
+
+- edges
+- textures
+- shapes
+
+
+## 2D Convolution in TensorFlow
+```{python}
+model = tf.keras.Sequential([
+    tf.keras.layers.Conv2D(
+        filters=32,
+        kernel_size=(3,3),
+        activation='relu',
+        input_shape=(28, 28, 1)
+    )
+])
+```
+
+# Padding
+
+## Why padding?
+
+Without padding:
+
+- Spatial dimensions shrink
+
+With kernel size 3:
+
+
+$$H_{out} = h - 2$$
+
+---
+
+## Types of Padding
+
+### Valid Padding
+
+- No padding
+- Output shrinks
+
+### Same Padding
+
+- Zero-padding
+- Output size preserved
+
+
+---
+
+## Output Size Formula
+
+$$
+H_{out} = \frac{H + 2P - K}{S} + 1
+$$
+
+Where:
+
+- $P$: padding
+- $K$: kernel size
+- $S$: stride
+
+# Pooling
+
+## Why Pooling?
+
+::: {.incremental}
+- Downsample feature maps
+- Reduce parameters
+- Increase receptive field
+- Add translation invariance
+:::
+
+---
+
+## Max Pooling
+
+$$Z = \max(x_{window})$$
+
+Keeps strongest activation.
+
+---
+
+## Average Pooling
+
+$$Z = \text{mean}(x_{window})$$
+
+Smoother representation.
+
+---
+
+## Pooling in TensorFlow
+```{python}
+tf.keras.layers.MaxPooling2D(pool_size=(2,2))
+```
+
+# CNN Architecture
+
+## CNN Architecture Pattern
+
+Typical CNN:
+
+Conv → ReLU → Conv → ReLU → Pool
+Conv → ReLU → Conv → ReLU → Pool
+Flatten → Dense → Output
+
+---
+
+## Example CNN (MNIST)
+
+```{python}
+model = tf.keras.Sequential([
+    tf.keras.layers.Conv2D(32, 3, activation='relu', padding='same'),
+    tf.keras.layers.MaxPooling2D(2),
+    tf.keras.layers.Conv2D(64, 3, activation='relu', padding='same'),
+    tf.keras.layers.MaxPooling2D(2),
+    tf.keras.layers.Flatten(),
+    tf.keras.layers.Dense(128, activation='relu'),
+    tf.keras.layers.Dense(10, activation='softmax')
+])
+```
+
+---
+
+## Receptive Field
+
+The receptive field grows with depth.
+
+**Deeper neurons:**
+
+- "see" larger parts of image
+- learn abstract features
+
+# Residual Networks
+
+## Vanishing Gradient Problem
+
+Deep CNNs suffer from:
+
+- Gradient decay
+- Hard optimization
+- Solution: Residual Connections
+
+---
+
+## Residual Connections
+
+Introduced in:
+
+>ResNet (2015) [REF AQUI]
+
+Instead of learning:
+
+$$HD(x)$$
+
+Learn:
+
+$$
+F(x) = H(x) - x
+$$
+
+So:
+
+$$
+H(x) = F(x) + x
+$$
+
+---
+
+## Residual Block
+
+Output:
+
+$$y = F(x) + x$$
+
+This is called a **skip connection**.
+
+---
+
+## Why Residuals Help
+
+- Easier optimization
+- Identity mapping available
+- Prevents degradation
+- Enables 100+ layer networks
+
+## Residual Block in TensorFlow
+```{python}
+from tensorflow.keras import layers
+
+def residual_block(x, filters):
+    shortcut = x
+    
+    x = layers.Conv2D(filters, 3, padding='same', activation='relu')(x)
+    x = layers.Conv2D(filters, 3, padding='same')(x)
+    
+    x = layers.Add()([x, shortcut])
+    x = layers.Activation('relu')(x)
+    
+    return x
+```
+
+---
+
+## Full CNN with Residuals
+```{python}
+inputs = tf.keras.Input(shape=(32,32,3))
+x = tf.keras.layers.Conv2D(32, 3, padding='same')(inputs)
+
+x = residual_block(x, 32)
+x = tf.keras.layers.MaxPooling2D()(x)
+
+x = residual_block(x, 32)
+x = tf.keras.layers.GlobalAveragePooling2D()(x)
+
+outputs = tf.keras.layers.Dense(10, activation='softmax')(x)
+
+model = tf.keras.Model(inputs, outputs)
+```

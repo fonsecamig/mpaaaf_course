@@ -1,0 +1,276 @@
+---
+title: "Regularisation for Neural Networks"
+subtitle: "Controlling Capacity, Improving Generalisation"
+author: "Miguel Fonseca"
+format: 
+  revealjs:
+    toc: true
+---
+
+# Why regularisation is necessary
+
+## Why Regularisation?
+
+- Neural networks are **high-capacity models**
+- Overfitting is common
+- Training loss ↓ does *not* imply test loss ↓
+
+**Goal:**  
+
+> Improve generalisation by controlling effective model complexity
+
+---
+
+## Overfitting in Neural Networks
+
+- Many parameters
+- Flexible decision boundaries
+- Can memorise training data
+
+Typical symptoms:
+
+- Training error → 0
+- Validation error ↑
+
+---
+
+## What Is Regularisation?
+
+**Definition**
+
+Any technique that constrains learning to improve out-of-sample performance.
+
+### Three perspectives
+
+1. Penalise complexity  
+2. Inject noise  
+3. Stop training early  
+
+# Explicit regularisation
+
+## Explicit Regularisation: L2 (Weight Decay)
+
+$$
+\mathscr{L}(\theta) = \mathscr{L}_{data}(\theta) + \lambda \sum_i w_i^2
+$$
+
+**Effects**
+
+- Penalises large weights
+- Encourages smooth functions
+- Improves conditioning
+
+---
+
+## Geometric Interpretation of L2
+
+- Penalises distance from origin
+- Shrinks parameters continuously
+- Equivalent to Gaussian prior on weights
+
+---
+
+## L1 Regularisation
+
+$$
+\mathscr{L}(\theta) = \mathscr{L}_{data}(\theta) + \lambda \sum_i |w_i|
+$$
+
+**Key properties**
+
+- Produces sparse solutions
+- Performs implicit feature selection
+- Less common in deep networks
+
+---
+
+## L1 vs L2
+
+| Aspect | L1 | L2 |
+|---|---|---|
+| Sparsity | Yes | No |
+| Weight shrinkage | Hard | Smooth |
+| Interpretability | Higher | Lower |
+
+# Stochastic regularisation
+
+## Stochastic Regularisation
+
+- Inject randomness during training
+- Forces robustness
+- Prevents co-adaptation
+
+Examples:
+
+- Dropout
+- Noise injection
+- BatchNorm (indirectly)
+
+---
+
+## Dropout
+
+**Idea**
+
+- Randomly drop neurons during training
+
+$$
+\widetilde{h} = h \cdot \text{Bernoulli}(p)
+$$
+
+**Interpretation**
+
+- Approximate ensemble learning
+- Strong regularisation effect
+
+---
+
+## Dropout: Practical Notes
+
+- Most effective in fully-connected layers
+- Typical rates: 0.1–0.5
+- Often unnecessary with BatchNorm
+
+# Normalisation layers
+
+## Normalisation Layers
+
+Primary purpose:
+
+- Stabilise optimisation
+
+Secondary effect:
+
+- Regularisation through noise or smoothing
+
+---
+
+## Batch Normalization
+
+For mini-batch $B$:
+
+$$
+\widehat{x} = \frac{x - \mu_B}{\sqrt{\sigma_B^2 + \epsilon}}, \quad
+y = \gamma \widehat{x} + \beta
+$$
+
+---
+
+## Why BatchNorm Works
+
+- Reduces sensitivity to parameter scale
+- Allows higher learning rates
+- Improves gradient flow
+
+---
+
+## BatchNorm as Regularisation
+
+- Uses batch statistics
+- Introduces stochastic noise
+- Noise depends on batch composition
+
+**Result**
+
+- Reduced overfitting
+- Often replaces dropout
+
+---
+
+## Limitations of BatchNorm
+
+- Depends on batch size
+- Poor with small batches
+- Not ideal for:
+  - RNNs
+  - Online learning
+  - Transformers
+
+---
+
+## Layer Normalization
+
+Normalises **within a single sample**:
+
+$$
+\widehat{x} = \frac{x - \mu_{features}}{\sqrt{\sigma_{features}^2 + \epsilon}}
+$$
+
+---
+
+## Why LayerNorm?
+
+- Independent of batch size
+- Stable for sequential models
+- Standard in Transformers
+
+**Regularisation effect**
+
+- Smoother optimisation landscape
+- Less noise than BatchNorm
+
+---
+
+## BatchNorm vs LayerNorm
+
+| Aspect | BatchNorm | LayerNorm |
+|---|---|---|
+| Normalisation axis | Batch | Features |
+| Batch-size dependent | Yes | No |
+| Noise level | High | Low |
+| Typical use | CNNs | Transformers
+
+# Implicit regularisation
+
+## Implicit Regularisation
+
+Not explicitly added to the loss.
+
+Examples:
+
+- Early stopping
+- SGD noise
+- Finite training time
+
+---
+
+## Early Stopping
+
+- Stop training when validation loss increases
+- Prevents late-stage memorisation
+
+**Theory**
+
+- Equivalent to L2 in linear models
+
+# Practical guidelines
+
+## Regularisation Strategy
+
+1. Start with:
+   - Weight decay
+   - Early stopping
+2. Add:
+   - BatchNorm *or* LayerNorm
+3. Use Dropout:
+   - If BatchNorm is absent
+   - Or in final dense layers
+
+---
+
+## Common Anti-Patterns
+
+- Dropout + BatchNorm everywhere
+- Over-regularising small datasets
+- Ignoring optimiser interactions
+
+---
+
+## Key Takeaways
+
+- Regularisation controls *effective capacity*
+- Normalisation layers regularise implicitly
+- Methods are complementary
+- Validation performance is the final arbiter
+
+> Generalisation is engineered, not accidental.

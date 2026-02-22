@@ -173,8 +173,6 @@ Typical use cases:
 - Preprocessing
 - Feature engineering
 
----
-
 # Machine Learning Workflow
 
 ## The Machine Learning Workflow {.scrollable}

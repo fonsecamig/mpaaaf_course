@@ -277,6 +277,7 @@ Never shuffle time series data.
 ## Feature Importance: Concept {.scrollable}
 
 Decision tree importance is based on:
+
 - Reduction in impurity
 - Aggregated over all splits
 
@@ -289,10 +290,12 @@ $$
 ## Impurity-Based Importance {.scrollable}
 
 **Pros**
+
 - Fast
 - Built-in
 
 **Cons**
+
 - Biased toward:
   - Continuous variables  
   - High-cardinality features  
@@ -301,11 +304,13 @@ $$
 
 ## Permutation Importance {.scrollable}
 
-Idea:
+**Idea:**
+
 - Shuffle one feature at a time  
 - Measure performance degradation  
 
-Advantages:
+**Advantages:**
+
 - Model-agnostic  
 - Less biased  
 
@@ -314,29 +319,32 @@ Advantages:
 ## Feature Importance in Finance {.scrollable}
 
 Interpret carefully:
+
 - Correlated predictors  
 - Lagged variables  
 - Proxy features  
 
 Best practice:
+
 - Combine with SHAP  
 - Apply economic intuition  
-
-<!-- --- -->
 
 # Financial applications
 
 ## Financial Application 1: Credit Scoring {.scrollable}
 
 **Inputs**
+
 - Income  
 - Debt ratio  
 - Payment history  
 
 **Target**
+
 - Default / No default  
 
-Decision trees:
+*Decision trees:*
+
 - Transparent rules  
 - Regulatory-friendly  
 
@@ -344,11 +352,13 @@ Decision trees:
 
 ## Financial Application 2: Fraud Detection {.scrollable}
 
-Characteristics:
+**Characteristics:**
+
 - Highly imbalanced data  
 - Rare events  
 
-Trees:
+**Trees:**
+
 - Capture non-linear interactions  
 - Produce interpretable alerts  
 

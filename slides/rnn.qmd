@@ -1,0 +1,351 @@
+---
+title: "Recurrent Neural Networks"
+subtitle: "Modeling Sequential Data with Memory"
+author: "Miguel Fonseca"
+format:
+  revealjs:
+    toc: true
+---
+
+# Why Do We Need RNNs?
+
+## Feedforward Networks Assume Independence
+
+For MLPs:
+
+$$
+x_i \perp x_j
+$$
+
+But many datasets are sequential:
+
+- Text
+- Speech
+- Financial time-series
+- Biological sequences
+- Sensor signals
+
+---
+
+## Sequential Dependency
+
+Language modeling:
+
+$$
+P(w_t | w_{t-1}, w_{t-2}, ..., w_1)
+$$
+
+The past matters.
+
+---
+
+## Applications
+
+- Language modeling
+- Machine translation
+- Speech recognition
+- Time-series forecasting
+- Genomics
+- Video processing
+
+# The Recurrent Neural Network (RNN)
+
+## Core Recurrence
+
+$$
+h_t = \sigma(W_h h_{t-1} + W_x x_t + b)
+$$
+
+$$
+y_t = W_y h_t
+$$
+
+Same weights reused across time.
+
+---
+
+## Unrolled Through Time
+
+![Unrolled RNN](/images/rnn_unrolled.png)
+
+---
+
+## TensorFlow: Simple RNN
+
+```{python}
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers
+
+model = keras.Sequential([
+    layers.SimpleRNN(64, return_sequences=True),
+    layers.SimpleRNN(32),
+    layers.Dense(1)
+])
+
+model.compile(optimizer="adam", loss="mse")
+model.summary()
+```
+
+---
+
+## Backpropagation Through Time (BPTT)
+
+Training objective:
+
+$$
+\frac{\partial L}{\partial W} =\sum_{t=1}^{T}\frac{\partial L}{\partial h_t}\frac{\partial h_t}{\partial W}
+$$
+
+But:
+
+$$
+\frac{\partial h_t}{\partial h_{t-k}}=\prod_{i=t-k+1}^{t}\frac{\partial h_i}{\partial h_{i-1}}
+$$
+
+Repeated matrix multiplication → instability.
+
+<!-- ## The Vanishing Gradient Problem
+
+Simplified Recurrence
+
+$$
+h_t = \sigma(W_h h_{t-1})
+$$
+
+Derivative:
+
+$$
+\frac{\partial h_t}{\partial h_{t-1}}
+=
+W_h \cdot \text{diag}(1 - \sigma^2(z))
+$$
+
+Since:
+
+$$
+|1 - \sigma^2(z)| \le 1
+$$
+
+Repeated products:
+
+$$
+\prod_{i=1}^{k} W_h \lambda_i
+$$
+
+
+:::{.columns}
+
+::::{.column width="50%"}
+If:
+
+$$
+\rho(W_h) < 1
+$$
+
+>Gradient vanishes.
+
+::::
+
+::::{.column width="50%"}
+
+If:
+
+$$
+\rho(W_h) > 1
+$$
+
+>Exploding gradient.
+
+::::
+
+::: -->
+
+# Long Short-Term Memory (LSTM)
+
+## Key Idea
+
+![LSTM Cell](/images/lstm_architecture.png)
+
+:::{.callout-note}
+Allow constant error flow through a memory cell.
+:::
+
+---
+
+
+## LSTM Equations
+
+**Forget gate:**
+
+$$
+f_t = \sigma(W_f [h_{t-1}, x_t])
+$$
+
+**Input gate:**
+
+$$
+i_t = \sigma(W_i [h_{t-1}, x_t])
+$$
+
+**Cell update:**
+
+$$
+c_t = f_t \odot c_{t-1} + i_t \odot \tilde{c}_t
+$$
+
+**Output:**
+
+$$
+h_t = o_t \odot \tanh(c_t)
+$$
+
+---
+
+## Why LSTM Works
+
+If:
+
+$$
+f_t \approx 1
+$$
+
+Then:
+
+$$
+\frac{\partial c_t}{\partial c_{t-1}} \approx 1
+$$
+
+>Gradient preserved.
+
+---
+
+## Tensorflow: LSTM
+
+```{python}
+model = keras.Sequential([
+    layers.LSTM(64, return_sequences=True),
+    layers.LSTM(32),
+    layers.Dense(1)
+])
+
+model.compile(optimizer="adam", loss="mse")
+```
+
+# Gated Recurrent Unit (GRU)
+
+## GRU Architecture
+
+>Simpler alternative to LSTM.
+
+![GRU Cell](/images/gru_architecture.png)
+
+## GRU Equations
+
+**Update gate:**
+
+$$
+z_t = \sigma(W_z [h_{t-1}, x_t])
+$$
+
+**Reset gate:**
+
+$$
+r_t = \sigma(W_r [h_{t-1}, x_t])
+$$
+
+**Final Update:**
+
+$$
+h_t = (1 - z_t) \odot h_{t-1} + z_t \odot \widetilde{h}_t
+$$
+
+---
+
+## Tensorflow: GRU
+
+```{python}
+model = keras.Sequential([
+    layers.GRU(64, return_sequences=True),
+    layers.GRU(32),
+    layers.Dense(1)
+])
+```
+
+# Regularization in RNNs
+
+## Recurrent Dropout
+
+Standard dropout disrupts temporal memory.
+
+**Recurrent dropout:**
+
+- Applied on recurrent connections
+- Same mask across timesteps
+
+---
+
+## TensorFlow: Recurrent Dropout
+
+```{python}
+model = keras.Sequential([
+    layers.LSTM(
+        64,
+        return_sequences=True,
+        dropout=0.2,
+        recurrent_dropout=0.2
+    ),
+    layers.LSTM(32),
+    layers.Dense(1)
+])
+```
+
+---
+
+## Gradient Clipping
+
+$$
+\nabla_\theta L \leftarrow \frac{\nabla_\theta L}{\max(1, \frac{||\nabla_\theta L||}{\text{clipnorm}})}
+$$
+
+Prevent exploding gradients:
+
+```{python}
+optimizer = tf.keras.optimizers.Adam(
+    learning_rate=0.001,
+    clipnorm=1.0
+)
+```
+
+# Extensions
+
+## Deep RNNs
+
+Stack multiple RNN layers for hierarchical representations:
+
+![Deep RNN](/images/deep_rnn.png)
+
+---
+
+## Bidirectional RNNs
+
+Process sequences in both directions:
+
+![Bidirectional RNN](/images/bidirectional_rnn.png)
+
+# Final Notes
+
+## Model Comparison
+
+| Model | Long Dependencies | Complexity | Speed  |
+| ----- | ----------------- | ---------- | ------ |
+| RNN   | Poor              | Low        | Fast   |
+| LSTM  | Excellent         | High       | Slower |
+| GRU   | Very Good         | Medium     | Faster |
+
+## Limitations of RNNs
+
+- Sequential computation
+- Hard to parallelize
+- Long sequences still challenging
+- Transformers dominate NLP

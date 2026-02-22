@@ -374,7 +374,6 @@ gb = GradientBoostingRegressor(
 )
 ```
 
----
 <!-- 
 ## Time-Series Validation (Important!) {.scrollable}
 
