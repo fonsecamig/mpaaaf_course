@@ -113,6 +113,7 @@
     }
     .reveal .slide:not(.center) {
       height: 100%;
+      overflow-y: auto;
     }
     .reveal .slide.scrollable {
       overflow-y: auto;
@@ -652,7 +653,7 @@ F_m(x) = F_{m-1}(x) + \nu h_m(x)
 </section>
 <section id="python-example-financial-regression" class="slide level2 scrollable">
 <h2>Python Example: Financial Regression</h2>
-<div id="f7906739" class="cell" data-execution_count="1">
+<div id="d1f58478" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> (</span>
 <span id="cb1-2"><a></a>    BaggingRegressor,</span>
 <span id="cb1-3"><a></a>    RandomForestRegressor,</span>
@@ -679,9 +680,6 @@ F_m(x) = F_{m-1}(x) + \nu h_m(x)
 <span id="cb1-24"><a></a>    random_state<span class="op">=</span><span class="dv">42</span></span>
 <span id="cb1-25"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section class="slide level2">
-
 <!-- 
 ## Time-Series Validation (Important!) {.scrollable}
 

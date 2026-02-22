@@ -1,5 +1,152 @@
 [
   {
+    "objectID": "slides/rnn.html#feedforward-networks-assume-independence",
+    "href": "slides/rnn.html#feedforward-networks-assume-independence",
+    "title": "Recurrent Neural Networks",
+    "section": "Feedforward Networks Assume Independence",
+    "text": "Feedforward Networks Assume Independence\nFor MLPs:\n\\[\nx_i \\perp x_j\n\\]\nBut many datasets are sequential:\n\nText\nSpeech\nFinancial time-series\nBiological sequences\nSensor signals"
+  },
+  {
+    "objectID": "slides/rnn.html#sequential-dependency",
+    "href": "slides/rnn.html#sequential-dependency",
+    "title": "Recurrent Neural Networks",
+    "section": "Sequential Dependency",
+    "text": "Sequential Dependency\nLanguage modeling:\n\\[\nP(w_t | w_{t-1}, w_{t-2}, ..., w_1)\n\\]\nThe past matters."
+  },
+  {
+    "objectID": "slides/rnn.html#applications",
+    "href": "slides/rnn.html#applications",
+    "title": "Recurrent Neural Networks",
+    "section": "Applications",
+    "text": "Applications\n\nLanguage modeling\nMachine translation\nSpeech recognition\nTime-series forecasting\nGenomics\nVideo processing"
+  },
+  {
+    "objectID": "slides/rnn.html#core-recurrence",
+    "href": "slides/rnn.html#core-recurrence",
+    "title": "Recurrent Neural Networks",
+    "section": "Core Recurrence",
+    "text": "Core Recurrence\n\\[\nh_t = \\sigma(W_h h_{t-1} + W_x x_t + b)\n\\]\n\\[\ny_t = W_y h_t\n\\]\nSame weights reused across time."
+  },
+  {
+    "objectID": "slides/rnn.html#unrolled-through-time",
+    "href": "slides/rnn.html#unrolled-through-time",
+    "title": "Recurrent Neural Networks",
+    "section": "Unrolled Through Time",
+    "text": "Unrolled Through Time\n\nUnrolled RNN"
+  },
+  {
+    "objectID": "slides/rnn.html#tensorflow-simple-rnn",
+    "href": "slides/rnn.html#tensorflow-simple-rnn",
+    "title": "Recurrent Neural Networks",
+    "section": "TensorFlow: Simple RNN",
+    "text": "TensorFlow: Simple RNN\n\nimport tensorflow as tf\nfrom tensorflow import keras\nfrom tensorflow.keras import layers\n\nmodel = keras.Sequential([\n    layers.SimpleRNN(64, return_sequences=True),\n    layers.SimpleRNN(32),\n    layers.Dense(1)\n])\n\nmodel.compile(optimizer=\"adam\", loss=\"mse\")\nmodel.summary()\n\nModel: \"sequential_12\"\n\n\n\n┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓\n┃ Layer (type)                    ┃ Output Shape           ┃       Param # ┃\n┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩\n│ simple_rnn_6 (SimpleRNN)        │ ?                      │   0 (unbuilt) │\n├─────────────────────────────────┼────────────────────────┼───────────────┤\n│ simple_rnn_7 (SimpleRNN)        │ ?                      │   0 (unbuilt) │\n├─────────────────────────────────┼────────────────────────┼───────────────┤\n│ dense_12 (Dense)                │ ?                      │   0 (unbuilt) │\n└─────────────────────────────────┴────────────────────────┴───────────────┘\n\n\n\n Total params: 0 (0.00 B)\n\n\n\n Trainable params: 0 (0.00 B)\n\n\n\n Non-trainable params: 0 (0.00 B)"
+  },
+  {
+    "objectID": "slides/rnn.html#backpropagation-through-time-bptt",
+    "href": "slides/rnn.html#backpropagation-through-time-bptt",
+    "title": "Recurrent Neural Networks",
+    "section": "Backpropagation Through Time (BPTT)",
+    "text": "Backpropagation Through Time (BPTT)\nTraining objective:\n\\[\n\\frac{\\partial L}{\\partial W} =\\sum_{t=1}^{T}\\frac{\\partial L}{\\partial h_t}\\frac{\\partial h_t}{\\partial W}\n\\]\nBut:\n\\[\n\\frac{\\partial h_t}{\\partial h_{t-k}}=\\prod_{i=t-k+1}^{t}\\frac{\\partial h_i}{\\partial h_{i-1}}\n\\]\nRepeated matrix multiplication → instability."
+  },
+  {
+    "objectID": "slides/rnn.html#key-idea",
+    "href": "slides/rnn.html#key-idea",
+    "title": "Recurrent Neural Networks",
+    "section": "Key Idea",
+    "text": "Key Idea\n\nLSTM Cell\n\n\n\n\n\nNote\n\n\nAllow constant error flow through a memory cell."
+  },
+  {
+    "objectID": "slides/rnn.html#lstm-equations",
+    "href": "slides/rnn.html#lstm-equations",
+    "title": "Recurrent Neural Networks",
+    "section": "LSTM Equations",
+    "text": "LSTM Equations\nForget gate:\n\\[\nf_t = \\sigma(W_f [h_{t-1}, x_t])\n\\]\nInput gate:\n\\[\ni_t = \\sigma(W_i [h_{t-1}, x_t])\n\\]\nCell update:\n\\[\nc_t = f_t \\odot c_{t-1} + i_t \\odot \\tilde{c}_t\n\\]\nOutput:\n\\[\nh_t = o_t \\odot \\tanh(c_t)\n\\]"
+  },
+  {
+    "objectID": "slides/rnn.html#why-lstm-works",
+    "href": "slides/rnn.html#why-lstm-works",
+    "title": "Recurrent Neural Networks",
+    "section": "Why LSTM Works",
+    "text": "Why LSTM Works\nIf:\n\\[\nf_t \\approx 1\n\\]\nThen:\n\\[\n\\frac{\\partial c_t}{\\partial c_{t-1}} \\approx 1\n\\]\n\nGradient preserved."
+  },
+  {
+    "objectID": "slides/rnn.html#tensorflow-lstm",
+    "href": "slides/rnn.html#tensorflow-lstm",
+    "title": "Recurrent Neural Networks",
+    "section": "Tensorflow: LSTM",
+    "text": "Tensorflow: LSTM\n\nmodel = keras.Sequential([\n    layers.LSTM(64, return_sequences=True),\n    layers.LSTM(32),\n    layers.Dense(1)\n])\n\nmodel.compile(optimizer=\"adam\", loss=\"mse\")"
+  },
+  {
+    "objectID": "slides/rnn.html#gru-architecture",
+    "href": "slides/rnn.html#gru-architecture",
+    "title": "Recurrent Neural Networks",
+    "section": "GRU Architecture",
+    "text": "GRU Architecture\n\nSimpler alternative to LSTM.\n\n\nGRU Cell"
+  },
+  {
+    "objectID": "slides/rnn.html#gru-equations",
+    "href": "slides/rnn.html#gru-equations",
+    "title": "Recurrent Neural Networks",
+    "section": "GRU Equations",
+    "text": "GRU Equations\nUpdate gate:\n\\[\nz_t = \\sigma(W_z [h_{t-1}, x_t])\n\\]\nReset gate:\n\\[\nr_t = \\sigma(W_r [h_{t-1}, x_t])\n\\]\nFinal Update:\n\\[\nh_t = (1 - z_t) \\odot h_{t-1} + z_t \\odot \\widetilde{h}_t\n\\]"
+  },
+  {
+    "objectID": "slides/rnn.html#tensorflow-gru",
+    "href": "slides/rnn.html#tensorflow-gru",
+    "title": "Recurrent Neural Networks",
+    "section": "Tensorflow: GRU",
+    "text": "Tensorflow: GRU\n\nmodel = keras.Sequential([\n    layers.GRU(64, return_sequences=True),\n    layers.GRU(32),\n    layers.Dense(1)\n])"
+  },
+  {
+    "objectID": "slides/rnn.html#recurrent-dropout",
+    "href": "slides/rnn.html#recurrent-dropout",
+    "title": "Recurrent Neural Networks",
+    "section": "Recurrent Dropout",
+    "text": "Recurrent Dropout\nStandard dropout disrupts temporal memory.\nRecurrent dropout:\n\nApplied on recurrent connections\nSame mask across timesteps"
+  },
+  {
+    "objectID": "slides/rnn.html#tensorflow-recurrent-dropout",
+    "href": "slides/rnn.html#tensorflow-recurrent-dropout",
+    "title": "Recurrent Neural Networks",
+    "section": "TensorFlow: Recurrent Dropout",
+    "text": "TensorFlow: Recurrent Dropout\n\nmodel = keras.Sequential([\n    layers.LSTM(\n        64,\n        return_sequences=True,\n        dropout=0.2,\n        recurrent_dropout=0.2\n    ),\n    layers.LSTM(32),\n    layers.Dense(1)\n])"
+  },
+  {
+    "objectID": "slides/rnn.html#gradient-clipping",
+    "href": "slides/rnn.html#gradient-clipping",
+    "title": "Recurrent Neural Networks",
+    "section": "Gradient Clipping",
+    "text": "Gradient Clipping\n\\[\n\\nabla_\\theta L \\leftarrow \\frac{\\nabla_\\theta L}{\\max(1, \\frac{||\\nabla_\\theta L||}{\\text{clipnorm}})}\n\\]\nPrevent exploding gradients:\n\noptimizer = tf.keras.optimizers.Adam(\n    learning_rate=0.001,\n    clipnorm=1.0\n)"
+  },
+  {
+    "objectID": "slides/rnn.html#deep-rnns",
+    "href": "slides/rnn.html#deep-rnns",
+    "title": "Recurrent Neural Networks",
+    "section": "Deep RNNs",
+    "text": "Deep RNNs\nStack multiple RNN layers for hierarchical representations:\n\nDeep RNN"
+  },
+  {
+    "objectID": "slides/rnn.html#bidirectional-rnns",
+    "href": "slides/rnn.html#bidirectional-rnns",
+    "title": "Recurrent Neural Networks",
+    "section": "Bidirectional RNNs",
+    "text": "Bidirectional RNNs\nProcess sequences in both directions:\n\nBidirectional RNN"
+  },
+  {
+    "objectID": "slides/rnn.html#model-comparison",
+    "href": "slides/rnn.html#model-comparison",
+    "title": "Recurrent Neural Networks",
+    "section": "Model Comparison",
+    "text": "Model Comparison\n\n\n\nModel\nLong Dependencies\nComplexity\nSpeed\n\n\n\n\nRNN\nPoor\nLow\nFast\n\n\nLSTM\nExcellent\nHigh\nSlower\n\n\nGRU\nVery Good\nMedium\nFaster"
+  },
+  {
+    "objectID": "slides/rnn.html#limitations-of-rnns",
+    "href": "slides/rnn.html#limitations-of-rnns",
+    "title": "Recurrent Neural Networks",
+    "section": "Limitations of RNNs",
+    "text": "Limitations of RNNs\n\nSequential computation\nHard to parallelize\nLong sequences still challenging\nTransformers dominate NLP"
+  },
+  {
     "objectID": "slides/intro_tensorflow2.html#what-is-tensorflow",
     "href": "slides/intro_tensorflow2.html#what-is-tensorflow",
     "title": "TensorFlow 2 — The Basics",
@@ -231,6 +378,244 @@
     "text": "Example 3: Volatility Forecasting\n\nNon-linear alternative to GARCH\nInputs:\n\nReturns\nSquared returns\nMacro variables"
   },
   {
+    "objectID": "slides/cnn.html#why-not-fully-connected-networks-for-images",
+    "href": "slides/cnn.html#why-not-fully-connected-networks-for-images",
+    "title": "Convolutional Neural Networks (CNNs)",
+    "section": "Why not Fully Connected Networks for Images?",
+    "text": "Why not Fully Connected Networks for Images?\n\nImages: 224×224×3 → 150,528 features\nDense layer with 1,000 neurons:\n\n\\[\n150,528 \\times 1000 = 150M \\text{ parameters}\n\\]\nProblems:\n\nToo many parameters\nNo spatial structure\nNo translation invariance"
+  },
+  {
+    "objectID": "slides/cnn.html#key-ideas-behind-cnns",
+    "href": "slides/cnn.html#key-ideas-behind-cnns",
+    "title": "Convolutional Neural Networks (CNNs)",
+    "section": "Key Ideas Behind CNNs",
+    "text": "Key Ideas Behind CNNs\n\nLocal connectivity\nParameter sharing\nTranslation equivariance\nHierarchical feature learning"
+  },
+  {
+    "objectID": "slides/cnn.html#continuous-convolution",
+    "href": "slides/cnn.html#continuous-convolution",
+    "title": "Convolutional Neural Networks (CNNs)",
+    "section": "Continuous Convolution",
+    "text": "Continuous Convolution\n\\[\n(f * g)(t) = \\int_{-\\infty}^{\\infty} f(\\tau) g(t - \\tau) d\\tau\n\\]\nInterpretation:\n\nFlip one function\nSlide it\nCompute overlap (inner product)"
+  },
+  {
+    "objectID": "slides/cnn.html#discrete-convolution-1d",
+    "href": "slides/cnn.html#discrete-convolution-1d",
+    "title": "Convolutional Neural Networks (CNNs)",
+    "section": "Discrete Convolution (1D)",
+    "text": "Discrete Convolution (1D)\n\\[\n(y * k)[n] = \\sum_{m=-\\infty}^{\\infty} y[m] \\cdot k[n - m]\n\\]\nIn practice (finite signals):\n\\[\nz[i] = \\sum_{j=0}^{K-1} x[i-j] \\cdot w[j]\n\\]"
+  },
+  {
+    "objectID": "slides/cnn.html#convolution-as-sliding-dot-product---kernel-filter-small-learnable-weight-matrix---slide-across-input",
+    "href": "slides/cnn.html#convolution-as-sliding-dot-product---kernel-filter-small-learnable-weight-matrix---slide-across-input",
+    "title": "Convolutional Neural Networks (CNNs)",
+    "section": "Convolution as Sliding Dot Product - Kernel (filter) = small learnable weight matrix - Slide across input",
+    "text": "Convolution as Sliding Dot Product - Kernel (filter) = small learnable weight matrix - Slide across input\n\nCompute dot product\n\nThis is:\n\nA linear operator\nWith shared weights"
+  },
+  {
+    "objectID": "slides/cnn.html#convolution-vs-cross-correlation",
+    "href": "slides/cnn.html#convolution-vs-cross-correlation",
+    "title": "Convolutional Neural Networks (CNNs)",
+    "section": "Convolution vs Cross-Correlation",
+    "text": "Convolution vs Cross-Correlation\nDeep learning frameworks usually compute:\n\\[\nz[i] = \\sum_{j=0}^{K-1} x[i+j] w[j]\n\\]\n(No flipping.)\nWe still call it “convolution”."
+  },
+  {
+    "objectID": "slides/cnn.html#when-do-we-use-them",
+    "href": "slides/cnn.html#when-do-we-use-them",
+    "title": "Convolutional Neural Networks (CNNs)",
+    "section": "When do we use them?",
+    "text": "When do we use them?\n\nTime series\nAudio\nFinancial data\nGenomics sequences"
+  },
+  {
+    "objectID": "slides/cnn.html#d-convolution-example",
+    "href": "slides/cnn.html#d-convolution-example",
+    "title": "Convolutional Neural Networks (CNNs)",
+    "section": "1D Convolution Example",
+    "text": "1D Convolution Example\nInput:\n\\[\nx = [1, 2, 3, 4, 5]\n\\]\nKernel: \\[\nw = [1, 0, -1]\n\\]\nOutput (stride 1):\n\\[\nz[0] = 1*1 + 2*0 + 3*(-1)\n\\]"
+  },
+  {
+    "objectID": "slides/cnn.html#d-convolution-in-tensorflow",
+    "href": "slides/cnn.html#d-convolution-in-tensorflow",
+    "title": "Convolutional Neural Networks (CNNs)",
+    "section": "1D Convolution in TensorFlow",
+    "text": "1D Convolution in TensorFlow\n\nimport tensorflow as tf\n\nmodel = tf.keras.Sequential([\n    tf.keras.layers.Conv1D(\n        filters=32,\n        kernel_size=3,\n        activation='relu',\n        input_shape=(100, 1)\n    )\n])"
+  },
+  {
+    "objectID": "slides/cnn.html#d-convolutions-2",
+    "href": "slides/cnn.html#d-convolutions-2",
+    "title": "Convolutional Neural Networks (CNNs)",
+    "section": "2D Convolutions",
+    "text": "2D Convolutions\nUsed for:\n\nImages\nVideo frames\nSpatial data"
+  },
+  {
+    "objectID": "slides/cnn.html#d-convolution-formula",
+    "href": "slides/cnn.html#d-convolution-formula",
+    "title": "Convolutional Neural Networks (CNNs)",
+    "section": "2D Convolution Formula",
+    "text": "2D Convolution Formula\n\\[\nZ(i,j) = \\sum_m \\sum_n X(i+m, j+n) W(m,n)\n\\]\nKernel is now a matrix."
+  },
+  {
+    "objectID": "slides/cnn.html#convolution-over-rgb-images",
+    "href": "slides/cnn.html#convolution-over-rgb-images",
+    "title": "Convolutional Neural Networks (CNNs)",
+    "section": "Convolution Over RGB Images",
+    "text": "Convolution Over RGB Images\nInput shape:\n\\[\nH \\times W \\times C\n\\]\nKernel shape:\n\\[\nk \\times k \\times C\n\\]\nEach filter spans all channels."
+  },
+  {
+    "objectID": "slides/cnn.html#multiple-filters",
+    "href": "slides/cnn.html#multiple-filters",
+    "title": "Convolutional Neural Networks (CNNs)",
+    "section": "Multiple Filters",
+    "text": "Multiple Filters\nIf we use 64 filters:\nOutput depth:\n\\[\nH' \\times W' \\times 64\n\\]\nEach filter learns a feature:\n\nedges\ntextures\nshapes"
+  },
+  {
+    "objectID": "slides/cnn.html#d-convolution-in-tensorflow-1",
+    "href": "slides/cnn.html#d-convolution-in-tensorflow-1",
+    "title": "Convolutional Neural Networks (CNNs)",
+    "section": "2D Convolution in TensorFlow",
+    "text": "2D Convolution in TensorFlow\n\nmodel = tf.keras.Sequential([\n    tf.keras.layers.Conv2D(\n        filters=32,\n        kernel_size=(3,3),\n        activation='relu',\n        input_shape=(28, 28, 1)\n    )\n])"
+  },
+  {
+    "objectID": "slides/cnn.html#why-padding",
+    "href": "slides/cnn.html#why-padding",
+    "title": "Convolutional Neural Networks (CNNs)",
+    "section": "Why padding?",
+    "text": "Why padding?\nWithout padding:\n\nSpatial dimensions shrink\n\nWith kernel size 3:\n\\[H_{out} = h - 2\\]"
+  },
+  {
+    "objectID": "slides/cnn.html#types-of-padding",
+    "href": "slides/cnn.html#types-of-padding",
+    "title": "Convolutional Neural Networks (CNNs)",
+    "section": "Types of Padding",
+    "text": "Types of Padding\nValid Padding\n\nNo padding\nOutput shrinks\n\nSame Padding\n\nZero-padding\nOutput size preserved"
+  },
+  {
+    "objectID": "slides/cnn.html#output-size-formula",
+    "href": "slides/cnn.html#output-size-formula",
+    "title": "Convolutional Neural Networks (CNNs)",
+    "section": "Output Size Formula",
+    "text": "Output Size Formula\n\\[\nH_{out} = \\frac{H + 2P - K}{S} + 1\n\\]\nWhere:\n\n\\(P\\): padding\n\\(K\\): kernel size\n\\(S\\): stride"
+  },
+  {
+    "objectID": "slides/cnn.html#why-pooling",
+    "href": "slides/cnn.html#why-pooling",
+    "title": "Convolutional Neural Networks (CNNs)",
+    "section": "Why Pooling?",
+    "text": "Why Pooling?\n\nDownsample feature maps\nReduce parameters\nIncrease receptive field\nAdd translation invariance"
+  },
+  {
+    "objectID": "slides/cnn.html#max-pooling",
+    "href": "slides/cnn.html#max-pooling",
+    "title": "Convolutional Neural Networks (CNNs)",
+    "section": "Max Pooling",
+    "text": "Max Pooling\n\\[Z = \\max(x_{window})\\]\nKeeps strongest activation."
+  },
+  {
+    "objectID": "slides/cnn.html#average-pooling",
+    "href": "slides/cnn.html#average-pooling",
+    "title": "Convolutional Neural Networks (CNNs)",
+    "section": "Average Pooling",
+    "text": "Average Pooling\n\\[Z = \\text{mean}(x_{window})\\]\nSmoother representation."
+  },
+  {
+    "objectID": "slides/cnn.html#pooling-in-tensorflow",
+    "href": "slides/cnn.html#pooling-in-tensorflow",
+    "title": "Convolutional Neural Networks (CNNs)",
+    "section": "Pooling in TensorFlow",
+    "text": "Pooling in TensorFlow\n\ntf.keras.layers.MaxPooling2D(pool_size=(2,2))\n\n&lt;MaxPooling2D name=max_pooling2d_12, built=True&gt;"
+  },
+  {
+    "objectID": "slides/cnn.html#cnn-architecture-pattern",
+    "href": "slides/cnn.html#cnn-architecture-pattern",
+    "title": "Convolutional Neural Networks (CNNs)",
+    "section": "CNN Architecture Pattern",
+    "text": "CNN Architecture Pattern\nTypical CNN:\nConv → ReLU → Conv → ReLU → Pool Conv → ReLU → Conv → ReLU → Pool Flatten → Dense → Output"
+  },
+  {
+    "objectID": "slides/cnn.html#example-cnn-mnist",
+    "href": "slides/cnn.html#example-cnn-mnist",
+    "title": "Convolutional Neural Networks (CNNs)",
+    "section": "Example CNN (MNIST)",
+    "text": "Example CNN (MNIST)\n\nmodel = tf.keras.Sequential([\n    tf.keras.layers.Conv2D(32, 3, activation='relu', padding='same'),\n    tf.keras.layers.MaxPooling2D(2),\n    tf.keras.layers.Conv2D(64, 3, activation='relu', padding='same'),\n    tf.keras.layers.MaxPooling2D(2),\n    tf.keras.layers.Flatten(),\n    tf.keras.layers.Dense(128, activation='relu'),\n    tf.keras.layers.Dense(10, activation='softmax')\n])"
+  },
+  {
+    "objectID": "slides/cnn.html#receptive-field",
+    "href": "slides/cnn.html#receptive-field",
+    "title": "Convolutional Neural Networks (CNNs)",
+    "section": "Receptive Field",
+    "text": "Receptive Field\nThe receptive field grows with depth.\nDeeper neurons:\n\n“see” larger parts of image\nlearn abstract features"
+  },
+  {
+    "objectID": "slides/cnn.html#vanishing-gradient-problem",
+    "href": "slides/cnn.html#vanishing-gradient-problem",
+    "title": "Convolutional Neural Networks (CNNs)",
+    "section": "Vanishing Gradient Problem",
+    "text": "Vanishing Gradient Problem\nDeep CNNs suffer from:\n\nGradient decay\nHard optimization\nSolution: Residual Connections"
+  },
+  {
+    "objectID": "slides/cnn.html#residual-connections",
+    "href": "slides/cnn.html#residual-connections",
+    "title": "Convolutional Neural Networks (CNNs)",
+    "section": "Residual Connections",
+    "text": "Residual Connections\nIntroduced in:\n\nResNet (2015) [REF AQUI]\n\nInstead of learning:\n\\[HD(x)\\]\nLearn:\n\\[\nF(x) = H(x) - x\n\\]\nSo:\n\\[\nH(x) = F(x) + x\n\\]"
+  },
+  {
+    "objectID": "slides/cnn.html#residual-block",
+    "href": "slides/cnn.html#residual-block",
+    "title": "Convolutional Neural Networks (CNNs)",
+    "section": "Residual Block",
+    "text": "Residual Block\nOutput:\n\\[y = F(x) + x\\]\nThis is called a skip connection."
+  },
+  {
+    "objectID": "slides/cnn.html#why-residuals-help",
+    "href": "slides/cnn.html#why-residuals-help",
+    "title": "Convolutional Neural Networks (CNNs)",
+    "section": "Why Residuals Help",
+    "text": "Why Residuals Help\n\nEasier optimization\nIdentity mapping available\nPrevents degradation\nEnables 100+ layer networks"
+  },
+  {
+    "objectID": "slides/cnn.html#residual-block-in-tensorflow",
+    "href": "slides/cnn.html#residual-block-in-tensorflow",
+    "title": "Convolutional Neural Networks (CNNs)",
+    "section": "Residual Block in TensorFlow",
+    "text": "Residual Block in TensorFlow\n\nfrom tensorflow.keras import layers\n\ndef residual_block(x, filters):\n    shortcut = x\n    \n    x = layers.Conv2D(filters, 3, padding='same', activation='relu')(x)\n    x = layers.Conv2D(filters, 3, padding='same')(x)\n    \n    x = layers.Add()([x, shortcut])\n    x = layers.Activation('relu')(x)\n    \n    return x"
+  },
+  {
+    "objectID": "slides/cnn.html#full-cnn-with-residuals",
+    "href": "slides/cnn.html#full-cnn-with-residuals",
+    "title": "Convolutional Neural Networks (CNNs)",
+    "section": "Full CNN with Residuals",
+    "text": "Full CNN with Residuals\n\ninputs = tf.keras.Input(shape=(32,32,3))\nx = tf.keras.layers.Conv2D(32, 3, padding='same')(inputs)\n\nx = residual_block(x, 32)\nx = tf.keras.layers.MaxPooling2D()(x)\n\nx = residual_block(x, 32)\nx = tf.keras.layers.GlobalAveragePooling2D()(x)\n\noutputs = tf.keras.layers.Dense(10, activation='softmax')(x)\n\nmodel = tf.keras.Model(inputs, outputs)"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Modeling, Programming and Machine Learning for Financial Analysis",
+    "section": "",
+    "text": "Slides\n\n\n\n\nExercise 1"
+  },
+  {
+    "objectID": "index.html#introduction-to-machine-learning",
+    "href": "index.html#introduction-to-machine-learning",
+    "title": "Modeling, Programming and Machine Learning for Financial Analysis",
+    "section": "",
+    "text": "Slides\n\n\n\n\nExercise 1"
+  },
+  {
+    "objectID": "index.html#decision-trees",
+    "href": "index.html#decision-trees",
+    "title": "Modeling, Programming and Machine Learning for Financial Analysis",
+    "section": "Decision Trees",
+    "text": "Decision Trees\n\nDecision trees\n\nSlides\n\n\n\nEnsemble Methods\n\nSlides\n\n\n\nExercises\n\nExercise 1\nExercise 2"
+  },
+  {
+    "objectID": "index.html#references",
+    "href": "index.html#references",
+    "title": "Modeling, Programming and Machine Learning for Financial Analysis",
+    "section": "References",
+    "text": "References\n\nBishop, C. M., & Bishop, H. (2024). Deep learning: Foundations and concepts. Springer. https://www.bishopbook.com\nChollet, F. (2021). Deep learning with Python (2nd ed.). Manning Publications.\nJames, G., Witten, D., Hastie, T., Tibshirani, R., & Taylor, J. (2023). An introduction to statistical learning: With applications in Python. Springer. https://www.statlearning.com\nJansen, S. (2020). Machine Learning for Algorithmic Trading. Packt.\nZhang, A., Lipton, Z. C., Li, M., & Smola, A. J. (2023). Dive into deep learning. Cambridge University Press. https://d2l.ai"
+  },
+  {
     "objectID": "slides/advanced_decision_trees.html#motivation-why-ensembles-in-finance",
     "href": "slides/advanced_decision_trees.html#motivation-why-ensembles-in-finance",
     "title": "Advanced Decision Trees",
@@ -399,20 +784,6 @@
     "text": "Hyperparameters\n\nn_estimators \\(\\rightarrow\\) number of trees\nlearning_rate \\(\\rightarrow\\) step size\nmax_depth / num_leaves \\(\\rightarrow\\) complexity\nsubsample \\(\\rightarrow\\) row sampling\ncolsample_bytree \\(\\rightarrow\\) feature sampling Golden rule:\n\n\n\n\n\n\n\nTip\n\n\nLower learning rate \\(\\implies\\) more trees \\(\\implies\\) more stability"
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "MPAAAF",
-    "section": "",
-    "text": "Graduate-level course (12 weeks × 4h/week) on ML for financial data with emphasis on time-series modeling, backtesting, and finance-aware metrics."
-  },
-  {
-    "objectID": "index.html#overview",
-    "href": "index.html#overview",
-    "title": "MPAAAF",
-    "section": "",
-    "text": "Graduate-level course (12 weeks × 4h/week) on ML for financial data with emphasis on time-series modeling, backtesting, and finance-aware metrics."
-  },
-  {
     "objectID": "slides/decision_trees.html#why-decision-trees",
     "href": "slides/decision_trees.html#why-decision-trees",
     "title": "Decision Trees for Financial Data",
@@ -522,42 +893,42 @@
     "href": "slides/decision_trees.html#feature-importance-concept",
     "title": "Decision Trees for Financial Data",
     "section": "Feature Importance: Concept",
-    "text": "Feature Importance: Concept\nDecision tree importance is based on: - Reduction in impurity - Aggregated over all splits\n\\[\nFI_j = \\sum_{t \\in j} \\Delta I_t\n\\]"
+    "text": "Feature Importance: Concept\nDecision tree importance is based on:\n\nReduction in impurity\nAggregated over all splits\n\n\\[\nFI_j = \\sum_{t \\in j} \\Delta I_t\n\\]"
   },
   {
     "objectID": "slides/decision_trees.html#impurity-based-importance",
     "href": "slides/decision_trees.html#impurity-based-importance",
     "title": "Decision Trees for Financial Data",
     "section": "Impurity-Based Importance",
-    "text": "Impurity-Based Importance\nPros - Fast - Built-in\nCons - Biased toward: - Continuous variables\n- High-cardinality features"
+    "text": "Impurity-Based Importance\nPros\n\nFast\nBuilt-in\n\nCons\n\nBiased toward:\n\nContinuous variables\n\nHigh-cardinality features"
   },
   {
     "objectID": "slides/decision_trees.html#permutation-importance",
     "href": "slides/decision_trees.html#permutation-importance",
     "title": "Decision Trees for Financial Data",
     "section": "Permutation Importance",
-    "text": "Permutation Importance\nIdea: - Shuffle one feature at a time\n- Measure performance degradation\nAdvantages: - Model-agnostic\n- Less biased"
+    "text": "Permutation Importance\nIdea:\n\nShuffle one feature at a time\n\nMeasure performance degradation\n\nAdvantages:\n\nModel-agnostic\n\nLess biased"
   },
   {
     "objectID": "slides/decision_trees.html#feature-importance-in-finance",
     "href": "slides/decision_trees.html#feature-importance-in-finance",
     "title": "Decision Trees for Financial Data",
     "section": "Feature Importance in Finance",
-    "text": "Feature Importance in Finance\nInterpret carefully: - Correlated predictors\n- Lagged variables\n- Proxy features\nBest practice: - Combine with SHAP\n- Apply economic intuition"
+    "text": "Feature Importance in Finance\nInterpret carefully:\n\nCorrelated predictors\n\nLagged variables\n\nProxy features\n\nBest practice:\n\nCombine with SHAP\n\nApply economic intuition"
   },
   {
     "objectID": "slides/decision_trees.html#financial-application-1-credit-scoring",
     "href": "slides/decision_trees.html#financial-application-1-credit-scoring",
     "title": "Decision Trees for Financial Data",
     "section": "Financial Application 1: Credit Scoring",
-    "text": "Financial Application 1: Credit Scoring\nInputs - Income\n- Debt ratio\n- Payment history\nTarget - Default / No default\nDecision trees: - Transparent rules\n- Regulatory-friendly"
+    "text": "Financial Application 1: Credit Scoring\nInputs\n\nIncome\n\nDebt ratio\n\nPayment history\n\nTarget\n\nDefault / No default\n\nDecision trees:\n\nTransparent rules\n\nRegulatory-friendly"
   },
   {
     "objectID": "slides/decision_trees.html#financial-application-2-fraud-detection",
     "href": "slides/decision_trees.html#financial-application-2-fraud-detection",
     "title": "Decision Trees for Financial Data",
     "section": "Financial Application 2: Fraud Detection",
-    "text": "Financial Application 2: Fraud Detection\nCharacteristics: - Highly imbalanced data\n- Rare events\nTrees: - Capture non-linear interactions\n- Produce interpretable alerts"
+    "text": "Financial Application 2: Fraud Detection\nCharacteristics:\n\nHighly imbalanced data\n\nRare events\n\nTrees:\n\nCapture non-linear interactions\n\nProduce interpretable alerts"
   },
   {
     "objectID": "slides/decision_trees.html#financial-application-3-trading-rules",
@@ -733,5 +1104,166 @@
     "title": "Introduction to Machine Learning",
     "section": "Best Practices in CV",
     "text": "Best Practices in CV\nCross-validation is often used to:\n\nCompare models\nTune hyperparameters\n\n\n\n\n\n\n\nWarning\n\n\nCross-Validation \\(\\neq\\) Test Set\n\n\n\n\n\n\n\n\n\n\nImportant Rule\n\n\nNever touch the test set until the very end\n\n\n\n\n\nCV is for model selection\nTest set is for final evaluation"
+  },
+  {
+    "objectID": "slides/regularization.html#why-regularisation",
+    "href": "slides/regularization.html#why-regularisation",
+    "title": "Regularisation for Neural Networks",
+    "section": "Why Regularisation?",
+    "text": "Why Regularisation?\n\nNeural networks are high-capacity models\nOverfitting is common\nTraining loss ↓ does not imply test loss ↓\n\nGoal:\n\nImprove generalisation by controlling effective model complexity"
+  },
+  {
+    "objectID": "slides/regularization.html#overfitting-in-neural-networks",
+    "href": "slides/regularization.html#overfitting-in-neural-networks",
+    "title": "Regularisation for Neural Networks",
+    "section": "Overfitting in Neural Networks",
+    "text": "Overfitting in Neural Networks\n\nMany parameters\nFlexible decision boundaries\nCan memorise training data\n\nTypical symptoms:\n\nTraining error → 0\nValidation error ↑"
+  },
+  {
+    "objectID": "slides/regularization.html#what-is-regularisation",
+    "href": "slides/regularization.html#what-is-regularisation",
+    "title": "Regularisation for Neural Networks",
+    "section": "What Is Regularisation?",
+    "text": "What Is Regularisation?\nDefinition\nAny technique that constrains learning to improve out-of-sample performance.\nThree perspectives\n\nPenalise complexity\n\nInject noise\n\nStop training early"
+  },
+  {
+    "objectID": "slides/regularization.html#explicit-regularisation-l2-weight-decay",
+    "href": "slides/regularization.html#explicit-regularisation-l2-weight-decay",
+    "title": "Regularisation for Neural Networks",
+    "section": "Explicit Regularisation: L2 (Weight Decay)",
+    "text": "Explicit Regularisation: L2 (Weight Decay)\n\\[\n\\mathscr{L}(\\theta) = \\mathscr{L}_{data}(\\theta) + \\lambda \\sum_i w_i^2\n\\]\nEffects\n\nPenalises large weights\nEncourages smooth functions\nImproves conditioning"
+  },
+  {
+    "objectID": "slides/regularization.html#geometric-interpretation-of-l2",
+    "href": "slides/regularization.html#geometric-interpretation-of-l2",
+    "title": "Regularisation for Neural Networks",
+    "section": "Geometric Interpretation of L2",
+    "text": "Geometric Interpretation of L2\n\nPenalises distance from origin\nShrinks parameters continuously\nEquivalent to Gaussian prior on weights"
+  },
+  {
+    "objectID": "slides/regularization.html#l1-regularisation",
+    "href": "slides/regularization.html#l1-regularisation",
+    "title": "Regularisation for Neural Networks",
+    "section": "L1 Regularisation",
+    "text": "L1 Regularisation\n\\[\n\\mathscr{L}(\\theta) = \\mathscr{L}_{data}(\\theta) + \\lambda \\sum_i |w_i|\n\\]\nKey properties\n\nProduces sparse solutions\nPerforms implicit feature selection\nLess common in deep networks"
+  },
+  {
+    "objectID": "slides/regularization.html#l1-vs-l2",
+    "href": "slides/regularization.html#l1-vs-l2",
+    "title": "Regularisation for Neural Networks",
+    "section": "L1 vs L2",
+    "text": "L1 vs L2\n\n\n\nAspect\nL1\nL2\n\n\n\n\nSparsity\nYes\nNo\n\n\nWeight shrinkage\nHard\nSmooth\n\n\nInterpretability\nHigher\nLower"
+  },
+  {
+    "objectID": "slides/regularization.html#stochastic-regularisation-1",
+    "href": "slides/regularization.html#stochastic-regularisation-1",
+    "title": "Regularisation for Neural Networks",
+    "section": "Stochastic Regularisation",
+    "text": "Stochastic Regularisation\n\nInject randomness during training\nForces robustness\nPrevents co-adaptation\n\nExamples:\n\nDropout\nNoise injection\nBatchNorm (indirectly)"
+  },
+  {
+    "objectID": "slides/regularization.html#dropout",
+    "href": "slides/regularization.html#dropout",
+    "title": "Regularisation for Neural Networks",
+    "section": "Dropout",
+    "text": "Dropout\nIdea\n\nRandomly drop neurons during training\n\n\\[\n\\widetilde{h} = h \\cdot \\text{Bernoulli}(p)\n\\]\nInterpretation\n\nApproximate ensemble learning\nStrong regularisation effect"
+  },
+  {
+    "objectID": "slides/regularization.html#dropout-practical-notes",
+    "href": "slides/regularization.html#dropout-practical-notes",
+    "title": "Regularisation for Neural Networks",
+    "section": "Dropout: Practical Notes",
+    "text": "Dropout: Practical Notes\n\nMost effective in fully-connected layers\nTypical rates: 0.1–0.5\nOften unnecessary with BatchNorm"
+  },
+  {
+    "objectID": "slides/regularization.html#normalisation-layers-1",
+    "href": "slides/regularization.html#normalisation-layers-1",
+    "title": "Regularisation for Neural Networks",
+    "section": "Normalisation Layers",
+    "text": "Normalisation Layers\nPrimary purpose:\n\nStabilise optimisation\n\nSecondary effect:\n\nRegularisation through noise or smoothing"
+  },
+  {
+    "objectID": "slides/regularization.html#batch-normalization",
+    "href": "slides/regularization.html#batch-normalization",
+    "title": "Regularisation for Neural Networks",
+    "section": "Batch Normalization",
+    "text": "Batch Normalization\nFor mini-batch \\(B\\):\n\\[\n\\widehat{x} = \\frac{x - \\mu_B}{\\sqrt{\\sigma_B^2 + \\epsilon}}, \\quad\ny = \\gamma \\widehat{x} + \\beta\n\\]"
+  },
+  {
+    "objectID": "slides/regularization.html#why-batchnorm-works",
+    "href": "slides/regularization.html#why-batchnorm-works",
+    "title": "Regularisation for Neural Networks",
+    "section": "Why BatchNorm Works",
+    "text": "Why BatchNorm Works\n\nReduces sensitivity to parameter scale\nAllows higher learning rates\nImproves gradient flow"
+  },
+  {
+    "objectID": "slides/regularization.html#batchnorm-as-regularisation",
+    "href": "slides/regularization.html#batchnorm-as-regularisation",
+    "title": "Regularisation for Neural Networks",
+    "section": "BatchNorm as Regularisation",
+    "text": "BatchNorm as Regularisation\n\nUses batch statistics\nIntroduces stochastic noise\nNoise depends on batch composition\n\nResult\n\nReduced overfitting\nOften replaces dropout"
+  },
+  {
+    "objectID": "slides/regularization.html#limitations-of-batchnorm",
+    "href": "slides/regularization.html#limitations-of-batchnorm",
+    "title": "Regularisation for Neural Networks",
+    "section": "Limitations of BatchNorm",
+    "text": "Limitations of BatchNorm\n\nDepends on batch size\nPoor with small batches\nNot ideal for:\n\nRNNs\nOnline learning\nTransformers"
+  },
+  {
+    "objectID": "slides/regularization.html#layer-normalization",
+    "href": "slides/regularization.html#layer-normalization",
+    "title": "Regularisation for Neural Networks",
+    "section": "Layer Normalization",
+    "text": "Layer Normalization\nNormalises within a single sample:\n\\[\n\\widehat{x} = \\frac{x - \\mu_{features}}{\\sqrt{\\sigma_{features}^2 + \\epsilon}}\n\\]"
+  },
+  {
+    "objectID": "slides/regularization.html#why-layernorm",
+    "href": "slides/regularization.html#why-layernorm",
+    "title": "Regularisation for Neural Networks",
+    "section": "Why LayerNorm?",
+    "text": "Why LayerNorm?\n\nIndependent of batch size\nStable for sequential models\nStandard in Transformers\n\nRegularisation effect\n\nSmoother optimisation landscape\nLess noise than BatchNorm"
+  },
+  {
+    "objectID": "slides/regularization.html#batchnorm-vs-layernorm",
+    "href": "slides/regularization.html#batchnorm-vs-layernorm",
+    "title": "Regularisation for Neural Networks",
+    "section": "BatchNorm vs LayerNorm",
+    "text": "BatchNorm vs LayerNorm\n\n\n\nAspect\nBatchNorm\nLayerNorm\n\n\n\n\nNormalisation axis\nBatch\nFeatures\n\n\nBatch-size dependent\nYes\nNo\n\n\nNoise level\nHigh\nLow\n\n\nTypical use\nCNNs\nTransformers"
+  },
+  {
+    "objectID": "slides/regularization.html#implicit-regularisation-1",
+    "href": "slides/regularization.html#implicit-regularisation-1",
+    "title": "Regularisation for Neural Networks",
+    "section": "Implicit Regularisation",
+    "text": "Implicit Regularisation\nNot explicitly added to the loss.\nExamples:\n\nEarly stopping\nSGD noise\nFinite training time"
+  },
+  {
+    "objectID": "slides/regularization.html#early-stopping",
+    "href": "slides/regularization.html#early-stopping",
+    "title": "Regularisation for Neural Networks",
+    "section": "Early Stopping",
+    "text": "Early Stopping\n\nStop training when validation loss increases\nPrevents late-stage memorisation\n\nTheory\n\nEquivalent to L2 in linear models"
+  },
+  {
+    "objectID": "slides/regularization.html#regularisation-strategy",
+    "href": "slides/regularization.html#regularisation-strategy",
+    "title": "Regularisation for Neural Networks",
+    "section": "Regularisation Strategy",
+    "text": "Regularisation Strategy\n\nStart with:\n\nWeight decay\nEarly stopping\n\nAdd:\n\nBatchNorm or LayerNorm\n\nUse Dropout:\n\nIf BatchNorm is absent\nOr in final dense layers"
+  },
+  {
+    "objectID": "slides/regularization.html#common-anti-patterns",
+    "href": "slides/regularization.html#common-anti-patterns",
+    "title": "Regularisation for Neural Networks",
+    "section": "Common Anti-Patterns",
+    "text": "Common Anti-Patterns\n\nDropout + BatchNorm everywhere\nOver-regularising small datasets\nIgnoring optimiser interactions"
+  },
+  {
+    "objectID": "slides/regularization.html#key-takeaways",
+    "href": "slides/regularization.html#key-takeaways",
+    "title": "Regularisation for Neural Networks",
+    "section": "Key Takeaways",
+    "text": "Key Takeaways\n\nRegularisation controls effective capacity\nNormalisation layers regularise implicitly\nMethods are complementary\nValidation performance is the final arbiter\n\n\nGeneralisation is engineered, not accidental."
   }
 ]

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>MPAAAF</title>
+<title>Modeling, Programming and Machine Learning for Financial Analysis – MPAAAF</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -109,14 +109,6 @@ ul.task-list li input[type="checkbox"] {
     <a class="dropdown-item" href="./slides/advanced_decision_trees.html">
  <span class="dropdown-text">Advanced Decision Trees</span></a>
   </li>  
-        <li>
-    <a class="dropdown-item" href="./slides/feed_forward_neural_networks.html">
- <span class="dropdown-text">Feed Forward Neural Networks</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./slides/intro_tensorflow2.html">
- <span class="dropdown-text">Introduction to TensorFlow 2</span></a>
-  </li>  
     </ul>
   </li>
 </ul>
@@ -135,7 +127,17 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#introduction-to-machine-learning" id="toc-introduction-to-machine-learning" class="nav-link active" data-scroll-target="#introduction-to-machine-learning">Introduction to Machine Learning</a>
+  <ul class="collapse">
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
+  </ul></li>
+  <li><a href="#decision-trees" id="toc-decision-trees" class="nav-link" data-scroll-target="#decision-trees">Decision Trees</a>
+  <ul class="collapse">
+  <li><a href="#decision-trees-1" id="toc-decision-trees-1" class="nav-link" data-scroll-target="#decision-trees-1">Decision trees</a></li>
+  <li><a href="#ensemble-methods" id="toc-ensemble-methods" class="nav-link" data-scroll-target="#ensemble-methods">Ensemble Methods</a></li>
+  <li><a href="#exercises-1" id="toc-exercises-1" class="nav-link" data-scroll-target="#exercises-1">Exercises</a></li>
+  </ul></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 </nav>
     </div>
@@ -144,7 +146,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">MPAAAF</h1>
+<h1 class="title">Modeling, Programming and Machine Learning for Financial Analysis</h1>
 </div>
 
 
@@ -161,9 +163,49 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="overview" class="level2">
-<h2 class="anchored" data-anchor-id="overview">Overview</h2>
-<p>Graduate-level course (12 weeks × 4h/week) on ML for financial data with emphasis on time-series modeling, backtesting, and finance-aware metrics.</p>
+<section id="introduction-to-machine-learning" class="level2">
+<h2 class="anchored" data-anchor-id="introduction-to-machine-learning">Introduction to Machine Learning</h2>
+<ul>
+<li><a href="./slides/intro_ml.html">Slides</a></li>
+</ul>
+<section id="exercises" class="level3">
+<h3 class="anchored" data-anchor-id="exercises">Exercises</h3>
+<ul>
+<li><a href="notebooks/exerc_kfold_cv.ipynb">Exercise 1</a></li>
+</ul>
+</section>
+</section>
+<section id="decision-trees" class="level2">
+<h2 class="anchored" data-anchor-id="decision-trees">Decision Trees</h2>
+<section id="decision-trees-1" class="level3">
+<h3 class="anchored" data-anchor-id="decision-trees-1">Decision trees</h3>
+<ul>
+<li><a href="./slides/decision_trees.html">Slides</a></li>
+</ul>
+</section>
+<section id="ensemble-methods" class="level3">
+<h3 class="anchored" data-anchor-id="ensemble-methods">Ensemble Methods</h3>
+<ul>
+<li><a href="./slides/advanced_decision_trees.html">Slides</a></li>
+</ul>
+</section>
+<section id="exercises-1" class="level3">
+<h3 class="anchored" data-anchor-id="exercises-1">Exercises</h3>
+<ul>
+<li><a href="notebooks/exerc_decision_trees_01.ipynb">Exercise 1</a></li>
+<li><a href="notebooks/exerc_decision_trees_02.ipynb">Exercise 2</a></li>
+</ul>
+</section>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li><p>Bishop, C. M., &amp; Bishop, H. (2024). <em>Deep learning: Foundations and concepts.</em> Springer. https://www.bishopbook.com</p></li>
+<li><p>Chollet, F. (2021). <em>Deep learning with Python (2nd ed.).</em> Manning Publications.</p></li>
+<li><p>James, G., Witten, D., Hastie, T., Tibshirani, R., &amp; Taylor, J. (2023). <em>An introduction to statistical learning: With applications in Python.</em> Springer. https://www.statlearning.com</p></li>
+<li><p>Jansen, S. (2020). <em>Machine Learning for Algorithmic Trading.</em> Packt.</p></li>
+<li><p>Zhang, A., Lipton, Z. C., Li, M., &amp; Smola, A. J. (2023). <em>Dive into deep learning.</em> Cambridge University Press. https://d2l.ai</p></li>
+</ul>
 
 
 </section>

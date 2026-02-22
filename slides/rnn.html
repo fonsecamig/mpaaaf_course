@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"><head>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-html/tabby.min.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -10,7 +10,7 @@
   <meta name="generator" content="quarto-1.7.32">
 
   <meta name="author" content="Miguel Fonseca">
-  <title>MPAAAF – Introduction to Machine Learning</title>
+  <title>MPAAAF – Recurrent Neural Networks</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -190,14 +190,17 @@
       margin-right: 0; 
     }
   </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+  
+  <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 </head>
 <body class="quarto-light">
   <div class="reveal">
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">Introduction to Machine Learning</h1>
-  <p class="subtitle">Core Concepts and First Examples</p>
+  <h1 class="title">Recurrent Neural Networks</h1>
+  <p class="subtitle">Modeling Sequential Data with Memory</p>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -207,439 +210,199 @@ Miguel Fonseca
 </div>
 </div>
 
+</section><section id="TOC">
+<nav role="doc-toc"> 
+<h2 id="toc-title">Table of contents</h2>
+<ul>
+<li><a href="#/why-do-we-need-rnns" id="/toc-why-do-we-need-rnns">Why Do We Need RNNs?</a></li>
+<li><a href="#/the-recurrent-neural-network-rnn" id="/toc-the-recurrent-neural-network-rnn">The Recurrent Neural Network (RNN)</a></li>
+<li><a href="#/long-short-term-memory-lstm" id="/toc-long-short-term-memory-lstm">Long Short-Term Memory (LSTM)</a></li>
+<li><a href="#/gated-recurrent-unit-gru" id="/toc-gated-recurrent-unit-gru">Gated Recurrent Unit (GRU)</a></li>
+<li><a href="#/regularization-in-rnns" id="/toc-regularization-in-rnns">Regularization in RNNs</a></li>
+<li><a href="#/extensions" id="/toc-extensions">Extensions</a></li>
+<li><a href="#/final-notes" id="/toc-final-notes">Final Notes</a></li>
+</ul>
+</nav>
 </section>
 <section>
-<section id="definition" class="title-slide slide level1 center">
-<h1>Definition</h1>
+<section id="why-do-we-need-rnns" class="title-slide slide level1 center">
+<h1>Why Do We Need RNNs?</h1>
 
 </section>
-<section id="what-is-machine-learning" class="slide level2 scrollable">
-<h2>What is Machine Learning?</h2>
-<!-- **Machine Learning (ML)** -->
-<!-- is a branch of Artificial Intelligence that focuses on: -->
-<div title="Machine Learning (ML)">
-<div class="callout callout-none no-icon callout-titled callout-style-simple">
-<div class="callout-body">
-<div class="callout-title">
-<p><strong>Machine Learning (ML)</strong></p>
-</div>
-<div class="callout-content">
-<p>Algorithms that learn patterns from data and make predictions or decisions without being explicitly programmed.</p>
-</div>
-</div>
-</div>
-</div>
-<p>Examples:</p>
-<ul>
-<li>Email spam detection</li>
-<li>Credit risk assessment</li>
-<li>Image and speech recognition</li>
-<li>Recommendation systems</li>
-</ul>
-<!-- ## Why Machine Learning?
-
-Traditional programming:
-
-- Rules are **explicitly coded**
-- Hard to scale for complex patterns
-
-Machine learning:
-
-- Rules are **learned from data**
-- Scales well to high-dimensional problems
-- Adapts as more data becomes available
-
---- -->
-</section>
-<section id="machine-learning-vs.-statistics" class="slide level2 scrollable">
-<h2>Machine Learning vs.&nbsp;Statistics</h2>
-<table class="caption-top">
-<colgroup>
-<col style="width: 15%">
-<col style="width: 41%">
-<col style="width: 42%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Aspect</th>
-<th>Statistics</th>
-<th>Machine Learning</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Primary goal</strong></td>
-<td>Inference, explanation, uncertainty quantification</td>
-<td>Prediction, pattern discovery, automation</td>
-</tr>
-<tr class="even">
-<td><strong>Typical questions</strong></td>
-<td><em>Why does this happen?</em><br><em>Is the effect significant?</em></td>
-<td><em>What will happen next?</em><br><em>Can we predict accurately?</em></td>
-</tr>
-<tr class="odd">
-<td><strong>Model assumptions</strong></td>
-<td>Strong (distributional forms, linearity, independence)</td>
-<td>Often weak or implicit</td>
-</tr>
-<tr class="even">
-<td><strong>Data size</strong></td>
-<td>Small to moderate datasets</td>
-<td>Large, high-dimensional datasets</td>
-</tr>
-</tbody>
-</table>
-<!-- | **Interpretability**  | High (coefficients, confidence intervals, p-values)     | Varies (from linear models to black boxes)               | -->
-<div class="line-block"><strong>Evaluation</strong> | Hypothesis tests, confidence intervals | Train/validation/test split, predictive metrics |</div>
-<!-- | **Typical methods**   | Linear regression, hypothesis testing, ANOVA            | Trees, random forests, neural networks                   | -->
-<div class="line-block"><strong>Philosophy</strong> | Model the data-generating process | Optimize performance on unseen data |</div>
-</section>
-<section id="main-categories-of-machine-learning" class="slide level2 scrollable">
-<h2>Main Categories of Machine Learning</h2>
-<h3 id="supervised-learning">1. Supervised Learning</h3>
-<ul>
-<li>Data with <strong>labels</strong></li>
-<li>Learn input → output mapping</li>
-</ul>
-<h3 id="unsupervised-learning">2. Unsupervised Learning</h3>
-<ul>
-<li>Data <strong>without labels</strong></li>
-<li>Discover hidden structure</li>
-</ul>
-<p>(We will focus mainly on supervised learning.)</p>
-</section>
-<section id="supervised-learning-1" class="slide level2 scrollable">
-<h2>Supervised Learning</h2>
-<p>Each observation consists of:</p>
-<ul>
-<li><strong>Features</strong> <span class="math inline">\(X\)</span></li>
-<li><strong>Target</strong> <span class="math inline">\(y\)</span></li>
-</ul>
-<p>Goal: <span class="math display">\[
-f(X) \approx y
-\]</span></p>
-<p>Typical applications:</p>
-<ul>
-<li>Predict prices</li>
-<li>Classify emails</li>
-<li>Diagnose diseases</li>
-</ul>
-</section></section>
-<section>
-<section id="supervised-learning-2" class="title-slide slide level1 center">
-<h1>Supervised Learning</h1>
-
-</section>
-<section id="supervised-learning-tasks" class="slide level2 scrollable">
-<h2>Supervised Learning Tasks</h2>
-<h3 id="two-main-task-types">Two main task types:</h3>
-<table class="caption-top">
-<thead>
-<tr class="header">
-<th>Task</th>
-<th>Output</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Regression</strong></td>
-<td>Continuous value</td>
-</tr>
-<tr class="even">
-<td><strong>Classification</strong></td>
-<td>Discrete class</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="regression" class="slide level2 scrollable">
-<h2>Regression</h2>
-<p><strong>Regression</strong> predicts a numerical value.</p>
-<p>Examples:</p>
-<ul>
-<li>House price prediction</li>
-<li>Stock return forecasting</li>
-<li>Temperature prediction</li>
-</ul>
-<p>Typical models:</p>
-<ul>
-<li>Linear Regression</li>
-<li>Ridge / Lasso</li>
-<li>Random Forest Regressor</li>
-</ul>
-</section>
-<section id="classification" class="slide level2 scrollable">
-<h2>Classification</h2>
-<p><strong>Classification</strong> predicts a category or label.</p>
-<p>Examples:</p>
-<ul>
-<li>Spam vs non-spam</li>
-<li>Fraud vs non-fraud</li>
-<li>Disease vs healthy</li>
-</ul>
-<p>Typical models:</p>
-<ul>
-<li>Logistic Regression</li>
-<li>k-Nearest Neighbors</li>
-<li>Decision Trees</li>
-<li>Support Vector Machines</li>
-</ul>
-</section></section>
-<section>
-<section id="unsupervised-learning-1" class="title-slide slide level1 center">
-<h1>Unsupervised Learning</h1>
-
-</section>
-<section id="unsupervised-learning-2" class="slide level2 scrollable">
-<h2>Unsupervised Learning</h2>
-<p>No labeled output variable.</p>
-<p>Goals:</p>
-<ul>
-<li>Discover structure</li>
-<li>Group similar observations</li>
-<li>Reduce dimensionality</li>
-</ul>
-<p>Examples:</p>
-<ul>
-<li>Customer segmentation</li>
-<li>Topic modeling</li>
-<li>Data visualization</li>
-</ul>
-</section>
-<section id="unsupervised-learning-tasks" class="slide level2 scrollable">
-<h2>Unsupervised Learning Tasks</h2>
-<p>Common tasks:</p>
-<ul>
-<li><strong>Clustering</strong> (e.g.&nbsp;k-means)</li>
-<li><strong>Dimensionality reduction</strong> (e.g.&nbsp;PCA)</li>
-</ul>
-<p>Typical use cases:</p>
-<ul>
-<li>Exploratory data analysis</li>
-<li>Preprocessing</li>
-<li>Feature engineering</li>
-</ul>
-</section></section>
-<section>
-<section id="machine-learning-workflow" class="title-slide slide level1 center">
-<h1>Machine Learning Workflow</h1>
-
-</section>
-<section id="the-machine-learning-workflow" class="slide level2 scrollable">
-<h2>The Machine Learning Workflow</h2>
-<ol type="1">
-<li>Collect data<br>
-</li>
-<li>Clean and preprocess<br>
-</li>
-<li>Split data<br>
-</li>
-<li>Train model<br>
-</li>
-<li>Evaluate model<br>
-</li>
-<li>Improve / deploy</li>
-</ol>
-</section></section>
-<section>
-<section id="train-validation-test" class="title-slide slide level1 center">
-<h1>Train, Validation &amp; Test</h1>
-
-</section>
-<section id="data-splitting" class="slide level2 scrollable">
-<h2>Data Splitting</h2>
-<p>We typically split data into:</p>
-<ul>
-<li><strong>Training set</strong> – used to fit the model<br>
-</li>
-<li><strong>Validation set</strong> – used for model selection / tuning<br>
-</li>
-<li><strong>Test set</strong> – used for final evaluation</li>
-</ul>
-</section>
-<section id="why-not-train-on-all-data" class="slide level2 scrollable">
-<h2>Why Not Train on all Data?</h2>
-<p>If we train and evaluate on the same data:</p>
-<ul>
-<li>Model may <strong>memorize</strong> the data</li>
-<li>Performance estimate becomes <strong>optimistic</strong></li>
-</ul>
-<p>This is called <strong>overfitting</strong>.</p>
-</section>
-<section id="train-validation-test-split" class="slide level2 scrollable">
-<h2>Train / Validation / Test Split</h2>
-<p>Typical split ratios:</p>
-<ul>
-<li>60% train / 20% validation / 20% test</li>
-<li>or 70% / 15% / 15%</li>
-</ul>
-<div title="Key principle:">
-<div class="callout callout-none no-icon callout-titled callout-style-simple">
-<div class="callout-body">
-<div class="callout-title">
-<p><strong>Key principle:</strong></p>
-</div>
-<div class="callout-content">
-<p>The test set must remain untouched until the very end.</p>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="example-data-splitting-in-python" class="slide level2 scrollable">
-<h2>Example: Data Splitting in Python</h2>
-<div id="4858251e" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
-<span id="cb1-2"><a></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-3"><a></a></span>
-<span id="cb1-4"><a></a><span class="co"># Dummy data</span></span>
-<span id="cb1-5"><a></a>X <span class="op">=</span> np.random.rand(<span class="dv">100</span>, <span class="dv">2</span>)</span>
-<span id="cb1-6"><a></a>y <span class="op">=</span> np.random.rand(<span class="dv">100</span>)</span>
-<span id="cb1-7"><a></a></span>
-<span id="cb1-8"><a></a><span class="co"># Train + test split</span></span>
-<span id="cb1-9"><a></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(</span>
-<span id="cb1-10"><a></a>    X, y, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">42</span></span>
-<span id="cb1-11"><a></a>)</span>
-<span id="cb1-12"><a></a></span>
-<span id="cb1-13"><a></a><span class="co"># Train + validation split</span></span>
-<span id="cb1-14"><a></a>X_train, X_val, y_train, y_val <span class="op">=</span> train_test_split(</span>
-<span id="cb1-15"><a></a>    X_train, y_train, test_size<span class="op">=</span><span class="fl">0.25</span>, random_state<span class="op">=</span><span class="dv">42</span></span>
-<span id="cb1-16"><a></a>)</span>
-<span id="cb1-17"><a></a></span>
-<span id="cb1-18"><a></a>X_train.shape, X_val.shape, X_test.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="4">
-<pre><code>((60, 2), (20, 2), (20, 2))</code></pre>
-</div>
-</div>
-</section></section>
-<section>
-<section id="k-fold-cross-validation" class="title-slide slide level1 center">
-<h1>K-Fold Cross-Validation</h1>
-
-</section>
-<section id="motivation" class="slide level2 scrollable">
-<h2>Motivation</h2>
-<h3 id="why-do-we-need-cross-validation">Why Do We Need Cross-Validation?</h3>
-<ul>
-<li>Goal: <strong>estimate generalization performance</strong></li>
-<li>Training error is <strong>optimistically biased</strong></li>
-<li>Single train/test split:
-<ul>
-<li>High variance</li>
-<li>Sensitive to random split</li>
-</ul></li>
-</ul>
-<p><strong>Cross-validation reduces uncertainty in model evaluation</strong></p>
-</section>
-<section id="the-core-idea" class="slide level2 scrollable">
-<h2>The Core Idea</h2>
-<h3 id="what-is-k-fold-cross-validation">What Is k-Fold Cross-Validation?</h3>
-<ol type="1">
-<li>Split data into <strong>k approximately equal folds</strong></li>
-<li>For each fold:
-<ul>
-<li>Train on <code>k−1</code> folds</li>
-<li>Test on the remaining fold</li>
-</ul></li>
-<li>Aggregate performance metrics</li>
-</ol>
+<section id="feedforward-networks-assume-independence" class="slide level2">
+<h2>Feedforward Networks Assume Independence</h2>
+<p>For MLPs:</p>
 <p><span class="math display">\[
-\text{CV score} = \frac{1}{k} \sum_{i=1}^{k} \text{Score}_i
+x_i \perp x_j
 \]</span></p>
-</section>
-<section id="choosing-k" class="slide level2 scrollable">
-<h2>Choosing k</h2>
-<h3 id="biasvariance-trade-off">Bias–Variance Trade-off</h3>
-<table class="caption-top">
-<thead>
-<tr class="header">
-<th>k</th>
-<th>Characteristics</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>2–5</td>
-<td>Higher bias, lower variance</td>
-</tr>
-<tr class="even">
-<td>5–10</td>
-<td>Common practical choice</td>
-</tr>
-<tr class="odd">
-<td>n (LOOCV)</td>
-<td>Minimal bias, high variance &amp; cost</td>
-</tr>
-</tbody>
-</table>
-<div title="Rule of thumb">
-<div class="callout callout-tip no-icon callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<p><strong>Rule of thumb</strong></p>
-</div>
-<div class="callout-content">
+<p>But many datasets are sequential:</p>
 <ul>
-<li>k = 5 or 10 for most problems</li>
+<li>Text</li>
+<li>Speech</li>
+<li>Financial time-series</li>
+<li>Biological sequences</li>
+<li>Sensor signals</li>
 </ul>
-</div>
-</div>
-</div>
-</div>
 </section>
-<section id="formal-perspective" class="slide level2 scrollable">
-<h2>Formal Perspective</h2>
-<h3 id="expected-error-estimation">Expected Error Estimation</h3>
-<p>k-fold CV estimates:</p>
+<section id="sequential-dependency" class="slide level2">
+<h2>Sequential Dependency</h2>
+<p>Language modeling:</p>
 <p><span class="math display">\[
-\mathbb{E}_{(X,Y)}[L(f_{\mathscr{D}}, (X,Y))]
+P(w_t | w_{t-1}, w_{t-2}, ..., w_1)
 \]</span></p>
-<p>with:</p>
-<ul>
-<li>Different training sets <span class="math inline">\(\mathscr{D}\)</span></li>
-<li>Same learning algorithm</li>
-<li>Same data distribution</li>
-</ul>
+<p>The past matters.</p>
 </section>
-<section id="regression-vs-classification" class="slide level2 scrollable">
-<h2>Regression vs Classification</h2>
-<h3 id="key-differences">Key Differences</h3>
-<table class="caption-top">
-<thead>
-<tr class="header">
-<th>Aspect</th>
-<th>Regression</th>
-<th>Classification</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Metrics</td>
-<td>MSE, MAE, R²</td>
-<td>Accuracy, F1, AUC</td>
-</tr>
-<tr class="even">
-<td>Splits</td>
-<td>Random OK</td>
-<td>Must preserve class balance</td>
-</tr>
-<tr class="odd">
-<td>CV variant</td>
-<td>KFold</td>
-<td>Stratified k-Fold</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="regression-k-fold-cv" class="slide level2 scrollable">
-<h2>Regression: k-Fold CV</h2>
-<h3 id="typical-metrics">Typical Metrics</h3>
+<section id="applications" class="slide level2">
+<h2>Applications</h2>
 <ul>
-<li>Mean Squared Error (MSE)</li>
-<li>Mean Absolute Error (MAE)</li>
-<li><span class="math inline">\(R^2\)</span></li>
+<li>Language modeling</li>
+<li>Machine translation</li>
+<li>Speech recognition</li>
+<li>Time-series forecasting</li>
+<li>Genomics</li>
+<li>Video processing</li>
 </ul>
-<div class="callout callout-note callout-titled callout-style-default">
+</section></section>
+<section>
+<section id="the-recurrent-neural-network-rnn" class="title-slide slide level1 center">
+<h1>The Recurrent Neural Network (RNN)</h1>
+
+</section>
+<section id="core-recurrence" class="slide level2">
+<h2>Core Recurrence</h2>
+<p><span class="math display">\[
+h_t = \sigma(W_h h_{t-1} + W_x x_t + b)
+\]</span></p>
+<p><span class="math display">\[
+y_t = W_y h_t
+\]</span></p>
+<p>Same weights reused across time.</p>
+</section>
+<section id="unrolled-through-time" class="slide level2">
+<h2>Unrolled Through Time</h2>
+
+<img data-src="../images/rnn_unrolled.png" class="r-stretch quarto-figure-center"><p class="caption">Unrolled RNN</p></section>
+<section id="tensorflow-simple-rnn" class="slide level2">
+<h2>TensorFlow: Simple RNN</h2>
+<div id="f2bc5556" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> tensorflow <span class="im">as</span> tf</span>
+<span id="cb1-2"><a></a><span class="im">from</span> tensorflow <span class="im">import</span> keras</span>
+<span id="cb1-3"><a></a><span class="im">from</span> tensorflow.keras <span class="im">import</span> layers</span>
+<span id="cb1-4"><a></a></span>
+<span id="cb1-5"><a></a>model <span class="op">=</span> keras.Sequential([</span>
+<span id="cb1-6"><a></a>    layers.SimpleRNN(<span class="dv">64</span>, return_sequences<span class="op">=</span><span class="va">True</span>),</span>
+<span id="cb1-7"><a></a>    layers.SimpleRNN(<span class="dv">32</span>),</span>
+<span id="cb1-8"><a></a>    layers.Dense(<span class="dv">1</span>)</span>
+<span id="cb1-9"><a></a>])</span>
+<span id="cb1-10"><a></a></span>
+<span id="cb1-11"><a></a>model.<span class="bu">compile</span>(optimizer<span class="op">=</span><span class="st">"adam"</span>, loss<span class="op">=</span><span class="st">"mse"</span>)</span>
+<span id="cb1-12"><a></a>model.summary()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="font-weight: bold">Model: "sequential_12"</span>
+</pre>
+</div>
+<div class="cell-output cell-output-display">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
+┃<span style="font-weight: bold"> Layer (type)                    </span>┃<span style="font-weight: bold"> Output Shape           </span>┃<span style="font-weight: bold">       Param # </span>┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
+│ simple_rnn_6 (<span style="color: #0087ff; text-decoration-color: #0087ff">SimpleRNN</span>)        │ ?                      │   <span style="color: #00af00; text-decoration-color: #00af00">0</span> (unbuilt) │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ simple_rnn_7 (<span style="color: #0087ff; text-decoration-color: #0087ff">SimpleRNN</span>)        │ ?                      │   <span style="color: #00af00; text-decoration-color: #00af00">0</span> (unbuilt) │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense_12 (<span style="color: #0087ff; text-decoration-color: #0087ff">Dense</span>)                │ ?                      │   <span style="color: #00af00; text-decoration-color: #00af00">0</span> (unbuilt) │
+└─────────────────────────────────┴────────────────────────┴───────────────┘
+</pre>
+</div>
+<div class="cell-output cell-output-display">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="font-weight: bold"> Total params: </span><span style="color: #00af00; text-decoration-color: #00af00">0</span> (0.00 B)
+</pre>
+</div>
+<div class="cell-output cell-output-display">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="font-weight: bold"> Trainable params: </span><span style="color: #00af00; text-decoration-color: #00af00">0</span> (0.00 B)
+</pre>
+</div>
+<div class="cell-output cell-output-display">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="font-weight: bold"> Non-trainable params: </span><span style="color: #00af00; text-decoration-color: #00af00">0</span> (0.00 B)
+</pre>
+</div>
+</div>
+</section>
+<section id="backpropagation-through-time-bptt" class="slide level2">
+<h2>Backpropagation Through Time (BPTT)</h2>
+<p>Training objective:</p>
+<p><span class="math display">\[
+\frac{\partial L}{\partial W} =\sum_{t=1}^{T}\frac{\partial L}{\partial h_t}\frac{\partial h_t}{\partial W}
+\]</span></p>
+<p>But:</p>
+<p><span class="math display">\[
+\frac{\partial h_t}{\partial h_{t-k}}=\prod_{i=t-k+1}^{t}\frac{\partial h_i}{\partial h_{i-1}}
+\]</span></p>
+<p>Repeated matrix multiplication → instability.</p>
+<!-- ## The Vanishing Gradient Problem
+
+Simplified Recurrence
+
+$$
+h_t = \sigma(W_h h_{t-1})
+$$
+
+Derivative:
+
+$$
+\frac{\partial h_t}{\partial h_{t-1}}
+=
+W_h \cdot \text{diag}(1 - \sigma^2(z))
+$$
+
+Since:
+
+$$
+|1 - \sigma^2(z)| \le 1
+$$
+
+Repeated products:
+
+$$
+\prod_{i=1}^{k} W_h \lambda_i
+$$
+
+
+:::{.columns}
+
+::::{.column width="50%"}
+If:
+
+$$
+\rho(W_h) < 1
+$$
+
+>Gradient vanishes.
+
+::::
+
+::::{.column width="50%"}
+
+If:
+
+$$
+\rho(W_h) > 1
+$$
+
+>Exploding gradient.
+
+::::
+
+::: -->
+</section></section>
+<section>
+<section id="long-short-term-memory-lstm" class="title-slide slide level1 center">
+<h1>Long Short-Term Memory (LSTM)</h1>
+
+</section>
+<section id="key-idea" class="slide level2">
+<h2>Key Idea</h2>
+
+<img data-src="../images/lstm_architecture.png" class="r-stretch quarto-figure-center"><p class="caption">LSTM Cell</p><div class="callout callout-note callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
@@ -648,121 +411,195 @@ f(X) \approx y
 <p><strong>Note</strong></p>
 </div>
 <div class="callout-content">
-<p>Scores may be <strong>negative</strong> in scikit-learn (loss convention)</p>
+<p>Allow constant error flow through a memory cell.</p>
 </div>
 </div>
 </div>
 </section>
-<section id="regression-example-scikit-learn" class="slide level2 scrollable">
-<h2>Regression Example (scikit-learn)</h2>
-<div id="e70cd221" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb3-2"><a></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> make_regression</span>
-<span id="cb3-3"><a></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression</span>
-<span id="cb3-4"><a></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> KFold, cross_val_score</span>
-<span id="cb3-5"><a></a></span>
-<span id="cb3-6"><a></a>X, y <span class="op">=</span> make_regression(n_samples<span class="op">=</span><span class="dv">100</span>, n_features<span class="op">=</span><span class="dv">5</span>, noise<span class="op">=</span><span class="dv">10</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
-<span id="cb3-7"><a></a></span>
-<span id="cb3-8"><a></a>model <span class="op">=</span> LinearRegression()</span>
-<span id="cb3-9"><a></a>cv <span class="op">=</span> KFold(n_splits<span class="op">=</span><span class="dv">5</span>, shuffle<span class="op">=</span><span class="va">True</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
-<span id="cb3-10"><a></a></span>
-<span id="cb3-11"><a></a>scores <span class="op">=</span> cross_val_score(</span>
-<span id="cb3-12"><a></a>    model, X, y,</span>
-<span id="cb3-13"><a></a>    cv<span class="op">=</span>cv,</span>
-<span id="cb3-14"><a></a>    scoring<span class="op">=</span><span class="st">"neg_mean_squared_error"</span></span>
-<span id="cb3-15"><a></a>)</span>
-<span id="cb3-16"><a></a></span>
-<span id="cb3-17"><a></a>mse_scores <span class="op">=</span> <span class="op">-</span>scores</span>
-<span id="cb3-18"><a></a><span class="bu">print</span>(<span class="st">"MSE per fold:"</span>, mse_scores)</span>
-<span id="cb3-19"><a></a><span class="bu">print</span>(<span class="st">"Mean MSE:"</span>, mse_scores.mean())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>MSE per fold: [113.44800318  81.16181775  88.22981966  85.52522476 102.8583864 ]
-Mean MSE: 94.2446503511611</code></pre>
-</div>
-</div>
+<section id="lstm-equations" class="slide level2">
+<h2>LSTM Equations</h2>
+<p><strong>Forget gate:</strong></p>
+<p><span class="math display">\[
+f_t = \sigma(W_f [h_{t-1}, x_t])
+\]</span></p>
+<p><strong>Input gate:</strong></p>
+<p><span class="math display">\[
+i_t = \sigma(W_i [h_{t-1}, x_t])
+\]</span></p>
+<p><strong>Cell update:</strong></p>
+<p><span class="math display">\[
+c_t = f_t \odot c_{t-1} + i_t \odot \tilde{c}_t
+\]</span></p>
+<p><strong>Output:</strong></p>
+<p><span class="math display">\[
+h_t = o_t \odot \tanh(c_t)
+\]</span></p>
 </section>
-<section id="classification-stratified-k-fold-cv" class="slide level2 scrollable">
-<h2>Classification: Stratified k-Fold CV</h2>
-<h3 id="why-stratified-k-fold">Why Stratified k-Fold?</h3>
-<p>In classification:</p>
+<section id="why-lstm-works" class="slide level2">
+<h2>Why LSTM Works</h2>
+<p>If:</p>
+<p><span class="math display">\[
+f_t \approx 1
+\]</span></p>
+<p>Then:</p>
+<p><span class="math display">\[
+\frac{\partial c_t}{\partial c_{t-1}} \approx 1
+\]</span></p>
+<blockquote>
+<p>Gradient preserved.</p>
+</blockquote>
+</section>
+<section id="tensorflow-lstm" class="slide level2">
+<h2>Tensorflow: LSTM</h2>
+<div id="f7b3eb6e" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>model <span class="op">=</span> keras.Sequential([</span>
+<span id="cb2-2"><a></a>    layers.LSTM(<span class="dv">64</span>, return_sequences<span class="op">=</span><span class="va">True</span>),</span>
+<span id="cb2-3"><a></a>    layers.LSTM(<span class="dv">32</span>),</span>
+<span id="cb2-4"><a></a>    layers.Dense(<span class="dv">1</span>)</span>
+<span id="cb2-5"><a></a>])</span>
+<span id="cb2-6"><a></a></span>
+<span id="cb2-7"><a></a>model.<span class="bu">compile</span>(optimizer<span class="op">=</span><span class="st">"adam"</span>, loss<span class="op">=</span><span class="st">"mse"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section></section>
+<section>
+<section id="gated-recurrent-unit-gru" class="title-slide slide level1 center">
+<h1>Gated Recurrent Unit (GRU)</h1>
+
+</section>
+<section id="gru-architecture" class="slide level2">
+<h2>GRU Architecture</h2>
+<blockquote>
+<p>Simpler alternative to LSTM.</p>
+</blockquote>
+
+<img data-src="../images/gru_architecture.png" class="r-stretch quarto-figure-center"><p class="caption">GRU Cell</p></section>
+<section id="gru-equations" class="slide level2">
+<h2>GRU Equations</h2>
+<p><strong>Update gate:</strong></p>
+<p><span class="math display">\[
+z_t = \sigma(W_z [h_{t-1}, x_t])
+\]</span></p>
+<p><strong>Reset gate:</strong></p>
+<p><span class="math display">\[
+r_t = \sigma(W_r [h_{t-1}, x_t])
+\]</span></p>
+<p><strong>Final Update:</strong></p>
+<p><span class="math display">\[
+h_t = (1 - z_t) \odot h_{t-1} + z_t \odot \widetilde{h}_t
+\]</span></p>
+</section>
+<section id="tensorflow-gru" class="slide level2">
+<h2>Tensorflow: GRU</h2>
+<div id="2c66f4d0" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>model <span class="op">=</span> keras.Sequential([</span>
+<span id="cb3-2"><a></a>    layers.GRU(<span class="dv">64</span>, return_sequences<span class="op">=</span><span class="va">True</span>),</span>
+<span id="cb3-3"><a></a>    layers.GRU(<span class="dv">32</span>),</span>
+<span id="cb3-4"><a></a>    layers.Dense(<span class="dv">1</span>)</span>
+<span id="cb3-5"><a></a>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section></section>
+<section>
+<section id="regularization-in-rnns" class="title-slide slide level1 center">
+<h1>Regularization in RNNs</h1>
+
+</section>
+<section id="recurrent-dropout" class="slide level2">
+<h2>Recurrent Dropout</h2>
+<p>Standard dropout disrupts temporal memory.</p>
+<p><strong>Recurrent dropout:</strong></p>
 <ul>
-<li>Preserves class proportions in each fold</li>
-<li>Especially important for imbalanced datasets</li>
+<li>Applied on recurrent connections</li>
+<li>Same mask across timesteps</li>
 </ul>
-<p>Use:</p>
-<ul>
-<li><code>KFold</code> → regression</li>
-<li><code>StratifiedKFold</code> → classification</li>
-</ul>
 </section>
-<section id="classification-example" class="slide level2">
-<h2>Classification Example</h2>
-<div id="a80452b3" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> make_classification</span>
-<span id="cb5-2"><a></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
-<span id="cb5-3"><a></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> StratifiedKFold, cross_val_score</span>
-<span id="cb5-4"><a></a></span>
-<span id="cb5-5"><a></a>X, y <span class="op">=</span> make_classification(</span>
-<span id="cb5-6"><a></a>    n_samples<span class="op">=</span><span class="dv">500</span>,</span>
-<span id="cb5-7"><a></a>    n_features<span class="op">=</span><span class="dv">5</span>,</span>
-<span id="cb5-8"><a></a>    n_classes<span class="op">=</span><span class="dv">2</span>,</span>
-<span id="cb5-9"><a></a>    random_state<span class="op">=</span><span class="dv">42</span></span>
-<span id="cb5-10"><a></a>)</span>
-<span id="cb5-11"><a></a></span>
-<span id="cb5-12"><a></a>model <span class="op">=</span> LogisticRegression(max_iter<span class="op">=</span><span class="dv">1000</span>)</span>
-<span id="cb5-13"><a></a></span>
-<span id="cb5-14"><a></a>skf <span class="op">=</span> StratifiedKFold(n_splits<span class="op">=</span><span class="dv">5</span>, shuffle<span class="op">=</span><span class="va">True</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
-<span id="cb5-15"><a></a></span>
-<span id="cb5-16"><a></a>scores <span class="op">=</span> cross_val_score(</span>
-<span id="cb5-17"><a></a>    model, X, y,</span>
-<span id="cb5-18"><a></a>    cv<span class="op">=</span>skf,</span>
-<span id="cb5-19"><a></a>    scoring<span class="op">=</span><span class="st">"accuracy"</span></span>
-<span id="cb5-20"><a></a>)</span>
-<span id="cb5-21"><a></a></span>
-<span id="cb5-22"><a></a>scores</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="6">
-<pre><code>array([0.92, 0.89, 0.87, 0.85, 0.9 ])</code></pre>
-</div>
+<section id="tensorflow-recurrent-dropout" class="slide level2">
+<h2>TensorFlow: Recurrent Dropout</h2>
+<div id="f27dd481" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a>model <span class="op">=</span> keras.Sequential([</span>
+<span id="cb4-2"><a></a>    layers.LSTM(</span>
+<span id="cb4-3"><a></a>        <span class="dv">64</span>,</span>
+<span id="cb4-4"><a></a>        return_sequences<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb4-5"><a></a>        dropout<span class="op">=</span><span class="fl">0.2</span>,</span>
+<span id="cb4-6"><a></a>        recurrent_dropout<span class="op">=</span><span class="fl">0.2</span></span>
+<span id="cb4-7"><a></a>    ),</span>
+<span id="cb4-8"><a></a>    layers.LSTM(<span class="dv">32</span>),</span>
+<span id="cb4-9"><a></a>    layers.Dense(<span class="dv">1</span>)</span>
+<span id="cb4-10"><a></a>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="best-practices-in-cv" class="slide level2">
-<h2>Best Practices in CV</h2>
-<p>Cross-validation is often used to:</p>
+<section id="gradient-clipping" class="slide level2">
+<h2>Gradient Clipping</h2>
+<p><span class="math display">\[
+\nabla_\theta L \leftarrow \frac{\nabla_\theta L}{\max(1, \frac{||\nabla_\theta L||}{\text{clipnorm}})}
+\]</span></p>
+<p>Prevent exploding gradients:</p>
+<div id="a3fa3721" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>optimizer <span class="op">=</span> tf.keras.optimizers.Adam(</span>
+<span id="cb5-2"><a></a>    learning_rate<span class="op">=</span><span class="fl">0.001</span>,</span>
+<span id="cb5-3"><a></a>    clipnorm<span class="op">=</span><span class="fl">1.0</span></span>
+<span id="cb5-4"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section></section>
+<section>
+<section id="extensions" class="title-slide slide level1 center">
+<h1>Extensions</h1>
+
+</section>
+<section id="deep-rnns" class="slide level2">
+<h2>Deep RNNs</h2>
+<p>Stack multiple RNN layers for hierarchical representations:</p>
+
+<img data-src="../images/deep_rnn.png" class="r-stretch quarto-figure-center"><p class="caption">Deep RNN</p></section>
+<section id="bidirectional-rnns" class="slide level2">
+<h2>Bidirectional RNNs</h2>
+<p>Process sequences in both directions:</p>
+
+<img data-src="../images/bidirectional_rnn.png" class="r-stretch quarto-figure-center"><p class="caption">Bidirectional RNN</p></section></section>
+<section>
+<section id="final-notes" class="title-slide slide level1 center">
+<h1>Final Notes</h1>
+
+</section>
+<section id="model-comparison" class="slide level2">
+<h2>Model Comparison</h2>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>Long Dependencies</th>
+<th>Complexity</th>
+<th>Speed</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>RNN</td>
+<td>Poor</td>
+<td>Low</td>
+<td>Fast</td>
+</tr>
+<tr class="even">
+<td>LSTM</td>
+<td>Excellent</td>
+<td>High</td>
+<td>Slower</td>
+</tr>
+<tr class="odd">
+<td>GRU</td>
+<td>Very Good</td>
+<td>Medium</td>
+<td>Faster</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="limitations-of-rnns" class="slide level2">
+<h2>Limitations of RNNs</h2>
 <ul>
-<li>Compare models</li>
-<li>Tune hyperparameters</li>
-</ul>
-<div class="callout callout-warning callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>Warning</strong></p>
-</div>
-<div class="callout-content">
-<p>Cross-Validation <span class="math inline">\(\neq\)</span> Test Set</p>
-</div>
-</div>
-</div>
-<div title="Important Rule">
-<div class="callout callout-important callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>Important Rule</strong></p>
-</div>
-<div class="callout-content">
-<p>Never touch the test set until the very end</p>
-</div>
-</div>
-</div>
-</div>
-<ul>
-<li>CV is for model selection</li>
-<li>Test set is for final evaluation</li>
+<li>Sequential computation</li>
+<li>Hard to parallelize</li>
+<li>Long sequences still challenging</li>
+<li>Transformers dominate NLP</li>
 </ul>
 
 

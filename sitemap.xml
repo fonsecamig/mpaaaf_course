@@ -1,27 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://fonsecamig.github.io/mpaaaf_course/slides/rnn.html</loc>
+    <lastmod>2026-02-17T15:03:49.649Z</lastmod>
+  </url>
+  <url>
     <loc>https://fonsecamig.github.io/mpaaaf_course/slides/intro_tensorflow2.html</loc>
     <lastmod>2026-02-02T17:22:11.042Z</lastmod>
   </url>
   <url>
     <loc>https://fonsecamig.github.io/mpaaaf_course/slides/feed_forward_neural_networks.html</loc>
-    <lastmod>2026-02-06T16:05:20.851Z</lastmod>
+    <lastmod>2026-02-12T15:00:02.855Z</lastmod>
   </url>
   <url>
-    <loc>https://fonsecamig.github.io/mpaaaf_course/slides/advanced_decision_trees.html</loc>
-    <lastmod>2026-01-31T17:27:57.167Z</lastmod>
+    <loc>https://fonsecamig.github.io/mpaaaf_course/slides/cnn.html</loc>
+    <lastmod>2026-02-12T15:18:21.534Z</lastmod>
   </url>
   <url>
     <loc>https://fonsecamig.github.io/mpaaaf_course/index.html</loc>
-    <lastmod>2026-02-02T17:47:00.696Z</lastmod>
+    <lastmod>2026-02-22T17:58:18.981Z</lastmod>
+  </url>
+  <url>
+    <loc>https://fonsecamig.github.io/mpaaaf_course/slides/advanced_decision_trees.html</loc>
+    <lastmod>2026-02-19T15:18:54.979Z</lastmod>
   </url>
   <url>
     <loc>https://fonsecamig.github.io/mpaaaf_course/slides/decision_trees.html</loc>
-    <lastmod>2026-01-20T15:12:45.815Z</lastmod>
+    <lastmod>2026-02-19T11:54:22.703Z</lastmod>
   </url>
   <url>
     <loc>https://fonsecamig.github.io/mpaaaf_course/slides/intro_ml.html</loc>
-    <lastmod>2026-02-06T17:49:27.366Z</lastmod>
+    <lastmod>2026-02-22T15:51:24.430Z</lastmod>
+  </url>
+  <url>
+    <loc>https://fonsecamig.github.io/mpaaaf_course/slides/regularization.html</loc>
+    <lastmod>2026-02-11T15:24:59.055Z</lastmod>
   </url>
 </urlset>

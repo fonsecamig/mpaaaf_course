@@ -10,7 +10,7 @@
   <meta name="generator" content="quarto-1.7.32">
 
   <meta name="author" content="Miguel Fonseca">
-  <title>MPAAAF – Introduction to Machine Learning</title>
+  <title>MPAAAF – Convolutional Neural Networks (CNNs)</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -196,8 +196,7 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">Introduction to Machine Learning</h1>
-  <p class="subtitle">Core Concepts and First Examples</p>
+  <h1 class="title">Convolutional Neural Networks (CNNs)</h1>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -207,563 +206,401 @@ Miguel Fonseca
 </div>
 </div>
 
+</section><section id="TOC">
+<nav role="doc-toc"> 
+<h2 id="toc-title">Table of contents</h2>
+<ul>
+<li><a href="#/motivation" id="/toc-motivation">Motivation</a></li>
+<li><a href="#/convolutions" id="/toc-convolutions">Convolutions</a></li>
+<li><a href="#/d-convolutions" id="/toc-d-convolutions">1D Convolutions</a></li>
+<li><a href="#/d-convolutions-1" id="/toc-d-convolutions-1">2D Convolutions</a></li>
+<li><a href="#/padding" id="/toc-padding">Padding</a></li>
+<li><a href="#/pooling" id="/toc-pooling">Pooling</a></li>
+<li><a href="#/cnn-architecture" id="/toc-cnn-architecture">CNN Architecture</a></li>
+<li><a href="#/residual-networks" id="/toc-residual-networks">Residual Networks</a></li>
+</ul>
+</nav>
 </section>
 <section>
-<section id="definition" class="title-slide slide level1 center">
-<h1>Definition</h1>
+<section id="motivation" class="title-slide slide level1 center">
+<h1>Motivation</h1>
 
 </section>
-<section id="what-is-machine-learning" class="slide level2 scrollable">
-<h2>What is Machine Learning?</h2>
-<!-- **Machine Learning (ML)** -->
-<!-- is a branch of Artificial Intelligence that focuses on: -->
-<div title="Machine Learning (ML)">
-<div class="callout callout-none no-icon callout-titled callout-style-simple">
-<div class="callout-body">
-<div class="callout-title">
-<p><strong>Machine Learning (ML)</strong></p>
-</div>
-<div class="callout-content">
-<p>Algorithms that learn patterns from data and make predictions or decisions without being explicitly programmed.</p>
-</div>
-</div>
-</div>
-</div>
-<p>Examples:</p>
+<section id="why-not-fully-connected-networks-for-images" class="slide level2">
+<h2>Why not Fully Connected Networks for Images?</h2>
 <ul>
-<li>Email spam detection</li>
-<li>Credit risk assessment</li>
-<li>Image and speech recognition</li>
-<li>Recommendation systems</li>
+<li>Images: 224×224×3 → 150,528 features</li>
+<li>Dense layer with 1,000 neurons:</li>
 </ul>
-<!-- ## Why Machine Learning?
-
-Traditional programming:
-
-- Rules are **explicitly coded**
-- Hard to scale for complex patterns
-
-Machine learning:
-
-- Rules are **learned from data**
-- Scales well to high-dimensional problems
-- Adapts as more data becomes available
-
---- -->
-</section>
-<section id="machine-learning-vs.-statistics" class="slide level2 scrollable">
-<h2>Machine Learning vs.&nbsp;Statistics</h2>
-<table class="caption-top">
-<colgroup>
-<col style="width: 15%">
-<col style="width: 41%">
-<col style="width: 42%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Aspect</th>
-<th>Statistics</th>
-<th>Machine Learning</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Primary goal</strong></td>
-<td>Inference, explanation, uncertainty quantification</td>
-<td>Prediction, pattern discovery, automation</td>
-</tr>
-<tr class="even">
-<td><strong>Typical questions</strong></td>
-<td><em>Why does this happen?</em><br><em>Is the effect significant?</em></td>
-<td><em>What will happen next?</em><br><em>Can we predict accurately?</em></td>
-</tr>
-<tr class="odd">
-<td><strong>Model assumptions</strong></td>
-<td>Strong (distributional forms, linearity, independence)</td>
-<td>Often weak or implicit</td>
-</tr>
-<tr class="even">
-<td><strong>Data size</strong></td>
-<td>Small to moderate datasets</td>
-<td>Large, high-dimensional datasets</td>
-</tr>
-</tbody>
-</table>
-<!-- | **Interpretability**  | High (coefficients, confidence intervals, p-values)     | Varies (from linear models to black boxes)               | -->
-<div class="line-block"><strong>Evaluation</strong> | Hypothesis tests, confidence intervals | Train/validation/test split, predictive metrics |</div>
-<!-- | **Typical methods**   | Linear regression, hypothesis testing, ANOVA            | Trees, random forests, neural networks                   | -->
-<div class="line-block"><strong>Philosophy</strong> | Model the data-generating process | Optimize performance on unseen data |</div>
-</section>
-<section id="main-categories-of-machine-learning" class="slide level2 scrollable">
-<h2>Main Categories of Machine Learning</h2>
-<h3 id="supervised-learning">1. Supervised Learning</h3>
-<ul>
-<li>Data with <strong>labels</strong></li>
-<li>Learn input → output mapping</li>
-</ul>
-<h3 id="unsupervised-learning">2. Unsupervised Learning</h3>
-<ul>
-<li>Data <strong>without labels</strong></li>
-<li>Discover hidden structure</li>
-</ul>
-<p>(We will focus mainly on supervised learning.)</p>
-</section>
-<section id="supervised-learning-1" class="slide level2 scrollable">
-<h2>Supervised Learning</h2>
-<p>Each observation consists of:</p>
-<ul>
-<li><strong>Features</strong> <span class="math inline">\(X\)</span></li>
-<li><strong>Target</strong> <span class="math inline">\(y\)</span></li>
-</ul>
-<p>Goal: <span class="math display">\[
-f(X) \approx y
+<p><span class="math display">\[
+150,528 \times 1000 = 150M \text{ parameters}
 \]</span></p>
-<p>Typical applications:</p>
+<p>Problems:</p>
 <ul>
-<li>Predict prices</li>
-<li>Classify emails</li>
-<li>Diagnose diseases</li>
-</ul>
-</section></section>
-<section>
-<section id="supervised-learning-2" class="title-slide slide level1 center">
-<h1>Supervised Learning</h1>
-
-</section>
-<section id="supervised-learning-tasks" class="slide level2 scrollable">
-<h2>Supervised Learning Tasks</h2>
-<h3 id="two-main-task-types">Two main task types:</h3>
-<table class="caption-top">
-<thead>
-<tr class="header">
-<th>Task</th>
-<th>Output</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Regression</strong></td>
-<td>Continuous value</td>
-</tr>
-<tr class="even">
-<td><strong>Classification</strong></td>
-<td>Discrete class</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="regression" class="slide level2 scrollable">
-<h2>Regression</h2>
-<p><strong>Regression</strong> predicts a numerical value.</p>
-<p>Examples:</p>
-<ul>
-<li>House price prediction</li>
-<li>Stock return forecasting</li>
-<li>Temperature prediction</li>
-</ul>
-<p>Typical models:</p>
-<ul>
-<li>Linear Regression</li>
-<li>Ridge / Lasso</li>
-<li>Random Forest Regressor</li>
+<li>Too many parameters</li>
+<li>No spatial structure</li>
+<li>No translation invariance</li>
 </ul>
 </section>
-<section id="classification" class="slide level2 scrollable">
-<h2>Classification</h2>
-<p><strong>Classification</strong> predicts a category or label.</p>
-<p>Examples:</p>
-<ul>
-<li>Spam vs non-spam</li>
-<li>Fraud vs non-fraud</li>
-<li>Disease vs healthy</li>
-</ul>
-<p>Typical models:</p>
-<ul>
-<li>Logistic Regression</li>
-<li>k-Nearest Neighbors</li>
-<li>Decision Trees</li>
-<li>Support Vector Machines</li>
-</ul>
-</section></section>
-<section>
-<section id="unsupervised-learning-1" class="title-slide slide level1 center">
-<h1>Unsupervised Learning</h1>
-
-</section>
-<section id="unsupervised-learning-2" class="slide level2 scrollable">
-<h2>Unsupervised Learning</h2>
-<p>No labeled output variable.</p>
-<p>Goals:</p>
-<ul>
-<li>Discover structure</li>
-<li>Group similar observations</li>
-<li>Reduce dimensionality</li>
-</ul>
-<p>Examples:</p>
-<ul>
-<li>Customer segmentation</li>
-<li>Topic modeling</li>
-<li>Data visualization</li>
-</ul>
-</section>
-<section id="unsupervised-learning-tasks" class="slide level2 scrollable">
-<h2>Unsupervised Learning Tasks</h2>
-<p>Common tasks:</p>
-<ul>
-<li><strong>Clustering</strong> (e.g.&nbsp;k-means)</li>
-<li><strong>Dimensionality reduction</strong> (e.g.&nbsp;PCA)</li>
-</ul>
-<p>Typical use cases:</p>
-<ul>
-<li>Exploratory data analysis</li>
-<li>Preprocessing</li>
-<li>Feature engineering</li>
-</ul>
-</section></section>
-<section>
-<section id="machine-learning-workflow" class="title-slide slide level1 center">
-<h1>Machine Learning Workflow</h1>
-
-</section>
-<section id="the-machine-learning-workflow" class="slide level2 scrollable">
-<h2>The Machine Learning Workflow</h2>
+<section id="key-ideas-behind-cnns" class="slide level2 scrollable">
+<h2>Key Ideas Behind CNNs</h2>
 <ol type="1">
-<li>Collect data<br>
-</li>
-<li>Clean and preprocess<br>
-</li>
-<li>Split data<br>
-</li>
-<li>Train model<br>
-</li>
-<li>Evaluate model<br>
-</li>
-<li>Improve / deploy</li>
+<li class="fragment"><strong>Local connectivity</strong></li>
+<li class="fragment"><strong>Parameter sharing</strong></li>
+<li class="fragment"><strong>Translation equivariance</strong></li>
+<li class="fragment"><strong>Hierarchical feature learning</strong></li>
 </ol>
 </section></section>
 <section>
-<section id="train-validation-test" class="title-slide slide level1 center">
-<h1>Train, Validation &amp; Test</h1>
+<section id="convolutions" class="title-slide slide level1 center">
+<h1>Convolutions</h1>
 
 </section>
-<section id="data-splitting" class="slide level2 scrollable">
-<h2>Data Splitting</h2>
-<p>We typically split data into:</p>
+<section id="continuous-convolution" class="slide level2">
+<h2>Continuous Convolution</h2>
+<p><span class="math display">\[
+(f * g)(t) = \int_{-\infty}^{\infty} f(\tau) g(t - \tau) d\tau
+\]</span></p>
+<p>Interpretation:</p>
 <ul>
-<li><strong>Training set</strong> – used to fit the model<br>
-</li>
-<li><strong>Validation set</strong> – used for model selection / tuning<br>
-</li>
-<li><strong>Test set</strong> – used for final evaluation</li>
+<li>Flip one function</li>
+<li>Slide it</li>
+<li>Compute overlap (inner product)</li>
 </ul>
 </section>
-<section id="why-not-train-on-all-data" class="slide level2 scrollable">
-<h2>Why Not Train on all Data?</h2>
-<p>If we train and evaluate on the same data:</p>
-<ul>
-<li>Model may <strong>memorize</strong> the data</li>
-<li>Performance estimate becomes <strong>optimistic</strong></li>
-</ul>
-<p>This is called <strong>overfitting</strong>.</p>
+<section class="slide level2">
+
+
+<img data-src="../images/continuous_convolution_anim.gif" class="r-stretch"></section>
+<section id="discrete-convolution-1d" class="slide level2">
+<h2>Discrete Convolution (1D)</h2>
+<p><span class="math display">\[
+(y * k)[n] = \sum_{m=-\infty}^{\infty} y[m] \cdot k[n - m]
+\]</span></p>
+<p>In practice (finite signals):</p>
+<p><span class="math display">\[
+z[i] = \sum_{j=0}^{K-1} x[i-j] \cdot w[j]
+\]</span></p>
 </section>
-<section id="train-validation-test-split" class="slide level2 scrollable">
-<h2>Train / Validation / Test Split</h2>
-<p>Typical split ratios:</p>
+<section class="slide level2">
+
+
+<img data-src="../images/discrete_convolution_anim.gif" class="r-stretch"></section>
+<section id="convolution-as-sliding-dot-product---kernel-filter-small-learnable-weight-matrix---slide-across-input" class="slide level2">
+<h2>Convolution as Sliding Dot Product - Kernel (filter) = small learnable weight matrix - Slide across input</h2>
 <ul>
-<li>60% train / 20% validation / 20% test</li>
-<li>or 70% / 15% / 15%</li>
+<li>Compute dot product</li>
 </ul>
-<div title="Key principle:">
-<div class="callout callout-none no-icon callout-titled callout-style-simple">
-<div class="callout-body">
-<div class="callout-title">
-<p><strong>Key principle:</strong></p>
-</div>
-<div class="callout-content">
-<p>The test set must remain untouched until the very end.</p>
-</div>
-</div>
-</div>
+<p>This is:</p>
+<ul>
+<li>A linear operator</li>
+<li>With shared weights</li>
+</ul>
+</section>
+<section id="convolution-vs-cross-correlation" class="slide level2">
+<h2>Convolution vs Cross-Correlation</h2>
+<p>Deep learning frameworks usually compute:</p>
+<p><span class="math display">\[
+z[i] = \sum_{j=0}^{K-1} x[i+j] w[j]
+\]</span></p>
+<p>(No flipping.)</p>
+<p>We still call it “convolution”.</p>
+</section></section>
+<section>
+<section id="d-convolutions" class="title-slide slide level1 center">
+<h1>1D Convolutions</h1>
+
+</section>
+<section id="when-do-we-use-them" class="slide level2">
+<h2>When do we use them?</h2>
+<ul>
+<li>Time series</li>
+<li>Audio</li>
+<li>Financial data</li>
+<li>Genomics sequences</li>
+</ul>
+</section>
+<section id="d-convolution-example" class="slide level2">
+<h2>1D Convolution Example</h2>
+<p>Input:</p>
+<p><span class="math display">\[
+x = [1, 2, 3, 4, 5]
+\]</span></p>
+<p>Kernel: <span class="math display">\[
+w = [1, 0, -1]
+\]</span></p>
+<p>Output (stride 1):</p>
+<p><span class="math display">\[
+z[0] = 1*1 + 2*0 + 3*(-1)
+\]</span></p>
+</section>
+<section id="d-convolution-in-tensorflow" class="slide level2">
+<h2>1D Convolution in TensorFlow</h2>
+<div id="d9ac4326" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> tensorflow <span class="im">as</span> tf</span>
+<span id="cb1-2"><a></a></span>
+<span id="cb1-3"><a></a>model <span class="op">=</span> tf.keras.Sequential([</span>
+<span id="cb1-4"><a></a>    tf.keras.layers.Conv1D(</span>
+<span id="cb1-5"><a></a>        filters<span class="op">=</span><span class="dv">32</span>,</span>
+<span id="cb1-6"><a></a>        kernel_size<span class="op">=</span><span class="dv">3</span>,</span>
+<span id="cb1-7"><a></a>        activation<span class="op">=</span><span class="st">'relu'</span>,</span>
+<span id="cb1-8"><a></a>        input_shape<span class="op">=</span>(<span class="dv">100</span>, <span class="dv">1</span>)</span>
+<span id="cb1-9"><a></a>    )</span>
+<span id="cb1-10"><a></a>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="example-data-splitting-in-python" class="slide level2 scrollable">
-<h2>Example: Data Splitting in Python</h2>
-<div id="4858251e" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
-<span id="cb1-2"><a></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-3"><a></a></span>
-<span id="cb1-4"><a></a><span class="co"># Dummy data</span></span>
-<span id="cb1-5"><a></a>X <span class="op">=</span> np.random.rand(<span class="dv">100</span>, <span class="dv">2</span>)</span>
-<span id="cb1-6"><a></a>y <span class="op">=</span> np.random.rand(<span class="dv">100</span>)</span>
-<span id="cb1-7"><a></a></span>
-<span id="cb1-8"><a></a><span class="co"># Train + test split</span></span>
-<span id="cb1-9"><a></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(</span>
-<span id="cb1-10"><a></a>    X, y, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">42</span></span>
-<span id="cb1-11"><a></a>)</span>
-<span id="cb1-12"><a></a></span>
-<span id="cb1-13"><a></a><span class="co"># Train + validation split</span></span>
-<span id="cb1-14"><a></a>X_train, X_val, y_train, y_val <span class="op">=</span> train_test_split(</span>
-<span id="cb1-15"><a></a>    X_train, y_train, test_size<span class="op">=</span><span class="fl">0.25</span>, random_state<span class="op">=</span><span class="dv">42</span></span>
-<span id="cb1-16"><a></a>)</span>
-<span id="cb1-17"><a></a></span>
-<span id="cb1-18"><a></a>X_train.shape, X_val.shape, X_test.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="4">
-<pre><code>((60, 2), (20, 2), (20, 2))</code></pre>
+<section class="slide level2">
+
+
+<img data-src="../images/1d_convolution.png" class="r-stretch"></section></section>
+<section>
+<section id="d-convolutions-1" class="title-slide slide level1 center">
+<h1>2D Convolutions</h1>
+
+</section>
+<section id="d-convolutions-2" class="slide level2">
+<h2>2D Convolutions</h2>
+<p>Used for:</p>
+<ul>
+<li>Images</li>
+<li>Video frames</li>
+<li>Spatial data</li>
+</ul>
+</section>
+<section id="d-convolution-formula" class="slide level2">
+<h2>2D Convolution Formula</h2>
+<p><span class="math display">\[
+Z(i,j) = \sum_m \sum_n X(i+m, j+n) W(m,n)
+\]</span></p>
+<p>Kernel is now a matrix.</p>
+</section>
+<section id="convolution-over-rgb-images" class="slide level2">
+<h2>Convolution Over RGB Images</h2>
+<p>Input shape:</p>
+<p><span class="math display">\[
+H \times W \times C
+\]</span></p>
+<p>Kernel shape:</p>
+<p><span class="math display">\[
+k \times k \times C
+\]</span></p>
+<p>Each filter spans all channels.</p>
+</section>
+<section class="slide level2">
+
+
+<img data-src="../images/2d_convolution_anim.gif" class="r-stretch"></section>
+<section id="multiple-filters" class="slide level2">
+<h2>Multiple Filters</h2>
+<p><strong>If we use 64 filters:</strong></p>
+<p>Output depth:</p>
+<p><span class="math display">\[
+H' \times W' \times 64
+\]</span></p>
+<p>Each filter learns a feature:</p>
+<ul>
+<li>edges</li>
+<li>textures</li>
+<li>shapes</li>
+</ul>
+</section>
+<section id="d-convolution-in-tensorflow-1" class="slide level2">
+<h2>2D Convolution in TensorFlow</h2>
+<div id="78c3e794" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>model <span class="op">=</span> tf.keras.Sequential([</span>
+<span id="cb2-2"><a></a>    tf.keras.layers.Conv2D(</span>
+<span id="cb2-3"><a></a>        filters<span class="op">=</span><span class="dv">32</span>,</span>
+<span id="cb2-4"><a></a>        kernel_size<span class="op">=</span>(<span class="dv">3</span>,<span class="dv">3</span>),</span>
+<span id="cb2-5"><a></a>        activation<span class="op">=</span><span class="st">'relu'</span>,</span>
+<span id="cb2-6"><a></a>        input_shape<span class="op">=</span>(<span class="dv">28</span>, <span class="dv">28</span>, <span class="dv">1</span>)</span>
+<span id="cb2-7"><a></a>    )</span>
+<span id="cb2-8"><a></a>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section></section>
+<section>
+<section id="padding" class="title-slide slide level1 center">
+<h1>Padding</h1>
+
+</section>
+<section id="why-padding" class="slide level2">
+<h2>Why padding?</h2>
+<p>Without padding:</p>
+<ul>
+<li>Spatial dimensions shrink</li>
+</ul>
+<p>With kernel size 3:</p>
+<p><span class="math display">\[H_{out} = h - 2\]</span></p>
+</section>
+<section id="types-of-padding" class="slide level2">
+<h2>Types of Padding</h2>
+<h3 id="valid-padding">Valid Padding</h3>
+<ul>
+<li>No padding</li>
+<li>Output shrinks</li>
+</ul>
+<h3 id="same-padding">Same Padding</h3>
+<ul>
+<li>Zero-padding</li>
+<li>Output size preserved</li>
+</ul>
+</section>
+<section id="output-size-formula" class="slide level2">
+<h2>Output Size Formula</h2>
+<p><span class="math display">\[
+H_{out} = \frac{H + 2P - K}{S} + 1
+\]</span></p>
+<p>Where:</p>
+<ul>
+<li><span class="math inline">\(P\)</span>: padding</li>
+<li><span class="math inline">\(K\)</span>: kernel size</li>
+<li><span class="math inline">\(S\)</span>: stride</li>
+</ul>
+</section></section>
+<section>
+<section id="pooling" class="title-slide slide level1 center">
+<h1>Pooling</h1>
+
+</section>
+<section id="why-pooling" class="slide level2">
+<h2>Why Pooling?</h2>
+<ul>
+<li class="fragment">Downsample feature maps</li>
+<li class="fragment">Reduce parameters</li>
+<li class="fragment">Increase receptive field</li>
+<li class="fragment">Add translation invariance</li>
+</ul>
+</section>
+<section id="max-pooling" class="slide level2">
+<h2>Max Pooling</h2>
+<p><span class="math display">\[Z = \max(x_{window})\]</span></p>
+<p>Keeps strongest activation.</p>
+</section>
+<section id="average-pooling" class="slide level2">
+<h2>Average Pooling</h2>
+<p><span class="math display">\[Z = \text{mean}(x_{window})\]</span></p>
+<p>Smoother representation.</p>
+</section>
+<section id="pooling-in-tensorflow" class="slide level2">
+<h2>Pooling in TensorFlow</h2>
+<div id="c54834db" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>tf.keras.layers.MaxPooling2D(pool_size<span class="op">=</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="21">
+<pre><code>&lt;MaxPooling2D name=max_pooling2d_12, built=True&gt;</code></pre>
 </div>
 </div>
 </section></section>
 <section>
-<section id="k-fold-cross-validation" class="title-slide slide level1 center">
-<h1>K-Fold Cross-Validation</h1>
+<section id="cnn-architecture" class="title-slide slide level1 center">
+<h1>CNN Architecture</h1>
 
 </section>
-<section id="motivation" class="slide level2 scrollable">
-<h2>Motivation</h2>
-<h3 id="why-do-we-need-cross-validation">Why Do We Need Cross-Validation?</h3>
-<ul>
-<li>Goal: <strong>estimate generalization performance</strong></li>
-<li>Training error is <strong>optimistically biased</strong></li>
-<li>Single train/test split:
-<ul>
-<li>High variance</li>
-<li>Sensitive to random split</li>
-</ul></li>
-</ul>
-<p><strong>Cross-validation reduces uncertainty in model evaluation</strong></p>
+<section id="cnn-architecture-pattern" class="slide level2">
+<h2>CNN Architecture Pattern</h2>
+<p>Typical CNN:</p>
+<p>Conv → ReLU → Conv → ReLU → Pool Conv → ReLU → Conv → ReLU → Pool Flatten → Dense → Output</p>
 </section>
-<section id="the-core-idea" class="slide level2 scrollable">
-<h2>The Core Idea</h2>
-<h3 id="what-is-k-fold-cross-validation">What Is k-Fold Cross-Validation?</h3>
-<ol type="1">
-<li>Split data into <strong>k approximately equal folds</strong></li>
-<li>For each fold:
+<section id="example-cnn-mnist" class="slide level2">
+<h2>Example CNN (MNIST)</h2>
+<div id="a8f97d9c" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>model <span class="op">=</span> tf.keras.Sequential([</span>
+<span id="cb5-2"><a></a>    tf.keras.layers.Conv2D(<span class="dv">32</span>, <span class="dv">3</span>, activation<span class="op">=</span><span class="st">'relu'</span>, padding<span class="op">=</span><span class="st">'same'</span>),</span>
+<span id="cb5-3"><a></a>    tf.keras.layers.MaxPooling2D(<span class="dv">2</span>),</span>
+<span id="cb5-4"><a></a>    tf.keras.layers.Conv2D(<span class="dv">64</span>, <span class="dv">3</span>, activation<span class="op">=</span><span class="st">'relu'</span>, padding<span class="op">=</span><span class="st">'same'</span>),</span>
+<span id="cb5-5"><a></a>    tf.keras.layers.MaxPooling2D(<span class="dv">2</span>),</span>
+<span id="cb5-6"><a></a>    tf.keras.layers.Flatten(),</span>
+<span id="cb5-7"><a></a>    tf.keras.layers.Dense(<span class="dv">128</span>, activation<span class="op">=</span><span class="st">'relu'</span>),</span>
+<span id="cb5-8"><a></a>    tf.keras.layers.Dense(<span class="dv">10</span>, activation<span class="op">=</span><span class="st">'softmax'</span>)</span>
+<span id="cb5-9"><a></a>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="receptive-field" class="slide level2">
+<h2>Receptive Field</h2>
+<p>The receptive field grows with depth.</p>
+<p><strong>Deeper neurons:</strong></p>
 <ul>
-<li>Train on <code>k−1</code> folds</li>
-<li>Test on the remaining fold</li>
-</ul></li>
-<li>Aggregate performance metrics</li>
-</ol>
+<li>“see” larger parts of image</li>
+<li>learn abstract features</li>
+</ul>
+</section></section>
+<section>
+<section id="residual-networks" class="title-slide slide level1 center">
+<h1>Residual Networks</h1>
+
+</section>
+<section id="vanishing-gradient-problem" class="slide level2">
+<h2>Vanishing Gradient Problem</h2>
+<p>Deep CNNs suffer from:</p>
+<ul>
+<li>Gradient decay</li>
+<li>Hard optimization</li>
+<li>Solution: Residual Connections</li>
+</ul>
+</section>
+<section id="residual-connections" class="slide level2">
+<h2>Residual Connections</h2>
+<p>Introduced in:</p>
+<blockquote>
+<p>ResNet (2015) [REF AQUI]</p>
+</blockquote>
+<p>Instead of learning:</p>
+<p><span class="math display">\[HD(x)\]</span></p>
+<p>Learn:</p>
 <p><span class="math display">\[
-\text{CV score} = \frac{1}{k} \sum_{i=1}^{k} \text{Score}_i
+F(x) = H(x) - x
+\]</span></p>
+<p>So:</p>
+<p><span class="math display">\[
+H(x) = F(x) + x
 \]</span></p>
 </section>
-<section id="choosing-k" class="slide level2 scrollable">
-<h2>Choosing k</h2>
-<h3 id="biasvariance-trade-off">Bias–Variance Trade-off</h3>
-<table class="caption-top">
-<thead>
-<tr class="header">
-<th>k</th>
-<th>Characteristics</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>2–5</td>
-<td>Higher bias, lower variance</td>
-</tr>
-<tr class="even">
-<td>5–10</td>
-<td>Common practical choice</td>
-</tr>
-<tr class="odd">
-<td>n (LOOCV)</td>
-<td>Minimal bias, high variance &amp; cost</td>
-</tr>
-</tbody>
-</table>
-<div title="Rule of thumb">
-<div class="callout callout-tip no-icon callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<p><strong>Rule of thumb</strong></p>
-</div>
-<div class="callout-content">
-<ul>
-<li>k = 5 or 10 for most problems</li>
-</ul>
-</div>
-</div>
-</div>
-</div>
+<section id="residual-block" class="slide level2">
+<h2>Residual Block</h2>
+<p>Output:</p>
+<p><span class="math display">\[y = F(x) + x\]</span></p>
+<p>This is called a <strong>skip connection</strong>.</p>
 </section>
-<section id="formal-perspective" class="slide level2 scrollable">
-<h2>Formal Perspective</h2>
-<h3 id="expected-error-estimation">Expected Error Estimation</h3>
-<p>k-fold CV estimates:</p>
-<p><span class="math display">\[
-\mathbb{E}_{(X,Y)}[L(f_{\mathscr{D}}, (X,Y))]
-\]</span></p>
-<p>with:</p>
+<section id="why-residuals-help" class="slide level2">
+<h2>Why Residuals Help</h2>
 <ul>
-<li>Different training sets <span class="math inline">\(\mathscr{D}\)</span></li>
-<li>Same learning algorithm</li>
-<li>Same data distribution</li>
+<li>Easier optimization</li>
+<li>Identity mapping available</li>
+<li>Prevents degradation</li>
+<li>Enables 100+ layer networks</li>
 </ul>
 </section>
-<section id="regression-vs-classification" class="slide level2 scrollable">
-<h2>Regression vs Classification</h2>
-<h3 id="key-differences">Key Differences</h3>
-<table class="caption-top">
-<thead>
-<tr class="header">
-<th>Aspect</th>
-<th>Regression</th>
-<th>Classification</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Metrics</td>
-<td>MSE, MAE, R²</td>
-<td>Accuracy, F1, AUC</td>
-</tr>
-<tr class="even">
-<td>Splits</td>
-<td>Random OK</td>
-<td>Must preserve class balance</td>
-</tr>
-<tr class="odd">
-<td>CV variant</td>
-<td>KFold</td>
-<td>Stratified k-Fold</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="regression-k-fold-cv" class="slide level2 scrollable">
-<h2>Regression: k-Fold CV</h2>
-<h3 id="typical-metrics">Typical Metrics</h3>
-<ul>
-<li>Mean Squared Error (MSE)</li>
-<li>Mean Absolute Error (MAE)</li>
-<li><span class="math inline">\(R^2\)</span></li>
-</ul>
-<div class="callout callout-note callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>Note</strong></p>
-</div>
-<div class="callout-content">
-<p>Scores may be <strong>negative</strong> in scikit-learn (loss convention)</p>
-</div>
-</div>
+<section id="residual-block-in-tensorflow" class="slide level2">
+<h2>Residual Block in TensorFlow</h2>
+<div id="c6df2711" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a><span class="im">from</span> tensorflow.keras <span class="im">import</span> layers</span>
+<span id="cb6-2"><a></a></span>
+<span id="cb6-3"><a></a><span class="kw">def</span> residual_block(x, filters):</span>
+<span id="cb6-4"><a></a>    shortcut <span class="op">=</span> x</span>
+<span id="cb6-5"><a></a>    </span>
+<span id="cb6-6"><a></a>    x <span class="op">=</span> layers.Conv2D(filters, <span class="dv">3</span>, padding<span class="op">=</span><span class="st">'same'</span>, activation<span class="op">=</span><span class="st">'relu'</span>)(x)</span>
+<span id="cb6-7"><a></a>    x <span class="op">=</span> layers.Conv2D(filters, <span class="dv">3</span>, padding<span class="op">=</span><span class="st">'same'</span>)(x)</span>
+<span id="cb6-8"><a></a>    </span>
+<span id="cb6-9"><a></a>    x <span class="op">=</span> layers.Add()([x, shortcut])</span>
+<span id="cb6-10"><a></a>    x <span class="op">=</span> layers.Activation(<span class="st">'relu'</span>)(x)</span>
+<span id="cb6-11"><a></a>    </span>
+<span id="cb6-12"><a></a>    <span class="cf">return</span> x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="regression-example-scikit-learn" class="slide level2 scrollable">
-<h2>Regression Example (scikit-learn)</h2>
-<div id="e70cd221" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb3-2"><a></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> make_regression</span>
-<span id="cb3-3"><a></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression</span>
-<span id="cb3-4"><a></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> KFold, cross_val_score</span>
-<span id="cb3-5"><a></a></span>
-<span id="cb3-6"><a></a>X, y <span class="op">=</span> make_regression(n_samples<span class="op">=</span><span class="dv">100</span>, n_features<span class="op">=</span><span class="dv">5</span>, noise<span class="op">=</span><span class="dv">10</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
-<span id="cb3-7"><a></a></span>
-<span id="cb3-8"><a></a>model <span class="op">=</span> LinearRegression()</span>
-<span id="cb3-9"><a></a>cv <span class="op">=</span> KFold(n_splits<span class="op">=</span><span class="dv">5</span>, shuffle<span class="op">=</span><span class="va">True</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
-<span id="cb3-10"><a></a></span>
-<span id="cb3-11"><a></a>scores <span class="op">=</span> cross_val_score(</span>
-<span id="cb3-12"><a></a>    model, X, y,</span>
-<span id="cb3-13"><a></a>    cv<span class="op">=</span>cv,</span>
-<span id="cb3-14"><a></a>    scoring<span class="op">=</span><span class="st">"neg_mean_squared_error"</span></span>
-<span id="cb3-15"><a></a>)</span>
-<span id="cb3-16"><a></a></span>
-<span id="cb3-17"><a></a>mse_scores <span class="op">=</span> <span class="op">-</span>scores</span>
-<span id="cb3-18"><a></a><span class="bu">print</span>(<span class="st">"MSE per fold:"</span>, mse_scores)</span>
-<span id="cb3-19"><a></a><span class="bu">print</span>(<span class="st">"Mean MSE:"</span>, mse_scores.mean())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>MSE per fold: [113.44800318  81.16181775  88.22981966  85.52522476 102.8583864 ]
-Mean MSE: 94.2446503511611</code></pre>
+<section id="full-cnn-with-residuals" class="slide level2">
+<h2>Full CNN with Residuals</h2>
+<div id="7e5dfa64" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a>inputs <span class="op">=</span> tf.keras.Input(shape<span class="op">=</span>(<span class="dv">32</span>,<span class="dv">32</span>,<span class="dv">3</span>))</span>
+<span id="cb7-2"><a></a>x <span class="op">=</span> tf.keras.layers.Conv2D(<span class="dv">32</span>, <span class="dv">3</span>, padding<span class="op">=</span><span class="st">'same'</span>)(inputs)</span>
+<span id="cb7-3"><a></a></span>
+<span id="cb7-4"><a></a>x <span class="op">=</span> residual_block(x, <span class="dv">32</span>)</span>
+<span id="cb7-5"><a></a>x <span class="op">=</span> tf.keras.layers.MaxPooling2D()(x)</span>
+<span id="cb7-6"><a></a></span>
+<span id="cb7-7"><a></a>x <span class="op">=</span> residual_block(x, <span class="dv">32</span>)</span>
+<span id="cb7-8"><a></a>x <span class="op">=</span> tf.keras.layers.GlobalAveragePooling2D()(x)</span>
+<span id="cb7-9"><a></a></span>
+<span id="cb7-10"><a></a>outputs <span class="op">=</span> tf.keras.layers.Dense(<span class="dv">10</span>, activation<span class="op">=</span><span class="st">'softmax'</span>)(x)</span>
+<span id="cb7-11"><a></a></span>
+<span id="cb7-12"><a></a>model <span class="op">=</span> tf.keras.Model(inputs, outputs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
-</section>
-<section id="classification-stratified-k-fold-cv" class="slide level2 scrollable">
-<h2>Classification: Stratified k-Fold CV</h2>
-<h3 id="why-stratified-k-fold">Why Stratified k-Fold?</h3>
-<p>In classification:</p>
-<ul>
-<li>Preserves class proportions in each fold</li>
-<li>Especially important for imbalanced datasets</li>
-</ul>
-<p>Use:</p>
-<ul>
-<li><code>KFold</code> → regression</li>
-<li><code>StratifiedKFold</code> → classification</li>
-</ul>
-</section>
-<section id="classification-example" class="slide level2">
-<h2>Classification Example</h2>
-<div id="a80452b3" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> make_classification</span>
-<span id="cb5-2"><a></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
-<span id="cb5-3"><a></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> StratifiedKFold, cross_val_score</span>
-<span id="cb5-4"><a></a></span>
-<span id="cb5-5"><a></a>X, y <span class="op">=</span> make_classification(</span>
-<span id="cb5-6"><a></a>    n_samples<span class="op">=</span><span class="dv">500</span>,</span>
-<span id="cb5-7"><a></a>    n_features<span class="op">=</span><span class="dv">5</span>,</span>
-<span id="cb5-8"><a></a>    n_classes<span class="op">=</span><span class="dv">2</span>,</span>
-<span id="cb5-9"><a></a>    random_state<span class="op">=</span><span class="dv">42</span></span>
-<span id="cb5-10"><a></a>)</span>
-<span id="cb5-11"><a></a></span>
-<span id="cb5-12"><a></a>model <span class="op">=</span> LogisticRegression(max_iter<span class="op">=</span><span class="dv">1000</span>)</span>
-<span id="cb5-13"><a></a></span>
-<span id="cb5-14"><a></a>skf <span class="op">=</span> StratifiedKFold(n_splits<span class="op">=</span><span class="dv">5</span>, shuffle<span class="op">=</span><span class="va">True</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
-<span id="cb5-15"><a></a></span>
-<span id="cb5-16"><a></a>scores <span class="op">=</span> cross_val_score(</span>
-<span id="cb5-17"><a></a>    model, X, y,</span>
-<span id="cb5-18"><a></a>    cv<span class="op">=</span>skf,</span>
-<span id="cb5-19"><a></a>    scoring<span class="op">=</span><span class="st">"accuracy"</span></span>
-<span id="cb5-20"><a></a>)</span>
-<span id="cb5-21"><a></a></span>
-<span id="cb5-22"><a></a>scores</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="6">
-<pre><code>array([0.92, 0.89, 0.87, 0.85, 0.9 ])</code></pre>
-</div>
-</div>
-</section>
-<section id="best-practices-in-cv" class="slide level2">
-<h2>Best Practices in CV</h2>
-<p>Cross-validation is often used to:</p>
-<ul>
-<li>Compare models</li>
-<li>Tune hyperparameters</li>
-</ul>
-<div class="callout callout-warning callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>Warning</strong></p>
-</div>
-<div class="callout-content">
-<p>Cross-Validation <span class="math inline">\(\neq\)</span> Test Set</p>
-</div>
-</div>
-</div>
-<div title="Important Rule">
-<div class="callout callout-important callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>Important Rule</strong></p>
-</div>
-<div class="callout-content">
-<p>Never touch the test set until the very end</p>
-</div>
-</div>
-</div>
-</div>
-<ul>
-<li>CV is for model selection</li>
-<li>Test set is for final evaluation</li>
-</ul>
 
 
 </section></section>

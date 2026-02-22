@@ -10,7 +10,7 @@
   <meta name="generator" content="quarto-1.7.32">
 
   <meta name="author" content="Miguel Fonseca">
-  <title>MPAAAF – Decision Trees for Financial Data</title>
+  <title>MPAAAF – Regularisation for Neural Networks</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -28,72 +28,6 @@
       margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
-    /* CSS for syntax highlighting */
-    html { -webkit-text-size-adjust: 100%; }
-    pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-    pre > code.sourceCode > span:empty { height: 1.2em; }
-    .sourceCode { overflow: visible; }
-    code.sourceCode > span { color: inherit; text-decoration: inherit; }
-    div.sourceCode { margin: 1em 0; }
-    pre.sourceCode { margin: 0; }
-    @media screen {
-    div.sourceCode { overflow: auto; }
-    }
-    @media print {
-    pre > code.sourceCode { white-space: pre-wrap; }
-    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-    }
-    pre.numberSource code
-      { counter-reset: source-line 0; }
-    pre.numberSource code > span
-      { position: relative; left: -4em; counter-increment: source-line; }
-    pre.numberSource code > span > a:first-child::before
-      { content: counter(source-line);
-        position: relative; left: -1em; text-align: right; vertical-align: baseline;
-        border: none; display: inline-block;
-        -webkit-touch-callout: none; -webkit-user-select: none;
-        -khtml-user-select: none; -moz-user-select: none;
-        -ms-user-select: none; user-select: none;
-        padding: 0 4px; width: 4em;
-        color: #aaaaaa;
-      }
-    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-    div.sourceCode
-      { color: #003b4f; background-color: #f1f3f5; }
-    @media screen {
-    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-    }
-    code span { color: #003b4f; } /* Normal */
-    code span.al { color: #ad0000; } /* Alert */
-    code span.an { color: #5e5e5e; } /* Annotation */
-    code span.at { color: #657422; } /* Attribute */
-    code span.bn { color: #ad0000; } /* BaseN */
-    code span.bu { } /* BuiltIn */
-    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
-    code span.ch { color: #20794d; } /* Char */
-    code span.cn { color: #8f5902; } /* Constant */
-    code span.co { color: #5e5e5e; } /* Comment */
-    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
-    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
-    code span.dt { color: #ad0000; } /* DataType */
-    code span.dv { color: #ad0000; } /* DecVal */
-    code span.er { color: #ad0000; } /* Error */
-    code span.ex { } /* Extension */
-    code span.fl { color: #ad0000; } /* Float */
-    code span.fu { color: #4758ab; } /* Function */
-    code span.im { color: #00769e; } /* Import */
-    code span.in { color: #5e5e5e; } /* Information */
-    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
-    code span.op { color: #5e5e5e; } /* Operator */
-    code span.ot { color: #003b4f; } /* Other */
-    code span.pp { color: #ad0000; } /* Preprocessor */
-    code span.sc { color: #5e5e5e; } /* SpecialChar */
-    code span.ss { color: #20794d; } /* SpecialString */
-    code span.st { color: #20794d; } /* String */
-    code span.va { color: #111111; } /* Variable */
-    code span.vs { color: #20794d; } /* VerbatimString */
-    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-7f656d197a6d4d458420565151872bca.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
@@ -196,8 +130,8 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">Decision Trees for Financial Data</h1>
-  <p class="subtitle">Theory, Evaluation, Feature Importance &amp; Applications</p>
+  <h1 class="title">Regularisation for Neural Networks</h1>
+  <p class="subtitle">Controlling Capacity, Improving Generalisation</p>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -211,448 +145,347 @@ Miguel Fonseca
 <nav role="doc-toc"> 
 <h2 id="toc-title">Table of contents</h2>
 <ul>
-<li><a href="#/motivation-intuition" id="/toc-motivation-intuition">Motivation &amp; intuition</a></li>
-<li><a href="#/decision-tree-theory" id="/toc-decision-tree-theory">Decision tree theory</a></li>
-<li><a href="#/splitting-criteria" id="/toc-splitting-criteria">Splitting criteria</a></li>
-<li><a href="#/overfitting-regularization" id="/toc-overfitting-regularization">Overfitting &amp; regularization</a></li>
-<li><a href="#/evaluation-metrics" id="/toc-evaluation-metrics">Evaluation metrics</a></li>
-<li><a href="#/feature-importance" id="/toc-feature-importance">Feature importance</a></li>
-<li><a href="#/financial-applications" id="/toc-financial-applications">Financial applications</a></li>
+<li><a href="#/why-regularisation-is-necessary" id="/toc-why-regularisation-is-necessary">Why regularisation is necessary</a></li>
+<li><a href="#/explicit-regularisation" id="/toc-explicit-regularisation">Explicit regularisation</a></li>
+<li><a href="#/stochastic-regularisation" id="/toc-stochastic-regularisation">Stochastic regularisation</a></li>
+<li><a href="#/normalisation-layers" id="/toc-normalisation-layers">Normalisation layers</a></li>
+<li><a href="#/implicit-regularisation" id="/toc-implicit-regularisation">Implicit regularisation</a></li>
+<li><a href="#/practical-guidelines" id="/toc-practical-guidelines">Practical guidelines</a></li>
 </ul>
 </nav>
 </section>
 <section>
-<section id="motivation-intuition" class="title-slide slide level1 center">
-<h1>Motivation &amp; intuition</h1>
-<!--## Outline
-- Motivation & intuition  
-- Decision tree theory  
-- Splitting criteria  
-- Overfitting & regularization  
-- Evaluation metrics  
-- Feature importance  
-- Financial applications  
-- Practical considerations  -->
+<section id="why-regularisation-is-necessary" class="title-slide slide level1 center">
+<h1>Why regularisation is necessary</h1>
+
 </section>
-<section id="why-decision-trees" class="slide level2 scrollable">
-<h2>Why Decision Trees?</h2>
-<div class="non-incremental">
+<section id="why-regularisation" class="slide level2">
+<h2>Why Regularisation?</h2>
 <ul>
-<li>Non-linear models<br>
-</li>
-<li>Easy to interpret<br>
-</li>
-<li>Handle mixed data types<br>
-</li>
-<li>Minimal preprocessing<br>
-</li>
-<li>Strong baseline in finance<br>
-</li>
+<li>Neural networks are <strong>high-capacity models</strong></li>
+<li>Overfitting is common</li>
+<li>Training loss ↓ does <em>not</em> imply test loss ↓</li>
 </ul>
-</div>
-<p><strong>Used in:</strong></p>
-<div class="non-incremental">
-<ul>
-<li>Credit scoring<br>
-</li>
-<li>Risk classification<br>
-</li>
-<li>Trading rules<br>
-</li>
-<li>Fraud detection<br>
-</li>
-</ul>
-</div>
-</section>
-<section id="intuition" class="slide level2 scrollable">
-<h2>Intuition</h2>
-<p>A decision tree:</p>
-<div class="non-incremental">
-<ul>
-<li>Recursively splits data</li>
-<li>Uses simple decision rules</li>
-<li>Creates homogeneous regions</li>
-</ul>
-</div>
+<p><strong>Goal:</strong></p>
 <blockquote>
-<p><em>“If–then–else logic learned from data”</em></p>
+<p>Improve generalisation by controlling effective model complexity</p>
 </blockquote>
-<!-- --- -->
+</section>
+<section id="overfitting-in-neural-networks" class="slide level2">
+<h2>Overfitting in Neural Networks</h2>
+<ul>
+<li>Many parameters</li>
+<li>Flexible decision boundaries</li>
+<li>Can memorise training data</li>
+</ul>
+<p>Typical symptoms:</p>
+<ul>
+<li>Training error → 0</li>
+<li>Validation error ↑</li>
+</ul>
+</section>
+<section id="what-is-regularisation" class="slide level2 scrollable">
+<h2>What Is Regularisation?</h2>
+<p><strong>Definition</strong></p>
+<p>Any technique that constrains learning to improve out-of-sample performance.</p>
+<h3 id="three-perspectives">Three perspectives</h3>
+<ol type="1">
+<li>Penalise complexity<br>
+</li>
+<li>Inject noise<br>
+</li>
+<li>Stop training early</li>
+</ol>
 </section></section>
 <section>
-<section id="decision-tree-theory" class="title-slide slide level1 scrollable center">
-<h1>Decision tree theory</h1>
+<section id="explicit-regularisation" class="title-slide slide level1 center">
+<h1>Explicit regularisation</h1>
 
 </section>
-<section id="tree-structure" class="slide level2">
-<h2>Tree Structure</h2>
-<ul>
-<li><strong>Root node</strong> – first split<br>
-</li>
-<li><strong>Internal nodes</strong> – decision rules<br>
-</li>
-<li><strong>Leaves</strong> – predictions</li>
-</ul>
-<p>Predictions:</p>
-<ul>
-<li class="fragment"><strong>Regression</strong> → mean value<br>
-</li>
-<li class="fragment"><strong>Classification</strong> → majority class / probability<br>
-</li>
-</ul>
-</section>
-<section id="mathematical-view" class="slide level2 scrollable">
-<h2>Mathematical View</h2>
-<p>Given data <span class="math inline">\((X, y)\)</span>:</p>
-<p>At each node, choose split <span class="math inline">\(s\)</span> that minimizes impurity:</p>
+<section id="explicit-regularisation-l2-weight-decay" class="slide level2">
+<h2>Explicit Regularisation: L2 (Weight Decay)</h2>
 <p><span class="math display">\[
-s^* = \mathop{\arg\min}_s \sum_{k \in \{L,R\}} \frac{n_k}{n} \, I(y_k)
+\mathscr{L}(\theta) = \mathscr{L}_{data}(\theta) + \lambda \sum_i w_i^2
 \]</span></p>
-<p>where <span class="math inline">\(I(\cdot)\)</span> is an impurity measure.</p>
-<!-- --- -->
-</section></section>
-<section>
-<section id="splitting-criteria" class="title-slide slide level1 center">
-<h1>Splitting criteria</h1>
-
-</section>
-<section id="splitting-criteria-classification" class="slide level2 scrollable">
-<h2>Splitting Criteria (Classification)</h2>
+<p><strong>Effects</strong></p>
 <ul>
-<li class="fragment"><p><strong>Gini Impurity</strong> <span class="math display">\[
-G = 1 - \sum_{c} p_c^2
-\]</span></p></li>
-<li class="fragment"><p><strong>Entropy</strong> <span class="math display">\[
-H = -\sum_c p_c \log (p_c)
-\]</span></p></li>
-<li class="fragment"><p><strong>Information Gain</strong> <span class="math display">\[
-IG = H(\text{parent}) - \sum_k \frac{n_k}{n} H(\text{child}_k)
-\]</span></p></li>
+<li>Penalises large weights</li>
+<li>Encourages smooth functions</li>
+<li>Improves conditioning</li>
 </ul>
 </section>
-<section id="splitting-criteria-regression-.scrollable" class="slide level2 scrollable">
-<h2>Splitting Criteria (Regression) {.scrollable}</h2>
-<h3 id="variance-reduction">Variance Reduction</h3>
+<section id="geometric-interpretation-of-l2" class="slide level2">
+<h2>Geometric Interpretation of L2</h2>
+<ul>
+<li>Penalises distance from origin</li>
+<li>Shrinks parameters continuously</li>
+<li>Equivalent to Gaussian prior on weights</li>
+</ul>
+</section>
+<section id="l1-regularisation" class="slide level2">
+<h2>L1 Regularisation</h2>
 <p><span class="math display">\[
-\mathrm{Var}(y) = \frac{1}{n} \sum (y_i - \bar{y})^2
+\mathscr{L}(\theta) = \mathscr{L}_{data}(\theta) + \lambda \sum_i |w_i|
 \]</span></p>
-<p>The optimal split minimizes <strong>weighted variance</strong> across child nodes.</p>
+<p><strong>Key properties</strong></p>
+<ul>
+<li>Produces sparse solutions</li>
+<li>Performs implicit feature selection</li>
+<li>Less common in deep networks</li>
+</ul>
 </section>
-<section id="continuous-vs-categorical-features" class="slide level2 scrollable">
-<h2>Continuous vs Categorical Features</h2>
-<ul>
-<li>Continuous: threshold splits (e.g.&nbsp;return &gt; 0.01)<br>
-</li>
-<li>Categorical: subset splits</li>
-</ul>
-<p>Financial data characteristics:</p>
-<div class="non-incremental">
-<ul>
-<li>Skewed distributions<br>
-</li>
-<li>Heavy tails<br>
-</li>
-<li>Strong correlations<br>
-</li>
-</ul>
-</div>
-</section>
-<section id="stopping-criteria" class="slide level2 scrollable">
-<h2>Stopping Criteria</h2>
-<p>Trees stop growing when:</p>
-<ul>
-<li class="fragment">Maximum depth is reached<br>
-</li>
-<li class="fragment">Minimum samples per leaf is violated<br>
-</li>
-<li class="fragment">No impurity reduction is possible<br>
-</li>
-<li class="fragment">Node becomes pure<br>
-</li>
-</ul>
-<!-- --- -->
-</section></section>
-<section>
-<section id="overfitting-regularization" class="title-slide slide level1 center">
-<h1>Overfitting &amp; regularization</h1>
-
-</section>
-<section id="overfitting-problem" class="slide level2 scrollable">
-<h2>Overfitting Problem</h2>
-<p>Decision trees:</p>
-<ul>
-<li>Low bias<br>
-</li>
-<li><strong>High variance</strong></li>
-</ul>
-<p>Unrestricted trees:</p>
-<div class="non-incremental">
-<ul>
-<li>Memorize noise<br>
-</li>
-<li>Poor out-of-sample performance<br>
-</li>
-</ul>
-</div>
-</section>
-<section id="regularization-pruning" class="slide level2 scrollable">
-<h2>Regularization (Pruning)</h2>
-<p>Key hyperparameters:</p>
-<div class="non-incremental">
-<ul>
-<li><code>max_depth</code></li>
-<li><code>min_samples_leaf</code></li>
-<li><code>min_samples_split</code></li>
-<li><code>max_leaf_nodes</code></li>
-</ul>
-</div>
-<div class="callout callout-none no-icon callout-style-simple">
-<div class="callout-body">
-<div class="callout-content">
-<p>Controls the <strong>bias–variance tradeoff</strong>.</p>
-</div>
-</div>
-</div>
-</section>
-<section id="cost-complexity-pruning" class="slide level2 scrollable">
-<h2>Cost-Complexity Pruning</h2>
-<p>Objective function:</p>
-<p><span class="math display">\[
-R_\alpha(T) = R(T) + \alpha |T|
-\]</span></p>
-<div class="non-incremental">
-<ul>
-<li><span class="math inline">\(R(T)\)</span>: training error<br>
-</li>
-<li><span class="math inline">\(|T|\)</span>: number of leaves<br>
-</li>
-</ul>
-</div>
-<p>Used in <strong>CART</strong>.</p>
-<!-- --- -->
-</section></section>
-<section>
-<section id="evaluation-metrics" class="title-slide slide level1 center">
-<h1>Evaluation metrics</h1>
-
-</section>
-<section id="evaluation-metrics-classification" class="slide level2 scrollable">
-<h2>Evaluation Metrics (Classification)</h2>
-<p><strong>Confusion Matrix</strong></p>
+<section id="l1-vs-l2" class="slide level2">
+<h2>L1 vs L2</h2>
 <table class="caption-top">
 <thead>
 <tr class="header">
-<th style="text-align: center;"></th>
-<th style="text-align: center;">Predicted +</th>
-<th style="text-align: center;">Predicted -</th>
+<th>Aspect</th>
+<th>L1</th>
+<th>L2</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: center;"><strong>Actual +</strong></td>
-<td style="text-align: center;">TP</td>
-<td style="text-align: center;">FN</td>
+<td>Sparsity</td>
+<td>Yes</td>
+<td>No</td>
 </tr>
 <tr class="even">
-<td style="text-align: center;"><strong>Actual -</strong></td>
-<td style="text-align: center;">FP</td>
-<td style="text-align: center;">TN</td>
+<td>Weight shrinkage</td>
+<td>Hard</td>
+<td>Smooth</td>
+</tr>
+<tr class="odd">
+<td>Interpretability</td>
+<td>Higher</td>
+<td>Lower</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Common Metrics</strong></p>
-<div class="non-incremental">
-<ul>
-<li>Accuracy: <span class="math inline">\(\frac{TP + TN}{TP + TN + FP + FN}\)</span><br>
-</li>
-<li>Precision: <span class="math inline">\(\frac{TP}{TP + FP}\)</span><br>
-</li>
-<li>Recall: <span class="math inline">\(\frac{TP}{TP + FN}\)</span><br>
-</li>
-<li>F1-score: <span class="math inline">\(2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}\)</span></li>
-<li>ROC / AUC</li>
-</ul>
-</div>
-</section>
-<section id="evaluation-metrics-finance-aware" class="slide level2 scrollable">
-<h2>Evaluation Metrics (Finance-Aware)</h2>
-<p>Accuracy is often misleading.</p>
-<p>Prefer:</p>
-<div class="non-incremental">
-<ul>
-<li>Recall (default detection)<br>
-</li>
-<li>Precision (fraud detection)<br>
-</li>
-<li>Expected loss<br>
-</li>
-<li>Cost-weighted metrics<br>
-</li>
-</ul>
-</div>
-</section>
-<section id="evaluation-metrics-regression" class="slide level2 scrollable">
-<h2>Evaluation Metrics (Regression)</h2>
-<div class="non-incremental">
-<ul>
-<li>MAE<br>
-</li>
-<li>MSE / RMSE<br>
-</li>
-<li><span class="math inline">\(R^2\)</span><br>
-</li>
-<li>Out-of-sample error<br>
-</li>
-</ul>
-</div>
-<p>For trading:</p>
-<div class="non-incremental">
-<ul>
-<li>Directional accuracy<br>
-</li>
-<li>PnL-based metrics<br>
-</li>
-</ul>
-</div>
-</section>
-<section id="cross-validation" class="slide level2 scrollable">
-<h2>Cross-Validation</h2>
-<p>Essential due to high variance:</p>
-<div class="non-incremental">
-<ul>
-<li>K-fold cross-validation<br>
-</li>
-<li><strong>Time-series split</strong> for financial data<br>
-</li>
-</ul>
-</div>
-<div class="callout callout-warning callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>Warning</strong></p>
-</div>
-<div class="callout-content">
-<p>Never shuffle time series data.</p>
-</div>
-</div>
-</div>
-<!-- --- -->
 </section></section>
 <section>
-<section id="feature-importance" class="title-slide slide level1 center">
-<h1>Feature importance</h1>
+<section id="stochastic-regularisation" class="title-slide slide level1 center">
+<h1>Stochastic regularisation</h1>
 
 </section>
-<section id="feature-importance-concept" class="slide level2 scrollable">
-<h2>Feature Importance: Concept</h2>
-<p>Decision tree importance is based on:</p>
+<section id="stochastic-regularisation-1" class="slide level2">
+<h2>Stochastic Regularisation</h2>
 <ul>
-<li>Reduction in impurity</li>
-<li>Aggregated over all splits</li>
+<li>Inject randomness during training</li>
+<li>Forces robustness</li>
+<li>Prevents co-adaptation</li>
+</ul>
+<p>Examples:</p>
+<ul>
+<li>Dropout</li>
+<li>Noise injection</li>
+<li>BatchNorm (indirectly)</li>
+</ul>
+</section>
+<section id="dropout" class="slide level2">
+<h2>Dropout</h2>
+<p><strong>Idea</strong></p>
+<ul>
+<li>Randomly drop neurons during training</li>
 </ul>
 <p><span class="math display">\[
-FI_j = \sum_{t \in j} \Delta I_t
+\widetilde{h} = h \cdot \text{Bernoulli}(p)
+\]</span></p>
+<p><strong>Interpretation</strong></p>
+<ul>
+<li>Approximate ensemble learning</li>
+<li>Strong regularisation effect</li>
+</ul>
+</section>
+<section id="dropout-practical-notes" class="slide level2">
+<h2>Dropout: Practical Notes</h2>
+<ul>
+<li>Most effective in fully-connected layers</li>
+<li>Typical rates: 0.1–0.5</li>
+<li>Often unnecessary with BatchNorm</li>
+</ul>
+</section></section>
+<section>
+<section id="normalisation-layers" class="title-slide slide level1 center">
+<h1>Normalisation layers</h1>
+
+</section>
+<section id="normalisation-layers-1" class="slide level2">
+<h2>Normalisation Layers</h2>
+<p>Primary purpose:</p>
+<ul>
+<li>Stabilise optimisation</li>
+</ul>
+<p>Secondary effect:</p>
+<ul>
+<li>Regularisation through noise or smoothing</li>
+</ul>
+</section>
+<section id="batch-normalization" class="slide level2">
+<h2>Batch Normalization</h2>
+<p>For mini-batch <span class="math inline">\(B\)</span>:</p>
+<p><span class="math display">\[
+\widehat{x} = \frac{x - \mu_B}{\sqrt{\sigma_B^2 + \epsilon}}, \quad
+y = \gamma \widehat{x} + \beta
 \]</span></p>
 </section>
-<section id="impurity-based-importance" class="slide level2 scrollable">
-<h2>Impurity-Based Importance</h2>
-<p><strong>Pros</strong></p>
+<section id="why-batchnorm-works" class="slide level2">
+<h2>Why BatchNorm Works</h2>
 <ul>
-<li>Fast</li>
-<li>Built-in</li>
+<li>Reduces sensitivity to parameter scale</li>
+<li>Allows higher learning rates</li>
+<li>Improves gradient flow</li>
 </ul>
-<p><strong>Cons</strong></p>
+</section>
+<section id="batchnorm-as-regularisation" class="slide level2">
+<h2>BatchNorm as Regularisation</h2>
 <ul>
-<li>Biased toward:
+<li>Uses batch statistics</li>
+<li>Introduces stochastic noise</li>
+<li>Noise depends on batch composition</li>
+</ul>
+<p><strong>Result</strong></p>
 <ul>
-<li>Continuous variables<br>
-</li>
-<li>High-cardinality features</li>
+<li>Reduced overfitting</li>
+<li>Often replaces dropout</li>
+</ul>
+</section>
+<section id="limitations-of-batchnorm" class="slide level2">
+<h2>Limitations of BatchNorm</h2>
+<ul>
+<li>Depends on batch size</li>
+<li>Poor with small batches</li>
+<li>Not ideal for:
+<ul>
+<li>RNNs</li>
+<li>Online learning</li>
+<li>Transformers</li>
 </ul></li>
 </ul>
 </section>
-<section id="permutation-importance" class="slide level2 scrollable">
-<h2>Permutation Importance</h2>
-<p><strong>Idea:</strong></p>
+<section id="layer-normalization" class="slide level2">
+<h2>Layer Normalization</h2>
+<p>Normalises <strong>within a single sample</strong>:</p>
+<p><span class="math display">\[
+\widehat{x} = \frac{x - \mu_{features}}{\sqrt{\sigma_{features}^2 + \epsilon}}
+\]</span></p>
+</section>
+<section id="why-layernorm" class="slide level2">
+<h2>Why LayerNorm?</h2>
 <ul>
-<li>Shuffle one feature at a time<br>
-</li>
-<li>Measure performance degradation</li>
+<li>Independent of batch size</li>
+<li>Stable for sequential models</li>
+<li>Standard in Transformers</li>
 </ul>
-<p><strong>Advantages:</strong></p>
+<p><strong>Regularisation effect</strong></p>
 <ul>
-<li>Model-agnostic<br>
-</li>
-<li>Less biased</li>
+<li>Smoother optimisation landscape</li>
+<li>Less noise than BatchNorm</li>
 </ul>
 </section>
-<section id="feature-importance-in-finance" class="slide level2 scrollable">
-<h2>Feature Importance in Finance</h2>
-<p>Interpret carefully:</p>
+<section id="batchnorm-vs-layernorm" class="slide level2">
+<h2>BatchNorm vs LayerNorm</h2>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Aspect</th>
+<th>BatchNorm</th>
+<th>LayerNorm</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Normalisation axis</td>
+<td>Batch</td>
+<td>Features</td>
+</tr>
+<tr class="even">
+<td>Batch-size dependent</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr class="odd">
+<td>Noise level</td>
+<td>High</td>
+<td>Low</td>
+</tr>
+<tr class="even">
+<td>Typical use</td>
+<td>CNNs</td>
+<td>Transformers</td>
+</tr>
+</tbody>
+</table>
+</section></section>
+<section>
+<section id="implicit-regularisation" class="title-slide slide level1 center">
+<h1>Implicit regularisation</h1>
+
+</section>
+<section id="implicit-regularisation-1" class="slide level2">
+<h2>Implicit Regularisation</h2>
+<p>Not explicitly added to the loss.</p>
+<p>Examples:</p>
 <ul>
-<li>Correlated predictors<br>
-</li>
-<li>Lagged variables<br>
-</li>
-<li>Proxy features</li>
+<li>Early stopping</li>
+<li>SGD noise</li>
+<li>Finite training time</li>
 </ul>
-<p>Best practice:</p>
+</section>
+<section id="early-stopping" class="slide level2">
+<h2>Early Stopping</h2>
 <ul>
-<li>Combine with SHAP<br>
-</li>
-<li>Apply economic intuition</li>
+<li>Stop training when validation loss increases</li>
+<li>Prevents late-stage memorisation</li>
+</ul>
+<p><strong>Theory</strong></p>
+<ul>
+<li>Equivalent to L2 in linear models</li>
 </ul>
 </section></section>
 <section>
-<section id="financial-applications" class="title-slide slide level1 center">
-<h1>Financial applications</h1>
+<section id="practical-guidelines" class="title-slide slide level1 center">
+<h1>Practical guidelines</h1>
 
 </section>
-<section id="financial-application-1-credit-scoring" class="slide level2 scrollable">
-<h2>Financial Application 1: Credit Scoring</h2>
-<p><strong>Inputs</strong></p>
+<section id="regularisation-strategy" class="slide level2 scrollable">
+<h2>Regularisation Strategy</h2>
+<ol type="1">
+<li>Start with:
 <ul>
-<li>Income<br>
-</li>
-<li>Debt ratio<br>
-</li>
-<li>Payment history</li>
-</ul>
-<p><strong>Target</strong></p>
+<li>Weight decay</li>
+<li>Early stopping</li>
+</ul></li>
+<li>Add:
 <ul>
-<li>Default / No default</li>
-</ul>
-<p><em>Decision trees:</em></p>
+<li>BatchNorm <em>or</em> LayerNorm</li>
+</ul></li>
+<li>Use Dropout:
 <ul>
-<li>Transparent rules<br>
-</li>
-<li>Regulatory-friendly</li>
+<li>If BatchNorm is absent</li>
+<li>Or in final dense layers</li>
+</ul></li>
+</ol>
+</section>
+<section id="common-anti-patterns" class="slide level2">
+<h2>Common Anti-Patterns</h2>
+<ul>
+<li>Dropout + BatchNorm everywhere</li>
+<li>Over-regularising small datasets</li>
+<li>Ignoring optimiser interactions</li>
 </ul>
 </section>
-<section id="financial-application-2-fraud-detection" class="slide level2 scrollable">
-<h2>Financial Application 2: Fraud Detection</h2>
-<p><strong>Characteristics:</strong></p>
+<section id="key-takeaways" class="slide level2">
+<h2>Key Takeaways</h2>
 <ul>
-<li>Highly imbalanced data<br>
-</li>
-<li>Rare events</li>
+<li>Regularisation controls <em>effective capacity</em></li>
+<li>Normalisation layers regularise implicitly</li>
+<li>Methods are complementary</li>
+<li>Validation performance is the final arbiter</li>
 </ul>
-<p><strong>Trees:</strong></p>
-<ul>
-<li>Capture non-linear interactions<br>
-</li>
-<li>Produce interpretable alerts</li>
-</ul>
-</section>
-<section id="financial-application-3-trading-rules" class="slide level2 scrollable">
-<h2>Financial Application 3: Trading Rules</h2>
-<p>Example learned rule:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource {text} number-lines code-with-copy"><code class="sourceCode"><span id="cb1-1"><a></a>IF momentum &gt; 0.02 AND volatility &lt; 0.15</span>
-<span id="cb1-2"><a></a>THEN Buy</span>
-<span id="cb1-3"><a></a>ELSE Hold</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<blockquote>
+<p>Generalisation is engineered, not accidental.</p>
+</blockquote>
 
 
 </section></section>
