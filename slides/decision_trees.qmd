@@ -107,7 +107,7 @@ $$
 
 ---
 
-## Splitting Criteria (Regression) {.scrollable} {.scrollable}
+## Splitting Criteria (Regression) {.scrollable}
 
 ### Variance Reduction
 
