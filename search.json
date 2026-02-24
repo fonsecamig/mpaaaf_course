@@ -819,11 +819,11 @@
     "text": "Splitting Criteria (Classification)\n\nGini Impurity \\[\nG = 1 - \\sum_{c} p_c^2\n\\]\nEntropy \\[\nH = -\\sum_c p_c \\log (p_c)\n\\]\nInformation Gain \\[\nIG = H(\\text{parent}) - \\sum_k \\frac{n_k}{n} H(\\text{child}_k)\n\\]"
   },
   {
-    "objectID": "slides/decision_trees.html#splitting-criteria-regression-.scrollable",
-    "href": "slides/decision_trees.html#splitting-criteria-regression-.scrollable",
+    "objectID": "slides/decision_trees.html#splitting-criteria-regression",
+    "href": "slides/decision_trees.html#splitting-criteria-regression",
     "title": "Decision Trees for Financial Data",
-    "section": "Splitting Criteria (Regression) {.scrollable}",
-    "text": "Splitting Criteria (Regression) {.scrollable}\nVariance Reduction\n\\[\n\\mathrm{Var}(y) = \\frac{1}{n} \\sum (y_i - \\bar{y})^2\n\\]\nThe optimal split minimizes weighted variance across child nodes."
+    "section": "Splitting Criteria (Regression)",
+    "text": "Splitting Criteria (Regression)\nVariance Reduction\n\\[\n\\mathrm{Var}(y) = \\frac{1}{n} \\sum (y_i - \\bar{y})^2\n\\]\nThe optimal split minimizes weighted variance across child nodes."
   },
   {
     "objectID": "slides/decision_trees.html#continuous-vs-categorical-features",
