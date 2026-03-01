@@ -55,13 +55,20 @@ A decision tree:
 
 # Decision tree theory {.scrollable}
 
+## Decisions
+
+![](/images/lemons_oranges.png)
+
+---
+
 ## Tree Structure
 
 - **Root node** – first split  
 - **Internal nodes** – decision rules  
-- **Leaves** – predictions  
+- **Leaves** – predictions
 
-Predictions:
+
+## Predictions
 
 ::: {.incremental}
 - **Regression** → mean value  

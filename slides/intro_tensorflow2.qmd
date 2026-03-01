@@ -90,8 +90,6 @@ tf.matmul(x, tf.transpose(y))
 - Operations are GPU-aware
 - Broadcasting rules apply (like NumPy)
 
----
-
 # Keras: The High-Level API
 
 ## Why Keras?
@@ -117,6 +115,7 @@ model.summary()
 ```
 
 **Concepts:**
+
 - Layers
 - Parameters
 - Trainable weights
@@ -136,8 +135,6 @@ model = tf.keras.Model(inputs, outputs)
 
 - Multiple inputs / outputs
 - Complex architectures
-
----
 
 # Training Workflow
 

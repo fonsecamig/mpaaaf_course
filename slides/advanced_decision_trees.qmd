@@ -123,6 +123,9 @@ Typical defaults:
 
 ## Random Forests in Finance {.scrollable}
 
+
+:::{.columns}
+::::{.column width="50%"}
 ### Strengths
 
 Excellent baseline for:
@@ -136,13 +139,16 @@ Handles:
 - Non-linearities
 - Interactions
 - Mixed feature types
+::::
 
+::::{.column width="50%"}
 ### Limitations
 
 - Poor extrapolation
 - Weak for regime shifts
 - Limited interpretability
-
+:::
+:::
 ---
 
 ## Out-of-Bag (OOB) Error {.scrollable}
@@ -159,6 +165,76 @@ Useful when:
 - Still respect time ordering
 - OOB $\neq$ time-aware validation
 :::
+
+---
+
+## Out-of-Bag (OOB) Error
+
+- Each tree in a  
+  **Random Forest**  
+  is trained on a **bootstrap sample**
+- ~63.2% of observations are used
+- ~36.8% are **Out-of-Bag (OOB)**
+
+For each observation:
+
+- Collect predictions **only from trees that did NOT see it**
+- Aggregate (vote / mean)
+- Compare with true value
+
+---
+
+## Why 36.8%?
+
+$$
+\begin{align*}
+P(\text{not selected}) =
+\left(1 - \frac{1}{n}\right)^n
+\approx e^{-1} \approx 0.368
+\end{align*}
+$$
+
+### OOB Error
+
+- Classification → Misclassification rate  
+- Regression → MSE  
+
+$$
+\text{OOB Error} =
+\frac{1}{n} \sum_{i=1}^n
+L(y_i, \widehat{y}_i^{OOB})
+$$
+
+---
+
+## OOB Error in Python {.scrollable}
+
+```{python}
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.datasets import make_classification
+from sklearn.model_selection import train_test_split
+
+X, y = make_classification(n_samples=1000, n_features=20, random_state=42)
+
+rf = RandomForestClassifier(
+    n_estimators=200,
+    oob_score=True,
+    bootstrap=True,
+    random_state=42
+)
+
+rf.fit(X, y)
+
+print("OOB Score:", rf.oob_score_)
+print("OOB Error:", 1 - rf.oob_score_)
+```
+
+## Why It Matters
+
+- No validation set required  
+- No k-fold cross-validation required  
+- Nearly unbiased test error estimate  
+- “Cross-validation for free”
 
 # Boosting
 
@@ -411,23 +487,12 @@ Power increases the risk of overfitting.
 
 **Key innovation:**
 
-- Leaf-wise tree growth
-- (instead of level-wise)
+- Leaf-wise tree growth (instead of level-wise)
 
 **Result:**
 
 - Faster training
 - Often better accuracy on large datasets
-
-## XGBoost vs LightGBM {.scrollable}
-
-| Aspect      | XGBoost     | LightGBM    |
-| ----------- | ----------- | ----------- |
-| Tree growth | Level-wise  | Leaf-wise   |
-| Speed       | Fast        | Very fast   |
-| Memory      | Moderate    | Low         |
-| Small data  | Very stable | Can overfit |
-| Large data  | Strong      | Excellent   |
 
 ---
 
@@ -438,8 +503,19 @@ Power increases the risk of overfitting.
 - `max_depth` / `num_leaves` $\rightarrow$ complexity
 - `subsample` $\rightarrow$ row sampling
 - `colsample_bytree` $\rightarrow$ feature sampling
-Golden rule:
 
 :::{.callout-tip}
 Lower learning rate $\implies$ more trees $\implies$ more stability
 :::
+
+---
+
+## XGBoost vs LightGBM {.scrollable}
+
+| Aspect      | XGBoost     | LightGBM    |
+| ----------- | ----------- | ----------- |
+| Tree growth | Level-wise  | Leaf-wise   |
+| Speed       | Fast        | Very fast   |
+| Memory      | Moderate    | Low         |
+| Small data  | Very stable | Can overfit |
+| Large data  | Strong      | Excellent   |
