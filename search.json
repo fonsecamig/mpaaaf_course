@@ -186,7 +186,7 @@
     "href": "slides/intro_tensorflow2.html#tensor-operations",
     "title": "TensorFlow 2 — The Basics",
     "section": "Tensor Operations",
-    "text": "Tensor Operations\nTensorFlow feels like NumPy:\n\nx = tf.random.normal((3, 2))\ny = tf.ones((3, 2))\n\nx + y\nx * y\n\n&lt;tf.Tensor: shape=(3, 2), dtype=float32, numpy=\narray([[-0.36148682,  0.96846837],\n       [-0.13048282,  0.267554  ],\n       [-0.7810959 ,  0.9396643 ]], dtype=float32)&gt;\n\n\nMatrix multiplication:\n\ntf.matmul(x, tf.transpose(y))\n\n&lt;tf.Tensor: shape=(3, 3), dtype=float32, numpy=\narray([[0.6069815 , 0.6069815 , 0.6069815 ],\n       [0.13707116, 0.13707116, 0.13707116],\n       [0.15856838, 0.15856838, 0.15856838]], dtype=float32)&gt;"
+    "text": "Tensor Operations\nTensorFlow feels like NumPy:\n\nx = tf.random.normal((3, 2))\ny = tf.ones((3, 2))\n\nx + y\nx * y\n\n&lt;tf.Tensor: shape=(3, 2), dtype=float32, numpy=\narray([[-0.79736733, -2.3686097 ],\n       [-0.0762083 , -1.2952324 ],\n       [-0.41634658,  1.1305054 ]], dtype=float32)&gt;\n\n\nMatrix multiplication:\n\ntf.matmul(x, tf.transpose(y))\n\n&lt;tf.Tensor: shape=(3, 3), dtype=float32, numpy=\narray([[-3.165977 , -3.165977 , -3.165977 ],\n       [-1.3714408, -1.3714408, -1.3714408],\n       [ 0.7141589,  0.7141589,  0.7141589]], dtype=float32)&gt;"
   },
   {
     "objectID": "slides/intro_tensorflow2.html#important-tensor-rules",
@@ -207,7 +207,7 @@
     "href": "slides/intro_tensorflow2.html#building-a-model-sequential",
     "title": "TensorFlow 2 — The Basics",
     "section": "Building a Model (Sequential)",
-    "text": "Building a Model (Sequential)\n\nmodel = tf.keras.Sequential([\n    tf.keras.layers.Dense(32, activation=\"relu\"),\n    tf.keras.layers.Dense(1)\n])\n\nModel Summary\n\nmodel.summary()\n\nModel: \"sequential\"\n\n\n\n┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓\n┃ Layer (type)                    ┃ Output Shape           ┃       Param # ┃\n┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩\n│ dense (Dense)                   │ ?                      │   0 (unbuilt) │\n├─────────────────────────────────┼────────────────────────┼───────────────┤\n│ dense_1 (Dense)                 │ ?                      │   0 (unbuilt) │\n└─────────────────────────────────┴────────────────────────┴───────────────┘\n\n\n\n Total params: 0 (0.00 B)\n\n\n\n Trainable params: 0 (0.00 B)\n\n\n\n Non-trainable params: 0 (0.00 B)\n\n\n\nConcepts: - Layers - Parameters - Trainable weights"
+    "text": "Building a Model (Sequential)\n\nmodel = tf.keras.Sequential([\n    tf.keras.layers.Dense(32, activation=\"relu\"),\n    tf.keras.layers.Dense(1)\n])\n\nModel Summary\n\nmodel.summary()\n\nModel: \"sequential\"\n\n\n\n┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓\n┃ Layer (type)                    ┃ Output Shape           ┃       Param # ┃\n┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩\n│ dense (Dense)                   │ ?                      │   0 (unbuilt) │\n├─────────────────────────────────┼────────────────────────┼───────────────┤\n│ dense_1 (Dense)                 │ ?                      │   0 (unbuilt) │\n└─────────────────────────────────┴────────────────────────┴───────────────┘\n\n\n\n Total params: 0 (0.00 B)\n\n\n\n Trainable params: 0 (0.00 B)\n\n\n\n Non-trainable params: 0 (0.00 B)\n\n\n\nConcepts:\n\nLayers\nParameters\nTrainable weights"
   },
   {
     "objectID": "slides/intro_tensorflow2.html#functional-api",
@@ -235,14 +235,14 @@
     "href": "slides/intro_tensorflow2.html#fit-the-model",
     "title": "TensorFlow 2 — The Basics",
     "section": "Fit the Model",
-    "text": "Fit the Model\n\nX_train, y_train = np.random.rand(100, 10), np.random.rand(100, 1)  # Training data\nhistory = model.fit(\n    X_train,\n    y_train,\n    epochs=5,\n    batch_size=32,\n    validation_split=0.2\n)\n\n\nEpoch 1/5\n\n\n1/3 ━━━━━━━━━━━━━━━━━━━━ 0s 245ms/step - loss: 0.3680 - mae: 0.5135\n\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\n3/3 ━━━━━━━━━━━━━━━━━━━━ 0s 29ms/step - loss: 0.3469 - mae: 0.5077 - val_loss: 0.2606 - val_mae: 0.4272\n\nEpoch 2/5\n\n\n1/3 ━━━━━━━━━━━━━━━━━━━━ 0s 6ms/step - loss: 0.3703 - mae: 0.5147\n\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\n3/3 ━━━━━━━━━━━━━━━━━━━━ 0s 8ms/step - loss: 0.2721 - mae: 0.4336 - val_loss: 0.2020 - val_mae: 0.3647\n\nEpoch 3/5\n\n\n1/3 ━━━━━━━━━━━━━━━━━━━━ 0s 6ms/step - loss: 0.2131 - mae: 0.3826\n\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\n3/3 ━━━━━━━━━━━━━━━━━━━━ 0s 12ms/step - loss: 0.2068 - mae: 0.3709 - val_loss: 0.1590 - val_mae: 0.3252\n\nEpoch 4/5\n\n\n1/3 ━━━━━━━━━━━━━━━━━━━━ 0s 14ms/step - loss: 0.1569 - mae: 0.3314\n\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\n3/3 ━━━━━━━━━━━━━━━━━━━━ 0s 11ms/step - loss: 0.1636 - mae: 0.3273 - val_loss: 0.1294 - val_mae: 0.2949\n\nEpoch 5/5\n\n\n1/3 ━━━━━━━━━━━━━━━━━━━━ 0s 6ms/step - loss: 0.1502 - mae: 0.3120\n\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\n3/3 ━━━━━━━━━━━━━━━━━━━━ 0s 8ms/step - loss: 0.1333 - mae: 0.2923 - val_loss: 0.1121 - val_mae: 0.2787\n\n\n\n\nTraining concepts:\n\nEpoch\nBatch\nValidation set"
+    "text": "Fit the Model\n\nX_train, y_train = np.random.rand(100, 10), np.random.rand(100, 1)  # Training data\nhistory = model.fit(\n    X_train,\n    y_train,\n    epochs=5,\n    batch_size=32,\n    validation_split=0.2\n)\n\n\nEpoch 1/5\n\n\n1/3 ━━━━━━━━━━━━━━━━━━━━ 0s 268ms/step - loss: 1.0015 - mae: 0.9527\n\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\n3/3 ━━━━━━━━━━━━━━━━━━━━ 0s 31ms/step - loss: 1.1666 - mae: 1.0225 - val_loss: 1.0812 - val_mae: 0.9953\n\nEpoch 2/5\n\n\n1/3 ━━━━━━━━━━━━━━━━━━━━ 0s 6ms/step - loss: 0.9767 - mae: 0.9366\n\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\n3/3 ━━━━━━━━━━━━━━━━━━━━ 0s 9ms/step - loss: 0.9938 - mae: 0.9351 - val_loss: 0.9074 - val_mae: 0.9053\n\nEpoch 3/5\n\n\n1/3 ━━━━━━━━━━━━━━━━━━━━ 0s 6ms/step - loss: 0.8947 - mae: 0.8868\n\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\n3/3 ━━━━━━━━━━━━━━━━━━━━ 0s 8ms/step - loss: 0.8401 - mae: 0.8490 - val_loss: 0.7521 - val_mae: 0.8171\n\nEpoch 4/5\n\n\n1/3 ━━━━━━━━━━━━━━━━━━━━ 0s 6ms/step - loss: 0.7439 - mae: 0.7933\n\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\n3/3 ━━━━━━━━━━━━━━━━━━━━ 0s 8ms/step - loss: 0.7029 - mae: 0.7660 - val_loss: 0.6174 - val_mae: 0.7322\n\nEpoch 5/5\n\n\n1/3 ━━━━━━━━━━━━━━━━━━━━ 0s 6ms/step - loss: 0.4989 - mae: 0.6303\n\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\n3/3 ━━━━━━━━━━━━━━━━━━━━ 0s 8ms/step - loss: 0.5849 - mae: 0.6870 - val_loss: 0.5015 - val_mae: 0.6505\n\n\n\n\nTraining concepts:\n\nEpoch\nBatch\nValidation set"
   },
   {
     "objectID": "slides/intro_tensorflow2.html#evaluate-and-predict",
     "href": "slides/intro_tensorflow2.html#evaluate-and-predict",
     "title": "TensorFlow 2 — The Basics",
     "section": "Evaluate and Predict",
-    "text": "Evaluate and Predict\n\nX_test, y_test = np.random.rand(20, 10), np.random.rand(20, 1)  # Test data\nmodel.evaluate(X_test, y_test)\n\n\n1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 6ms/step - loss: 0.0922 - mae: 0.2344\n\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\n1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 12ms/step - loss: 0.0922 - mae: 0.2344\n\n\n\n\n[0.09216944128274918, 0.23438318073749542]\n\n\n\nX_new = np.random.rand(5, 10)  # New data for prediction\nmodel.predict(X_new)\n\n\n1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 12ms/step\n\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\n1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 17ms/step\n\n\n\n\narray([[0.41935465],\n       [0.29805505],\n       [0.31255642],\n       [0.49967656],\n       [0.15230194]], dtype=float32)"
+    "text": "Evaluate and Predict\n\nX_test, y_test = np.random.rand(20, 10), np.random.rand(20, 1)  # Test data\nmodel.evaluate(X_test, y_test)\n\n\n1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 6ms/step - loss: 0.5646 - mae: 0.6283\n\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\n1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 11ms/step - loss: 0.5646 - mae: 0.6283\n\n\n\n\n[0.5646446943283081, 0.6283422112464905]\n\n\n\nX_new = np.random.rand(5, 10)  # New data for prediction\nmodel.predict(X_new)\n\n\n1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 13ms/step\n\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\n1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 17ms/step\n\n\n\n\narray([[-0.15440282],\n       [-0.16889064],\n       [ 0.15105328],\n       [ 0.03820252],\n       [ 0.14451118]], dtype=float32)"
   },
   {
     "objectID": "slides/feed_forward_neural_networks.html#why-neural-networks-in-finance",
@@ -669,7 +669,7 @@
     "href": "slides/advanced_decision_trees.html#random-forests-in-finance",
     "title": "Advanced Decision Trees",
     "section": "Random Forests in Finance",
-    "text": "Random Forests in Finance\nStrengths\nExcellent baseline for:\n\nCross-sectional stock selection\nCredit scoring\nFraud detection\n\nHandles:\n\nNon-linearities\nInteractions\nMixed feature types\n\nLimitations\n\nPoor extrapolation\nWeak for regime shifts\nLimited interpretability"
+    "text": "Random Forests in Finance\n\n\nStrengths\nExcellent baseline for:\n\nCross-sectional stock selection\nCredit scoring\nFraud detection\n\nHandles:\n\nNon-linearities\nInteractions\nMixed feature types\n\n\nLimitations\n\nPoor extrapolation\nWeak for regime shifts\nLimited interpretability"
   },
   {
     "objectID": "slides/advanced_decision_trees.html#out-of-bag-oob-error",
@@ -677,6 +677,34 @@
     "title": "Advanced Decision Trees",
     "section": "Out-of-Bag (OOB) Error",
     "text": "Out-of-Bag (OOB) Error\n\n~36% of observations are excluded from each bootstrap sample\nCan be used as a validation set\n\nUseful when:\n\nTime-series CV is expensive\nDataset is small\n\n\n\n\n\n\n\n\nIn finance:\n\n\n\nStill respect time ordering\nOOB \\(\\neq\\) time-aware validation"
+  },
+  {
+    "objectID": "slides/advanced_decision_trees.html#out-of-bag-oob-error-1",
+    "href": "slides/advanced_decision_trees.html#out-of-bag-oob-error-1",
+    "title": "Advanced Decision Trees",
+    "section": "Out-of-Bag (OOB) Error",
+    "text": "Out-of-Bag (OOB) Error\n\nEach tree in a\nRandom Forest\nis trained on a bootstrap sample\n~63.2% of observations are used\n~36.8% are Out-of-Bag (OOB)\n\nFor each observation:\n\nCollect predictions only from trees that did NOT see it\nAggregate (vote / mean)\nCompare with true value"
+  },
+  {
+    "objectID": "slides/advanced_decision_trees.html#why-36.8",
+    "href": "slides/advanced_decision_trees.html#why-36.8",
+    "title": "Advanced Decision Trees",
+    "section": "Why 36.8%?",
+    "text": "Why 36.8%?\n\\[\n\\begin{align*}\nP(\\text{not selected}) =\n\\left(1 - \\frac{1}{n}\\right)^n\n\\approx e^{-1} \\approx 0.368\n\\end{align*}\n\\]\nOOB Error\n\nClassification → Misclassification rate\n\nRegression → MSE\n\n\\[\n\\text{OOB Error} =\n\\frac{1}{n} \\sum_{i=1}^n\nL(y_i, \\widehat{y}_i^{OOB})\n\\]"
+  },
+  {
+    "objectID": "slides/advanced_decision_trees.html#oob-error-in-python",
+    "href": "slides/advanced_decision_trees.html#oob-error-in-python",
+    "title": "Advanced Decision Trees",
+    "section": "OOB Error in Python",
+    "text": "OOB Error in Python\n\nfrom sklearn.ensemble import RandomForestClassifier\nfrom sklearn.datasets import make_classification\nfrom sklearn.model_selection import train_test_split\n\nX, y = make_classification(n_samples=1000, n_features=20, random_state=42)\n\nrf = RandomForestClassifier(\n    n_estimators=200,\n    oob_score=True,\n    bootstrap=True,\n    random_state=42\n)\n\nrf.fit(X, y)\n\nprint(\"OOB Score:\", rf.oob_score_)\nprint(\"OOB Error:\", 1 - rf.oob_score_)\n\nOOB Score: 0.896\nOOB Error: 0.10399999999999998"
+  },
+  {
+    "objectID": "slides/advanced_decision_trees.html#why-it-matters",
+    "href": "slides/advanced_decision_trees.html#why-it-matters",
+    "title": "Advanced Decision Trees",
+    "section": "Why It Matters",
+    "text": "Why It Matters\n\nNo validation set required\n\nNo k-fold cross-validation required\n\nNearly unbiased test error estimate\n\n“Cross-validation for free”"
   },
   {
     "objectID": "slides/advanced_decision_trees.html#boosting-the-big-idea",
@@ -767,7 +795,14 @@
     "href": "slides/advanced_decision_trees.html#lightgbm-light-gradient-boosting-machine",
     "title": "Advanced Decision Trees",
     "section": "LightGBM (Light Gradient Boosting Machine)",
-    "text": "LightGBM (Light Gradient Boosting Machine)\n\nAlso Gradient Boosting\nDesigned for speed and memory efficiency\nDeveloped by Microsoft\n\nKey innovation:\n\nLeaf-wise tree growth\n(instead of level-wise)\n\nResult:\n\nFaster training\nOften better accuracy on large datasets"
+    "text": "LightGBM (Light Gradient Boosting Machine)\n\nAlso Gradient Boosting\nDesigned for speed and memory efficiency\nDeveloped by Microsoft\n\nKey innovation:\n\nLeaf-wise tree growth (instead of level-wise)\n\nResult:\n\nFaster training\nOften better accuracy on large datasets"
+  },
+  {
+    "objectID": "slides/advanced_decision_trees.html#hyperparameters",
+    "href": "slides/advanced_decision_trees.html#hyperparameters",
+    "title": "Advanced Decision Trees",
+    "section": "Hyperparameters",
+    "text": "Hyperparameters\n\nn_estimators \\(\\rightarrow\\) number of trees\nlearning_rate \\(\\rightarrow\\) step size\nmax_depth / num_leaves \\(\\rightarrow\\) complexity\nsubsample \\(\\rightarrow\\) row sampling\ncolsample_bytree \\(\\rightarrow\\) feature sampling\n\n\n\n\n\n\n\nTip\n\n\nLower learning rate \\(\\implies\\) more trees \\(\\implies\\) more stability"
   },
   {
     "objectID": "slides/advanced_decision_trees.html#xgboost-vs-lightgbm",
@@ -775,13 +810,6 @@
     "title": "Advanced Decision Trees",
     "section": "XGBoost vs LightGBM",
     "text": "XGBoost vs LightGBM\n\n\n\nAspect\nXGBoost\nLightGBM\n\n\n\n\nTree growth\nLevel-wise\nLeaf-wise\n\n\nSpeed\nFast\nVery fast\n\n\nMemory\nModerate\nLow\n\n\nSmall data\nVery stable\nCan overfit\n\n\nLarge data\nStrong\nExcellent"
-  },
-  {
-    "objectID": "slides/advanced_decision_trees.html#hyperparameters",
-    "href": "slides/advanced_decision_trees.html#hyperparameters",
-    "title": "Advanced Decision Trees",
-    "section": "Hyperparameters",
-    "text": "Hyperparameters\n\nn_estimators \\(\\rightarrow\\) number of trees\nlearning_rate \\(\\rightarrow\\) step size\nmax_depth / num_leaves \\(\\rightarrow\\) complexity\nsubsample \\(\\rightarrow\\) row sampling\ncolsample_bytree \\(\\rightarrow\\) feature sampling Golden rule:\n\n\n\n\n\n\n\nTip\n\n\nLower learning rate \\(\\implies\\) more trees \\(\\implies\\) more stability"
   },
   {
     "objectID": "slides/decision_trees.html#why-decision-trees",
@@ -798,11 +826,25 @@
     "text": "Intuition\nA decision tree:\n\n\nRecursively splits data\nUses simple decision rules\nCreates homogeneous regions\n\n\n\n“If–then–else logic learned from data”"
   },
   {
+    "objectID": "slides/decision_trees.html#decisions",
+    "href": "slides/decision_trees.html#decisions",
+    "title": "Decision Trees for Financial Data",
+    "section": "Decisions",
+    "text": "Decisions"
+  },
+  {
     "objectID": "slides/decision_trees.html#tree-structure",
     "href": "slides/decision_trees.html#tree-structure",
     "title": "Decision Trees for Financial Data",
     "section": "Tree Structure",
-    "text": "Tree Structure\n\nRoot node – first split\n\nInternal nodes – decision rules\n\nLeaves – predictions\n\nPredictions:\n\nRegression → mean value\n\nClassification → majority class / probability"
+    "text": "Tree Structure\n\nRoot node – first split\n\nInternal nodes – decision rules\n\nLeaves – predictions"
+  },
+  {
+    "objectID": "slides/decision_trees.html#predictions",
+    "href": "slides/decision_trees.html#predictions",
+    "title": "Decision Trees for Financial Data",
+    "section": "Predictions",
+    "text": "Predictions\n\nRegression → mean value\n\nClassification → majority class / probability"
   },
   {
     "objectID": "slides/decision_trees.html#mathematical-view",
