@@ -36,11 +36,11 @@ Composed of:
 - Hidden layers
 - Output layer
 
-$$\widehat{y} = F(x;\theta)$$
+$$\widehat{y} = F(\mathbf x;\boldsymbol \theta)$$
 
 ---
 
-![Feed-Forward NN Structure](/images/hidden_layer_definition_0.png){width=70%}
+![Feed-Forward NN Structure](/images/hidden_layer_definition.png){width=70%}
 
 # The Perceptron
 
@@ -64,17 +64,26 @@ Where:
 - Linear decision boundary
 - Cannot solve XOR
 
-$$\widehat{y} = \mathbb{1}(w^\top x + b > 0)$$
+$$\widehat{y} = \mathbb{1}(\mathbf{w}^\top x + \mathbf{b} > 0)$$
 
 # Multi-Layer Perceptron (MLP) {.scrollable}
+
+## Limitation of a Single Perceptron
+
+- Can only learn **linear decision boundaries**
+- Cannot solve XOR
+
+![](/images/xor.png){width=70%}
+
+---
 
 ## Why Hidden Layers? {.scrollable}
 
 - Composition of linear + non-linear maps
 - Enables non-linear decision boundaries
 
-$$h^{(1)} = \phi(W^{(1)} x + b^{(1)})$$
-$$\widehat{y} = \phi(W^{(2)} h^{(1)} + b^{(2)})$$
+$$\mathbf{h}^{(1)} = \phi(\mathbf{W}^{(1)} \mathbf{x} + \mathbf{b}^{(1)})$$
+$$\widehat{y} = \phi(\mathbf{W}^{(2)} \mathbf{h}^{(1)} + \mathbf{b}^{(2)})$$
 
 ---
 
@@ -121,7 +130,7 @@ Expressiveness grows with:
 ### Logistic Regression
 
 $$
-P(y=1 \mid x) = \sigma(w^\top x)
+P(y=1 \mid \mathbf{x}) = \sigma(\mathbf{w}^\top \mathbf{x} + b)
 $$
 
 - Linear decision boundary
@@ -142,7 +151,7 @@ $$
 ### Neural Networks (MLP)
 
 $$
-P(y=1 \mid x) = \sigma\big(W^{(2)} \phi(W^{(1)}x)\big)
+P(y=1 \mid \mathbf{x}) = \sigma\big(\mathbf{W}^{(2)} \phi(\mathbf{W}^{(1)}\mathbf{x} + \mathbf{b}^{(1)}) + \mathbf{b}^{(2)}\big)
 $$
 
 - Non-linear decision boundary
@@ -211,13 +220,16 @@ ReLU:
 
 ## Regression vs Classification
 
-Regression (returns, volatility):
+:::{.callout title="Regression"}
+$$\mathscr{L}_{MSE} = \frac{1}{n}\sum_i (y_i - \widehat{y}_i)^2$$
+:::
 
-$$\mathscr{L}_{MSE} = \frac{1}{n}\sum (y - \widehat{y})^2$$
-
-Classification (default, fraud):
-
-$$\mathscr{L}_{CE} = -\frac{1}{n}\sum y \log(\widehat{y}) + (1-y)\log(1-\widehat{y})$$
+:::{.callout title="Classification"}
+- Binary
+$$\mathscr{L}_{BCE} = -\frac{1}{n}\sum_i y_i \log(\widehat{y}_i) + (1-y_i)\log(1-\widehat{y}_i)$$
+- Multiclass
+$$\mathscr{L}_{CE} = -\frac{1}{n}\sum_i \sum_k y_{ik} \log(\widehat{y}_{ik})$$
+:::
 
 # Optimization
 
