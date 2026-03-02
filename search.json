@@ -329,11 +329,53 @@
     "text": "ReLU vs Sigmoid (Finance Insight)\nSigmoid:\n\nVanishing gradients\nSaturation\n\nReLU:\n\nSparse activation\nFaster convergence\nIndustry standard"
   },
   {
-    "objectID": "slides/feed_forward_neural_networks.html#regression-vs-classification",
-    "href": "slides/feed_forward_neural_networks.html#regression-vs-classification",
+    "objectID": "slides/feed_forward_neural_networks.html#loss-functions",
+    "href": "slides/feed_forward_neural_networks.html#loss-functions",
     "title": "Feed-Forward Neural Networks in Finance",
-    "section": "Regression vs Classification",
-    "text": "Regression vs Classification\n\n\n\n\nRegression\n\n\n\\[\\mathscr{L}_{MSE} = \\frac{1}{n}\\sum_i (y_i - \\widehat{y}_i)^2\\]\n\n\n\n\n\n\n\n\nClassification\n\n\n\nBinary \\[\\mathscr{L}_{BCE} = -\\frac{1}{n}\\sum_i y_i \\log(\\widehat{y}_i) + (1-y_i)\\log(1-\\widehat{y}_i)\\]\nMulticlass \\[\\mathscr{L}_{CE} = -\\frac{1}{n}\\sum_i \\sum_k y_{ik} \\log(\\widehat{y}_{ik})\\]"
+    "section": "Loss Functions",
+    "text": "Loss Functions"
+  },
+  {
+    "objectID": "slides/feed_forward_neural_networks.html#loss-functions-why-do-we-need-them",
+    "href": "slides/feed_forward_neural_networks.html#loss-functions-why-do-we-need-them",
+    "title": "Feed-Forward Neural Networks in Finance",
+    "section": "Loss Functions: Why Do We Need Them?",
+    "text": "Loss Functions: Why Do We Need Them?\nA neural network produces predictions:\n\\[\n\\widehat{\\mathbf y} = \\mathbf f_\\boldsymbol\\theta(\\mathbf x)\n\\]\nBut how do we measure how wrong it is?\nWe define a loss function:\n\\[\n\\mathscr{L}(\\mathbf y, \\widehat{\\mathbf y})\n\\]\nTraining objective:\n\\[\n\\min_{\\boldsymbol \\theta} \\; \\mathscr{L}(\\mathbf y, \\widehat{\\mathbf y})\n\\]\nThe loss defines:\n\nThe optimization problem\nThe gradient signal\nThe statistical interpretation"
+  },
+  {
+    "objectID": "slides/feed_forward_neural_networks.html#regression-loss-mean-squared-error-mse",
+    "href": "slides/feed_forward_neural_networks.html#regression-loss-mean-squared-error-mse",
+    "title": "Feed-Forward Neural Networks in Finance",
+    "section": "Regression Loss: Mean Squared Error (MSE)",
+    "text": "Regression Loss: Mean Squared Error (MSE)\nUsed for: - Regression - Continuous targets\nDefinition:\n\\[\n\\mathscr{L}_{MSE}\n=\n\\frac{1}{n} \\sum_{i=1}^n (\\mathbf y_i - \\widehat{\\mathbf y}_i)^\\top (\\mathbf y_i - \\widehat{\\mathbf y}_i)\n\\]\nProperties:\n\nPenalizes large errors heavily\nSmooth and differentiable\nCorresponds to Gaussian noise assumption"
+  },
+  {
+    "objectID": "slides/feed_forward_neural_networks.html#mse-gradient-intuition",
+    "href": "slides/feed_forward_neural_networks.html#mse-gradient-intuition",
+    "title": "Feed-Forward Neural Networks in Finance",
+    "section": "MSE: Gradient Intuition",
+    "text": "MSE: Gradient Intuition\nFor a single example:\n\\[\n\\mathscr{L} = \\frac{1}{2}(y - \\widehat{y})^2\n\\]\nDerivative:\n\\[\n\\frac{\\partial \\mathscr{L}}{\\partial \\widehat{y}}\n=\n\\widehat{y} - y\n\\]\nInterpretation:\n\nIf prediction too large → positive gradient\nIf prediction too small → negative gradient\n\nThis becomes the error signal in backpropagation"
+  },
+  {
+    "objectID": "slides/feed_forward_neural_networks.html#binary-classification-binary-cross-entropy",
+    "href": "slides/feed_forward_neural_networks.html#binary-classification-binary-cross-entropy",
+    "title": "Feed-Forward Neural Networks in Finance",
+    "section": "Binary Classification: Binary Cross-Entropy",
+    "text": "Binary Classification: Binary Cross-Entropy\nUsed for:\n\nSpam detection\nCredit default\nMedical diagnosis\n\nOutput: probability\n\\[\n\\widehat{y} = \\sigma(z)\n\\]\nLoss:\n\\[\n\\mathscr{L}_{BCE}\n=\n- \\left[\ny \\log(\\widehat{y})\n+\n(1-y)\\log(1-\\widehat{y})\n\\right]\n\\]"
+  },
+  {
+    "objectID": "slides/feed_forward_neural_networks.html#why-not-use-mse-for-classification",
+    "href": "slides/feed_forward_neural_networks.html#why-not-use-mse-for-classification",
+    "title": "Feed-Forward Neural Networks in Finance",
+    "section": "Why Not Use MSE for Classification?",
+    "text": "Why Not Use MSE for Classification?\nProblem:\n\nSigmoid saturates\nGradients become very small\n\nBinary cross-entropy:\n\nStrong gradients when wrong\nBetter probabilistic interpretation\n\nWith sigmoid + BCE: \\[\n\\frac{\\partial \\mathscr{L}}{\\partial z} = \\widehat{y} - y\n\\]\nClean gradient → stable training"
+  },
+  {
+    "objectID": "slides/feed_forward_neural_networks.html#multiclass-classification-cross-entropy",
+    "href": "slides/feed_forward_neural_networks.html#multiclass-classification-cross-entropy",
+    "title": "Feed-Forward Neural Networks in Finance",
+    "section": "Multiclass Classification: Cross-Entropy",
+    "text": "Multiclass Classification: Cross-Entropy\nUsed for:\n\nDigit recognition\nImage classification\nNLP tagging\n\nOutput: Softmax\n\\[\n\\widehat{y}_i =\n\\frac{e^{z_i}}{\\sum_j e^{z_j}}\n\\]\nLoss:\n\\[\n\\mathscr{L}_{CE}\n=\n- \\sum_{i=1}^K y_i \\log(\\widehat{y}_i)\n\\]\nWhere:\n\n\\(y_i\\) is one-hot encoded"
   },
   {
     "objectID": "slides/feed_forward_neural_networks.html#gradient-descent",

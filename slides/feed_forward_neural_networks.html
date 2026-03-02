@@ -150,7 +150,6 @@ Miguel Fonseca
 <li><a href="#/the-perceptron" id="/toc-the-perceptron">The Perceptron</a></li>
 <li><a href="#/multi-layer-perceptron-mlp" id="/toc-multi-layer-perceptron-mlp">Multi-Layer Perceptron (MLP)</a></li>
 <li><a href="#/activation-functions" id="/toc-activation-functions">Activation Functions</a></li>
-<li><a href="#/loss-functions" id="/toc-loss-functions">Loss Functions</a></li>
 <li><a href="#/optimization" id="/toc-optimization">Optimization</a></li>
 <li><a href="#/financial-applications" id="/toc-financial-applications">Financial Applications</a></li>
 </ul>
@@ -381,41 +380,130 @@ P(y=1 \mid \mathbf{x}) = \sigma\big(\mathbf{W}^{(2)} \phi(\mathbf{W}^{(1)}\mathb
 <li>Faster convergence</li>
 <li>Industry standard</li>
 </ul>
-</section></section>
-<section>
-<section id="loss-functions" class="title-slide slide level1 center">
-<h1>Loss Functions</h1>
-
 </section>
-<section id="regression-vs-classification" class="slide level2">
-<h2>Regression vs Classification</h2>
-<div title="Regression">
-<div class="callout callout-none no-icon callout-titled callout-style-simple">
-<div class="callout-body">
-<div class="callout-title">
-<p><strong>Regression</strong></p>
-</div>
-<div class="callout-content">
-<p><span class="math display">\[\mathscr{L}_{MSE} = \frac{1}{n}\sum_i (y_i - \widehat{y}_i)^2\]</span></p>
-</div>
-</div>
-</div>
-</div>
-<div title="Classification">
-<div class="callout callout-none no-icon callout-titled callout-style-simple">
-<div class="callout-body">
-<div class="callout-title">
-<p><strong>Classification</strong></p>
-</div>
-<div class="callout-content">
+<section id="loss-functions" class="slide level2">
+<h2>Loss Functions</h2>
+</section>
+<section id="loss-functions-why-do-we-need-them" class="slide level2">
+<h2>Loss Functions: Why Do We Need Them?</h2>
+<p>A neural network produces predictions:</p>
+<p><span class="math display">\[
+\widehat{\mathbf y} = \mathbf f_\boldsymbol\theta(\mathbf x)
+\]</span></p>
+<p>But how do we measure <em>how wrong</em> it is?</p>
+<p>We define a <strong>loss function</strong>:</p>
+<p><span class="math display">\[
+\mathscr{L}(\mathbf y, \widehat{\mathbf y})
+\]</span></p>
+<p>Training objective:</p>
+<p><span class="math display">\[
+\min_{\boldsymbol \theta} \; \mathscr{L}(\mathbf y, \widehat{\mathbf y})
+\]</span></p>
+<p>The loss defines:</p>
 <ul>
-<li>Binary <span class="math display">\[\mathscr{L}_{BCE} = -\frac{1}{n}\sum_i y_i \log(\widehat{y}_i) + (1-y_i)\log(1-\widehat{y}_i)\]</span></li>
-<li>Multiclass <span class="math display">\[\mathscr{L}_{CE} = -\frac{1}{n}\sum_i \sum_k y_{ik} \log(\widehat{y}_{ik})\]</span></li>
+<li>The optimization problem</li>
+<li>The gradient signal</li>
+<li>The statistical interpretation</li>
 </ul>
-</div>
-</div>
-</div>
-</div>
+</section>
+<section id="regression-loss-mean-squared-error-mse" class="slide level2">
+<h2>Regression Loss: Mean Squared Error (MSE)</h2>
+<p>Used for: - Regression - Continuous targets</p>
+<p>Definition:</p>
+<p><span class="math display">\[
+\mathscr{L}_{MSE}
+=
+\frac{1}{n} \sum_{i=1}^n (\mathbf y_i - \widehat{\mathbf y}_i)^\top (\mathbf y_i - \widehat{\mathbf y}_i)
+\]</span></p>
+<p>Properties:</p>
+<ul>
+<li>Penalizes large errors heavily</li>
+<li>Smooth and differentiable</li>
+<li>Corresponds to Gaussian noise assumption</li>
+</ul>
+</section>
+<section id="mse-gradient-intuition" class="slide level2">
+<h2>MSE: Gradient Intuition</h2>
+<p>For a single example:</p>
+<p><span class="math display">\[
+\mathscr{L} = \frac{1}{2}(y - \widehat{y})^2
+\]</span></p>
+<p>Derivative:</p>
+<p><span class="math display">\[
+\frac{\partial \mathscr{L}}{\partial \widehat{y}}
+=
+\widehat{y} - y
+\]</span></p>
+<p>Interpretation:</p>
+<ul>
+<li>If prediction too large → positive gradient</li>
+<li>If prediction too small → negative gradient</li>
+</ul>
+<p>This becomes the <strong>error signal</strong> in backpropagation</p>
+</section>
+<section id="binary-classification-binary-cross-entropy" class="slide level2">
+<h2>Binary Classification: Binary Cross-Entropy</h2>
+<p>Used for:</p>
+<ul>
+<li>Spam detection</li>
+<li>Credit default</li>
+<li>Medical diagnosis</li>
+</ul>
+<p>Output: probability</p>
+<p><span class="math display">\[
+\widehat{y} = \sigma(z)
+\]</span></p>
+<p>Loss:</p>
+<p><span class="math display">\[
+\mathscr{L}_{BCE}
+=
+- \left[
+y \log(\widehat{y})
++
+(1-y)\log(1-\widehat{y})
+\right]
+\]</span></p>
+</section>
+<section id="why-not-use-mse-for-classification" class="slide level2">
+<h2>Why Not Use MSE for Classification?</h2>
+<p>Problem:</p>
+<ul>
+<li>Sigmoid saturates</li>
+<li>Gradients become very small</li>
+</ul>
+<p>Binary cross-entropy:</p>
+<ul>
+<li>Strong gradients when wrong</li>
+<li>Better probabilistic interpretation</li>
+</ul>
+<p>With sigmoid + BCE: <span class="math display">\[
+\frac{\partial \mathscr{L}}{\partial z} = \widehat{y} - y
+\]</span></p>
+<p>Clean gradient → stable training</p>
+</section>
+<section id="multiclass-classification-cross-entropy" class="slide level2">
+<h2>Multiclass Classification: Cross-Entropy</h2>
+<p>Used for:</p>
+<ul>
+<li>Digit recognition</li>
+<li>Image classification</li>
+<li>NLP tagging</li>
+</ul>
+<p>Output: Softmax</p>
+<p><span class="math display">\[
+\widehat{y}_i =
+\frac{e^{z_i}}{\sum_j e^{z_j}}
+\]</span></p>
+<p>Loss:</p>
+<p><span class="math display">\[
+\mathscr{L}_{CE}
+=
+- \sum_{i=1}^K y_i \log(\widehat{y}_i)
+\]</span></p>
+<p>Where:</p>
+<ul>
+<li><span class="math inline">\(y_i\)</span> is one-hot encoded</li>
+</ul>
 </section></section>
 <section>
 <section id="optimization" class="title-slide slide level1 center">
