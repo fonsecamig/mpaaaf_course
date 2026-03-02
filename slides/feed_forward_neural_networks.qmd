@@ -216,20 +216,160 @@ ReLU:
 - Faster convergence
 - Industry standard
 
-# Loss Functions
+## Loss Functions
 
-## Regression vs Classification
+## Loss Functions: Why Do We Need Them?
 
-:::{.callout title="Regression"}
-$$\mathscr{L}_{MSE} = \frac{1}{n}\sum_i (y_i - \widehat{y}_i)^2$$
-:::
+A neural network produces predictions:
 
-:::{.callout title="Classification"}
-- Binary
-$$\mathscr{L}_{BCE} = -\frac{1}{n}\sum_i y_i \log(\widehat{y}_i) + (1-y_i)\log(1-\widehat{y}_i)$$
-- Multiclass
-$$\mathscr{L}_{CE} = -\frac{1}{n}\sum_i \sum_k y_{ik} \log(\widehat{y}_{ik})$$
-:::
+$$
+\widehat{\mathbf y} = \mathbf f_\boldsymbol\theta(\mathbf x)
+$$
+
+But how do we measure *how wrong* it is?
+
+We define a **loss function**:
+
+$$
+\mathscr{L}(\mathbf y, \widehat{\mathbf y})
+$$
+
+Training objective:
+
+$$
+\min_{\boldsymbol \theta} \; \mathscr{L}(\mathbf y, \widehat{\mathbf y})
+$$
+
+The loss defines:
+
+- The optimization problem
+- The gradient signal
+- The statistical interpretation
+
+---
+
+## Regression Loss: Mean Squared Error (MSE)
+
+Used for:
+- Regression
+- Continuous targets
+
+Definition:
+
+$$
+\mathscr{L}_{MSE}
+=
+\frac{1}{n} \sum_{i=1}^n (\mathbf y_i - \widehat{\mathbf y}_i)^\top (\mathbf y_i - \widehat{\mathbf y}_i)
+$$
+
+Properties:
+
+- Penalizes large errors heavily
+- Smooth and differentiable
+- Corresponds to Gaussian noise assumption
+
+---
+
+## MSE: Gradient Intuition
+
+For a single example:
+
+$$
+\mathscr{L} = \frac{1}{2}(y - \widehat{y})^2
+$$
+
+Derivative:
+
+$$
+\frac{\partial \mathscr{L}}{\partial \widehat{y}}
+=
+\widehat{y} - y
+$$
+
+Interpretation:
+
+- If prediction too large → positive gradient
+- If prediction too small → negative gradient
+
+This becomes the **error signal** in backpropagation
+
+---
+
+## Binary Classification: Binary Cross-Entropy
+
+Used for:
+
+- Spam detection
+- Credit default
+- Medical diagnosis
+
+Output: probability
+
+$$
+\widehat{y} = \sigma(z)
+$$
+
+Loss:
+
+$$
+\mathscr{L}_{BCE}
+=
+- \left[
+y \log(\widehat{y})
++
+(1-y)\log(1-\widehat{y})
+\right]
+$$
+
+---
+
+## Why Not Use MSE for Classification?
+
+Problem:
+
+- Sigmoid saturates
+- Gradients become very small
+
+Binary cross-entropy:
+
+- Strong gradients when wrong
+- Better probabilistic interpretation
+
+With sigmoid + BCE:
+$$
+\frac{\partial \mathscr{L}}{\partial z} = \widehat{y} - y
+$$
+
+Clean gradient → stable training
+
+---
+
+## Multiclass Classification: Cross-Entropy
+
+Used for:
+
+- Digit recognition
+- Image classification
+- NLP tagging
+
+Output: Softmax
+
+$$
+\widehat{y}_i =
+\frac{e^{z_i}}{\sum_j e^{z_j}}
+$$
+
+Loss:
+
+$$
+\mathscr{L}_{CE}
+=
+- \sum_{i=1}^K y_i \log(\widehat{y}_i)
+$$
+
+Where:
+
+- $y_i$ is one-hot encoded
 
 # Optimization
 
