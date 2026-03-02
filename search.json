@@ -256,7 +256,7 @@
     "href": "slides/feed_forward_neural_networks.html#what-is-a-feed-forward-network",
     "title": "Feed-Forward Neural Networks in Finance",
     "section": "What is a Feed-Forward Network?",
-    "text": "What is a Feed-Forward Network?\n\nInformation flows one direction only\nNo cycles, no memory\n\nComposed of:\n\nInput layer\nHidden layers\nOutput layer\n\n\\[\\widehat{y} = F(x;\\theta)\\]"
+    "text": "What is a Feed-Forward Network?\n\nInformation flows one direction only\nNo cycles, no memory\n\nComposed of:\n\nInput layer\nHidden layers\nOutput layer\n\n\\[\\widehat{y} = F(\\mathbf x;\\boldsymbol \\theta)\\]"
   },
   {
     "objectID": "slides/feed_forward_neural_networks.html#single-neuron-model",
@@ -270,14 +270,21 @@
     "href": "slides/feed_forward_neural_networks.html#perceptron-as-a-classifier",
     "title": "Feed-Forward Neural Networks in Finance",
     "section": "Perceptron as a Classifier",
-    "text": "Perceptron as a Classifier\n\nBinary classifier\nLinear decision boundary\nCannot solve XOR\n\n\\[\\widehat{y} = \\mathbb{1}(w^\\top x + b &gt; 0)\\]"
+    "text": "Perceptron as a Classifier\n\nBinary classifier\nLinear decision boundary\nCannot solve XOR\n\n\\[\\widehat{y} = \\mathbb{1}(\\mathbf{w}^\\top x + \\mathbf{b} &gt; 0)\\]"
+  },
+  {
+    "objectID": "slides/feed_forward_neural_networks.html#limitation-of-a-single-perceptron",
+    "href": "slides/feed_forward_neural_networks.html#limitation-of-a-single-perceptron",
+    "title": "Feed-Forward Neural Networks in Finance",
+    "section": "Limitation of a Single Perceptron",
+    "text": "Limitation of a Single Perceptron\n\nCan only learn linear decision boundaries\nCannot solve XOR"
   },
   {
     "objectID": "slides/feed_forward_neural_networks.html#why-hidden-layers",
     "href": "slides/feed_forward_neural_networks.html#why-hidden-layers",
     "title": "Feed-Forward Neural Networks in Finance",
     "section": "Why Hidden Layers?",
-    "text": "Why Hidden Layers?\n\nComposition of linear + non-linear maps\nEnables non-linear decision boundaries\n\n\\[h^{(1)} = \\phi(W^{(1)} x + b^{(1)})\\] \\[\\widehat{y} = \\phi(W^{(2)} h^{(1)} + b^{(2)})\\]"
+    "text": "Why Hidden Layers?\n\nComposition of linear + non-linear maps\nEnables non-linear decision boundaries\n\n\\[\\mathbf{h}^{(1)} = \\phi(\\mathbf{W}^{(1)} \\mathbf{x} + \\mathbf{b}^{(1)})\\] \\[\\widehat{y} = \\phi(\\mathbf{W}^{(2)} \\mathbf{h}^{(1)} + \\mathbf{b}^{(2)})\\]"
   },
   {
     "objectID": "slides/feed_forward_neural_networks.html#universal-approximation-theorem",
@@ -298,7 +305,7 @@
     "href": "slides/feed_forward_neural_networks.html#logistic-regression-vs-neural-networks",
     "title": "Feed-Forward Neural Networks in Finance",
     "section": "Logistic Regression vs Neural Networks",
-    "text": "Logistic Regression vs Neural Networks\n\n\nLogistic Regression\n\\[\nP(y=1 \\mid x) = \\sigma(w^\\top x)\n\\]\n\nLinear decision boundary\nConvex optimization\nInterpretable coefficients\nStrong statistical grounding\n\nTypical finance uses\n\nCredit scoring\nDefault probability\nRisk classification\n\n\nNeural Networks (MLP)\n\\[\nP(y=1 \\mid x) = \\sigma\\big(W^{(2)} \\phi(W^{(1)}x)\\big)\n\\]\n\nNon-linear decision boundary\nNon-convex optimization\nHigh expressive power\nRequires tuning & regularization\n\nTypical finance uses\n\nFraud detection\nComplex behavioral patterns\nHigh-dimensional signals"
+    "text": "Logistic Regression vs Neural Networks\n\n\nLogistic Regression\n\\[\nP(y=1 \\mid \\mathbf{x}) = \\sigma(\\mathbf{w}^\\top \\mathbf{x} + b)\n\\]\n\nLinear decision boundary\nConvex optimization\nInterpretable coefficients\nStrong statistical grounding\n\nTypical finance uses\n\nCredit scoring\nDefault probability\nRisk classification\n\n\nNeural Networks (MLP)\n\\[\nP(y=1 \\mid \\mathbf{x}) = \\sigma\\big(\\mathbf{W}^{(2)} \\phi(\\mathbf{W}^{(1)}\\mathbf{x} + \\mathbf{b}^{(1)}) + \\mathbf{b}^{(2)}\\big)\n\\]\n\nNon-linear decision boundary\nNon-convex optimization\nHigh expressive power\nRequires tuning & regularization\n\nTypical finance uses\n\nFraud detection\nComplex behavioral patterns\nHigh-dimensional signals"
   },
   {
     "objectID": "slides/feed_forward_neural_networks.html#decision-boundary-intuition",
@@ -326,7 +333,7 @@
     "href": "slides/feed_forward_neural_networks.html#regression-vs-classification",
     "title": "Feed-Forward Neural Networks in Finance",
     "section": "Regression vs Classification",
-    "text": "Regression vs Classification\nRegression (returns, volatility):\n\\[\\mathscr{L}_{MSE} = \\frac{1}{n}\\sum (y - \\widehat{y})^2\\]\nClassification (default, fraud):\n\\[\\mathscr{L}_{CE} = -\\frac{1}{n}\\sum y \\log(\\widehat{y}) + (1-y)\\log(1-\\widehat{y})\\]"
+    "text": "Regression vs Classification\n\n\n\n\nRegression\n\n\n\\[\\mathscr{L}_{MSE} = \\frac{1}{n}\\sum_i (y_i - \\widehat{y}_i)^2\\]\n\n\n\n\n\n\n\n\nClassification\n\n\n\nBinary \\[\\mathscr{L}_{BCE} = -\\frac{1}{n}\\sum_i y_i \\log(\\widehat{y}_i) + (1-y_i)\\log(1-\\widehat{y}_i)\\]\nMulticlass \\[\\mathscr{L}_{CE} = -\\frac{1}{n}\\sum_i \\sum_k y_{ik} \\log(\\widehat{y}_{ik})\\]"
   },
   {
     "objectID": "slides/feed_forward_neural_networks.html#gradient-descent",

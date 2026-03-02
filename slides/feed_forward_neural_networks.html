@@ -193,12 +193,12 @@ Miguel Fonseca
 <li>Hidden layers</li>
 <li>Output layer</li>
 </ul>
-<p><span class="math display">\[\widehat{y} = F(x;\theta)\]</span></p>
+<p><span class="math display">\[\widehat{y} = F(\mathbf x;\boldsymbol \theta)\]</span></p>
 </section>
 <section class="slide level2">
 
 
-<img data-src="../images/hidden_layer_definition_0.png" style="width:70.0%" class="r-stretch quarto-figure-center"><p class="caption">Feed-Forward NN Structure</p></section></section>
+<img data-src="../images/hidden_layer_definition.png" style="width:70.0%" class="r-stretch quarto-figure-center"><p class="caption">Feed-Forward NN Structure</p></section></section>
 <section>
 <section id="the-perceptron" class="title-slide slide level1 center">
 <h1>The Perceptron</h1>
@@ -222,20 +222,28 @@ Miguel Fonseca
 <li>Linear decision boundary</li>
 <li>Cannot solve XOR</li>
 </ul>
-<p><span class="math display">\[\widehat{y} = \mathbb{1}(w^\top x + b &gt; 0)\]</span></p>
+<p><span class="math display">\[\widehat{y} = \mathbb{1}(\mathbf{w}^\top x + \mathbf{b} &gt; 0)\]</span></p>
 </section></section>
 <section>
 <section id="multi-layer-perceptron-mlp" class="title-slide slide level1 scrollable center">
 <h1>Multi-Layer Perceptron (MLP)</h1>
 
 </section>
+<section id="limitation-of-a-single-perceptron" class="slide level2">
+<h2>Limitation of a Single Perceptron</h2>
+<ul>
+<li>Can only learn <strong>linear decision boundaries</strong></li>
+<li>Cannot solve XOR</li>
+</ul>
+
+<img data-src="../images/xor.png" style="width:70.0%" class="r-stretch"></section>
 <section id="why-hidden-layers" class="slide level2 scrollable">
 <h2>Why Hidden Layers?</h2>
 <ul>
 <li>Composition of linear + non-linear maps</li>
 <li>Enables non-linear decision boundaries</li>
 </ul>
-<p><span class="math display">\[h^{(1)} = \phi(W^{(1)} x + b^{(1)})\]</span> <span class="math display">\[\widehat{y} = \phi(W^{(2)} h^{(1)} + b^{(2)})\]</span></p>
+<p><span class="math display">\[\mathbf{h}^{(1)} = \phi(\mathbf{W}^{(1)} \mathbf{x} + \mathbf{b}^{(1)})\]</span> <span class="math display">\[\widehat{y} = \phi(\mathbf{W}^{(2)} \mathbf{h}^{(1)} + \mathbf{b}^{(2)})\]</span></p>
 </section>
 <section id="universal-approximation-theorem" class="slide level2 scrollable">
 <h2>Universal Approximation Theorem</h2>
@@ -276,7 +284,7 @@ Miguel Fonseca
 <div class="column" style="width:50%;">
 <h3 id="logistic-regression">Logistic Regression</h3>
 <p><span class="math display">\[
-P(y=1 \mid x) = \sigma(w^\top x)
+P(y=1 \mid \mathbf{x}) = \sigma(\mathbf{w}^\top \mathbf{x} + b)
 \]</span></p>
 <ul>
 <li>Linear decision boundary</li>
@@ -293,7 +301,7 @@ P(y=1 \mid x) = \sigma(w^\top x)
 </div><div class="column" style="width:50%;">
 <h3 id="neural-networks-mlp">Neural Networks (MLP)</h3>
 <p><span class="math display">\[
-P(y=1 \mid x) = \sigma\big(W^{(2)} \phi(W^{(1)}x)\big)
+P(y=1 \mid \mathbf{x}) = \sigma\big(\mathbf{W}^{(2)} \phi(\mathbf{W}^{(1)}\mathbf{x} + \mathbf{b}^{(1)}) + \mathbf{b}^{(2)}\big)
 \]</span></p>
 <ul>
 <li>Non-linear decision boundary</li>
@@ -381,10 +389,33 @@ P(y=1 \mid x) = \sigma\big(W^{(2)} \phi(W^{(1)}x)\big)
 </section>
 <section id="regression-vs-classification" class="slide level2">
 <h2>Regression vs Classification</h2>
-<p>Regression (returns, volatility):</p>
-<p><span class="math display">\[\mathscr{L}_{MSE} = \frac{1}{n}\sum (y - \widehat{y})^2\]</span></p>
-<p>Classification (default, fraud):</p>
-<p><span class="math display">\[\mathscr{L}_{CE} = -\frac{1}{n}\sum y \log(\widehat{y}) + (1-y)\log(1-\widehat{y})\]</span></p>
+<div title="Regression">
+<div class="callout callout-none no-icon callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Regression</strong></p>
+</div>
+<div class="callout-content">
+<p><span class="math display">\[\mathscr{L}_{MSE} = \frac{1}{n}\sum_i (y_i - \widehat{y}_i)^2\]</span></p>
+</div>
+</div>
+</div>
+</div>
+<div title="Classification">
+<div class="callout callout-none no-icon callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Classification</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>Binary <span class="math display">\[\mathscr{L}_{BCE} = -\frac{1}{n}\sum_i y_i \log(\widehat{y}_i) + (1-y_i)\log(1-\widehat{y}_i)\]</span></li>
+<li>Multiclass <span class="math display">\[\mathscr{L}_{CE} = -\frac{1}{n}\sum_i \sum_k y_{ik} \log(\widehat{y}_{ik})\]</span></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
 </section></section>
 <section>
 <section id="optimization" class="title-slide slide level1 center">
