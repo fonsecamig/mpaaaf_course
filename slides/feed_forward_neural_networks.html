@@ -150,7 +150,8 @@ Miguel Fonseca
 <li><a href="#/the-perceptron" id="/toc-the-perceptron">The Perceptron</a></li>
 <li><a href="#/multi-layer-perceptron-mlp" id="/toc-multi-layer-perceptron-mlp">Multi-Layer Perceptron (MLP)</a></li>
 <li><a href="#/activation-functions" id="/toc-activation-functions">Activation Functions</a></li>
-<li><a href="#/optimization" id="/toc-optimization">Optimization</a></li>
+<li><a href="#/loss-functions" id="/toc-loss-functions">Loss Functions</a></li>
+<li><a href="#/backpropagation" id="/toc-backpropagation">Backpropagation</a></li>
 <li><a href="#/financial-applications" id="/toc-financial-applications">Financial Applications</a></li>
 </ul>
 </nav>
@@ -380,9 +381,11 @@ P(y=1 \mid \mathbf{x}) = \sigma\big(\mathbf{W}^{(2)} \phi(\mathbf{W}^{(1)}\mathb
 <li>Faster convergence</li>
 <li>Industry standard</li>
 </ul>
-</section>
-<section id="loss-functions" class="slide level2">
-<h2>Loss Functions</h2>
+</section></section>
+<section>
+<section id="loss-functions" class="title-slide slide level1 center">
+<h1>Loss Functions</h1>
+
 </section>
 <section id="loss-functions-why-do-we-need-them" class="slide level2">
 <h2>Loss Functions: Why Do We Need Them?</h2>
@@ -506,97 +509,389 @@ y \log(\widehat{y})
 </ul>
 </section></section>
 <section>
-<section id="optimization" class="title-slide slide level1 center">
-<h1>Optimization</h1>
+<section id="backpropagation" class="title-slide slide level1 center">
+<h1>Backpropagation</h1>
 
 </section>
-<section id="gradient-descent" class="slide level2">
-<h2>Gradient Descent</h2>
-<p>Goal:</p>
-<p><span class="math display">\[\min_\theta \mathscr{L}(\theta)\]</span></p>
-<p>Update:</p>
-<p><span class="math display">\[\theta_{t+1} = \theta_t - \eta \nabla_\theta \mathscr{L}(\theta)\]</span></p>
+<section id="training-a-neural-network" class="slide level2 scrollable">
+<h2>Training a Neural Network</h2>
+<p>Goal: <span class="math display">\[
+\min_{\boldsymbol \theta} \; \mathscr{L}(\mathbf y, \widehat{\mathbf y})
+\]</span></p>
+<p>Steps:</p>
+<ol type="1">
+<li>Forward pass</li>
+<li>Compute loss</li>
+<li>Backpropagate gradients</li>
+<li>Update parameters</li>
+</ol>
 </section>
-<section id="stochastic-gradient-descent-sgd" class="slide level2">
-<h2>Stochastic Gradient Descent (SGD)</h2>
+<section id="backpropagation-intuition" class="slide level2">
+<h2>Backpropagation: Intuition</h2>
 <ul>
-<li>Uses mini-batches</li>
-<li>Noisy but efficient</li>
-<li>Scales to large financial datasets</li>
-</ul>
-<p>Variants:</p>
-<ul>
-<li>SGD</li>
-<li>Momentum</li>
-<li>Adam (default in practice)</li>
+<li>Efficient application of the <strong>chain rule</strong></li>
+<li>Propagates error backward</li>
+<li>Computes gradients for all weights</li>
 </ul>
 </section>
 <section class="slide level2">
 
 
-<img data-src="../images/sgd_vs_gd.png" style="width:70.0%" class="r-stretch quarto-figure-center"><p class="caption">SGD Illustration</p></section>
-<section id="backpropagation-intuition" class="slide level2 scrollable">
-<h2>Backpropagation — Intuition</h2>
-<p><strong>Goal:</strong><br>
-Efficiently compute how each weight affects the loss.</p>
+<img data-src="../images/backpropagation.png" style="width:100.0%" class="r-stretch quarto-figure-center"><p class="caption">Backpropagation</p></section>
+<section id="backpropagation-what-problem-are-we-solving" class="slide level2">
+<h2>Backpropagation: What Problem Are We Solving?</h2>
+<p>We want to compute efficiently:</p>
+<p><span class="math display">\[
+\frac{\partial \mathscr{L}}{\partial w^{(l)}_{jk}} \quad \text{for all layers } l
+\]</span></p>
+<p>Naively:</p>
 <ul>
-<li class="fragment">Neural networks are compositions of functions</li>
-<li class="fragment">Loss depends on outputs</li>
-<li class="fragment">Outputs depend on weights</li>
-<li class="fragment">Use the <strong>chain rule</strong> to propagate errors backward</li>
+<li>Many parameters</li>
+<li>Repeated computations</li>
 </ul>
-<div class="callout callout-tip callout-titled callout-style-default">
+<div title="Key idea">
+<div class="callout callout-important callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<p><strong>Tip</strong></p>
+<p><strong>Key idea</strong></p>
 </div>
 <div class="callout-content">
-<p>💡 Backpropagation is <strong>not</strong> an optimizer.<br>
-It is a <strong>gradient computation algorithm</strong>.</p>
-</div>
-</div>
-</div>
-<p><strong>Key idea</strong></p>
 <ul>
-<li>Errors flow <strong>backwards</strong></li>
-<li>Information flows <strong>forwards</strong></li>
+<li><strong>Reuse intermediate derivatives</strong></li>
+<li>Apply the <strong>chain rule systematically</strong></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="backpropagation-chain-rule-view" class="slide level2">
+<h2>Backpropagation: Chain Rule View</h2>
+<p>Forward pass: <span class="math display">\[
+\mathbf x \rightarrow \mathbf z^{(1)} \rightarrow \mathbf h^{(1)} \rightarrow \mathbf z^{(2)} \rightarrow \widehat{\mathbf y}
+\]</span></p>
+<p>Where: <span class="math display">\[
+\mathbf z^{(l)} = \mathbf W^{(l)} \mathbf h^{(l-1)} + \mathbf b^{(l)}
+\]</span> <span class="math display">\[
+\mathbf h^{(l)} = \sigma(\mathbf z^{(l)}) =[\sigma(z_1^{(l)}), \ldots, \sigma(z_{n_l}^{(l)})]^\top
+\]</span></p>
+<p>Backward pass: <span class="math display">\[
+\frac{\partial \mathscr{L}}{\partial \mathbf z^{(l)}} =
+\frac{\partial \mathscr{L}}{\partial \mathbf z^{(l+1)}}
+\frac{\partial \mathbf z^{(l+1)}}{\partial \mathbf z^{(l)}}
+\]</span></p>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>Errors flow <strong>backwards</strong>, data flows <strong>forwards</strong></p>
+</div>
+</div>
+</div>
+</section>
+<section id="backpropagation-error-terms" class="slide level2">
+<h2>Backpropagation: Error Terms</h2>
+<p>Define the <strong>error signal</strong> at layer <span class="math inline">\(l\)</span>:</p>
+<p><span class="math display">\[
+\boldsymbol \delta^{(l)} = \frac{\partial \mathscr{L}}{\partial \mathbf z^{(l)}}
+\]</span></p>
+<p><strong>Output layer:</strong> <span class="math display">\[
+\boldsymbol \delta^{(L + 1)} =
+\nabla_{\widehat{\mathbf y}} \mathscr{L} \odot \sigma'(\mathbf z^{(L + 1)})
+\]</span></p>
+<p><strong>Hidden layers:</strong> <span class="math display">\[\begin{align*}
+\boldsymbol \delta^{(l)}  &amp;= \frac{\partial \mathscr{L}}{\partial \mathbf z^{(l)}} \\
+&amp; = \frac{\partial \mathscr{L}}{\partial \mathbf z^{(l + 1)}} \frac{\partial \mathbf z^{(l + 1)}}{\partial \mathbf h^{(l)}} \frac{\partial \mathbf h^{(l)}}{\partial \mathbf z^{(l)}} \\
+&amp; = \boldsymbol \delta^{(l+1)} \left(\mathbf W^{(l+1)}\right)^\top \odot \sigma'(\mathbf z^{(l)})
+\end{align*}\]</span></p>
+</section>
+<section id="gradients-at-each-layer" class="slide level2">
+<h2>Gradients at Each Layer</h2>
+<p><span class="math display">\[
+\frac{\partial \mathscr L}{\partial w^{(l)}_{jk}} = \frac{\partial \mathscr L}{\partial \mathbf z^{(l)}} \frac{\partial \mathbf z^{(l)}}{\partial w^{(l)}_{jk}} = \boldsymbol \delta^{(l)} \begin{bmatrix}0 \\ \vdots \\ \underbrace{h^{(l-1)}_k}_{k^{\text{th}}\text{ position}} \\ \vdots \\ 0\end{bmatrix} =\delta^{(l)}_j h^{(l-1)}_k
+\]</span></p>
+<div class="fragment">
+<p><span class="math display">\[
+\frac{\partial \mathscr L}{\partial \mathbf W^{(l)}} = \boldsymbol \delta^{(l)} \left(\mathbf h^{(l-1)}\right)^\top
+\]</span></p>
+</div>
+</section>
+<section id="toy-example-one-hidden-neuron" class="slide level2">
+<h2>Toy Example: One Hidden Neuron</h2>
+<p>Model:</p>
+<ul>
+<li>Input: <span class="math inline">\(x = 1\)</span></li>
+<li>Hidden: <span class="math inline">\(h = \sigma(w_1 x)\)</span></li>
+<li>Output: <span class="math inline">\(\widehat{y} = w_2 h\)</span></li>
+<li>Loss: <span class="math inline">\(\mathscr{L} = \frac{1}{2}(y - \widehat{y})^2\)</span></li>
+</ul>
+<p>Forward: <span class="math display">\[
+h = \sigma(w_1)
+\]</span></p>
+<p><span class="math display">\[
+\widehat{y} = w_2 h
+\]</span></p>
+<p>Backward:</p>
+<p><span class="math display">\[
+\frac{\partial \mathscr{L}}{\partial w_2}
+= (\widehat{y} - y) h
+\]</span></p>
+<p><span class="math display">\[
+\frac{\partial \mathscr{L}}{\partial w_1}
+= (\widehat{y} - y) w_2 \sigma'(w_1)
+\]</span></p>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>Error at output <strong>propagates backward</strong> to earlier weights</p>
+</div>
+</div>
+</div>
+</section>
+<section id="gradient-descent" class="slide level2">
+<h2>Gradient Descent</h2>
+<p>Goal:</p>
+<p><span class="math display">\[
+\min_{\boldsymbol \theta} \; \mathscr{L}(\boldsymbol \theta)
+\]</span></p>
+<p>Update rule:</p>
+<p><span class="math display">\[
+\boldsymbol \theta \leftarrow
+\boldsymbol \theta - \eta \nabla_{\boldsymbol \theta} \mathscr{L}(\boldsymbol \theta)
+\]</span></p>
+<p>Where:</p>
+<ul>
+<li><span class="math inline">\(\eta\)</span> = learning rate</li>
+<li><span class="math inline">\(\nabla_{\boldsymbol \theta} \mathscr{L}\)</span> = gradient</li>
+<li><span class="math inline">\(\boldsymbol \theta\)</span> = all weights and biases</li>
+</ul>
+<p>Interpretation:</p>
+<blockquote>
+<p>Move parameters in the direction of steepest decrease.</p>
+</blockquote>
+</section>
+<section id="stochastic-mini-batch-gradient-descent" class="slide level2">
+<h2>Stochastic &amp; Mini-Batch Gradient Descent</h2>
+<p>Full gradient (expensive):</p>
+<p><span class="math display">\[
+\nabla_{\boldsymbol \theta} \mathscr{L}
+=
+\frac{1}{N}
+\sum_{i=1}^{N}
+\nabla_{\boldsymbol \theta} \mathscr{L}_i
+\]</span></p>
+<p>Mini-batch gradient:</p>
+<p><span class="math display">\[
+\nabla_{\boldsymbol \theta} \mathscr{L}_B
+=
+\frac{1}{|B|}
+\sum_{i \in B}
+\nabla_{\boldsymbol \theta} \mathscr{L}_i
+\]</span></p>
+<p>Weight update:</p>
+<p><span class="math display">\[
+\boldsymbol \theta \leftarrow
+\boldsymbol \theta - \eta \nabla_{\boldsymbol \theta} \mathscr{L}_B
+\]</span></p>
+<p>Why batching works:</p>
+<ul>
+<li><p>The mini-batch gradient is an <strong>unbiased estimator</strong> of the true gradient: <span class="math display">\[
+\mathbb{E}[\nabla_{\boldsymbol \theta} \mathscr{L}_B]
+=
+\nabla_{\boldsymbol \theta} \mathscr{L}
+\]</span></p></li>
+<li><p>Much cheaper computationally</p></li>
+<li><p>Adds useful noise → helps escape shallow minima</p></li>
 </ul>
 </section>
-<section id="backpropagation-mathematical-view" class="slide level2 scrollable">
-<h2>Backpropagation — Mathematical View</h2>
-<p>Consider a 2-layer network:</p>
-<p><span class="math display">\[
-z^{(1)} = W^{(1)}x,\quad
-h = \phi(z^{(1)}),\quad
-\widehat{y} = W^{(2)}h
-\]</span></p>
-<p>Loss: <span class="math display">\[
-\mathscr{L} = \ell(y, \widehat{y})
-\]</span></p>
-<p><strong>Gradients (chain rule):</strong></p>
-<p><span class="math display">\[
-\frac{\partial \mathscr{L}}{\partial W^{(2)}} =
-\frac{\partial \mathscr{L}}{\partial \widehat{y}}
-\frac{\partial \widehat{y}}{\partial W^{(2)}}
-\]</span></p>
-<p><span class="math display">\[
-\frac{\partial \mathscr{L}}{\partial W^{(1)}} =
-\frac{\partial \mathscr{L}}{\partial \widehat{y}}
-\frac{\partial \widehat{y}}{\partial h}
-\frac{\partial h}{\partial z^{(1)}}
-\frac{\partial z^{(1)}}{\partial W^{(1)}}
-\]</span></p>
-<div class="{-callout-note}">
-<p>Gradients are reused → <strong>computational efficiency</strong></p>
+<section id="batches-and-epochs" class="slide level2">
+<h2>Batches and Epochs</h2>
+<p>Definitions:</p>
+<ul>
+<li><strong>Batch size</strong> = number of samples used per update</li>
+<li><strong>Iteration</strong> = one parameter update</li>
+<li><strong>Epoch</strong> = one full pass through the dataset</li>
+</ul>
+<p>If:</p>
+<ul>
+<li>Dataset size = <span class="math inline">\(N\)</span></li>
+<li>Batch size = <span class="math inline">\(B\)</span></li>
+</ul>
+<p>Then:</p>
+<ul>
+<li>Iterations per epoch = <span class="math inline">\(\frac{N}{B}\)</span></li>
+</ul>
+<div title="Example">
+<div class="callout callout-none no-icon callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Example</strong></p>
 </div>
+<div class="callout-content">
+<p><span class="math inline">\(N\)</span> = 10000</p>
+<p>Batch size = 100 → 100 updates per epoch</p>
+</div>
+</div>
+</div>
+</div>
+<p>Why multiple epochs?</p>
+<ul>
+<li>One pass is rarely enough</li>
+<li>We refine weights gradually</li>
+<li>Convergence requires repeated updates</li>
+</ul>
 </section>
 <section class="slide level2">
 
 
-<img data-src="../images/backpropagation.png" style="width:70.0%" class="r-stretch quarto-figure-center"><p class="caption">Backpropagation</p></section></section>
+<img data-src="../images/sgd.png" class="r-stretch"></section>
+<section id="momentum-accelerating-gradient-descent" class="slide level2">
+<h2>Momentum: Accelerating Gradient Descent</h2>
+<p>Problem with vanilla SGD:</p>
+<ul>
+<li>Oscillates in narrow valleys</li>
+<li>Slow convergence</li>
+<li>Sensitive to noisy gradients</li>
+</ul>
+<div title="Idea">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Idea</strong></p>
+</div>
+<div class="callout-content">
+<p>Accumulate a velocity vector in the direction of consistent descent.</p>
+</div>
+</div>
+</div>
+</div>
+<p>Velocity update:</p>
+<p><span class="math display">\[
+\mathbf v_t = \beta \mathbf v_{t-1} + \nabla_\theta \mathscr{L}_B
+\]</span></p>
+<p>Weight update:</p>
+<p><span class="math display">\[
+\boldsymbol \theta_t =
+\boldsymbol \theta_{t-1} - \eta \mathbf v_t
+\]</span></p>
+<p>Where:</p>
+<ul>
+<li><span class="math inline">\(\beta \in [0,1)\)</span> = momentum coefficient (e.g.&nbsp;0.9)</li>
+<li><span class="math inline">\(\mathbf v_t\)</span> = exponentially weighted moving average of gradients</li>
+</ul>
+<p>Intuition:</p>
+<ul>
+<li>Smooths noisy updates<br>
+</li>
+<li>Speeds up motion along shallow directions<br>
+</li>
+<li>Reduces zig-zag behaviour</li>
+</ul>
+</section>
+<section id="rmsprop-adaptive-learning-rates" class="slide level2">
+<h2>RMSProp: Adaptive Learning Rates</h2>
+<p>Problem with SGD + Momentum:</p>
+<ul>
+<li>Same learning rate for all parameters</li>
+<li>Some directions require smaller steps</li>
+<li>Exploding updates in steep dimensions</li>
+</ul>
+<p>Idea:</p>
+<blockquote>
+<p>Scale the learning rate using a running average of squared gradients.</p>
+</blockquote>
+<p>Compute running average:</p>
+<p><span class="math display">\[
+\mathbf s_t = \rho \mathbf s_{t-1} + (1-\rho)(\nabla_{\boldsymbol \theta} \mathscr{L}_B)^2
+\]</span></p>
+<p>Update rule:</p>
+<p><span class="math display">\[
+\boldsymbol \theta_t =
+\boldsymbol \theta_{t-1}
+-
+\frac{\eta}{\sqrt{\mathbf s_t} + \epsilon}
+\nabla_{\boldsymbol \theta} \mathscr{L}_B
+\]</span></p>
+<p>Where:</p>
+<ul>
+<li><span class="math inline">\(\rho \approx 0.9\)</span></li>
+<li><span class="math inline">\(\epsilon \approx 10^{-8}\)</span></li>
+</ul>
+<p>Intuition:</p>
+<ul>
+<li>Large gradients → smaller effective step<br>
+</li>
+<li>Small gradients → larger effective step<br>
+</li>
+<li>Each parameter gets its own adaptive learning rate</li>
+</ul>
+</section>
+<section id="adam-momentum-rmsprop" class="slide level2">
+<h2>Adam: Momentum + RMSProp</h2>
+<p>Adam = <strong>Adaptive Moment Estimation</strong></p>
+<p>Combines:</p>
+<ul>
+<li>Momentum (1st moment)</li>
+<li>RMSProp (2nd moment)</li>
+</ul>
+<h3 id="step-1-first-moment-mean-of-gradients">Step 1: First moment (mean of gradients)</h3>
+<p><span class="math display">\[
+\mathbf m_t = \beta_1 \mathbf m_{t-1} + (1-\boldsymbol\beta_1) \nabla_\theta \mathscr{L}_B
+\]</span></p>
+<h3 id="step-2-second-moment-mean-of-squared-gradients">Step 2: Second moment (mean of squared gradients)</h3>
+<p><span class="math display">\[
+\mathbf v_t = \beta_2 \mathbf v_{t-1} + (1-\beta_2) (\nabla_\theta \mathscr{L}_B)^2
+\]</span></p>
+<h3 id="step-3-bias-correction">Step 3: Bias correction</h3>
+<p><span class="math display">\[
+\widehat{\mathbf m}_t = \frac{\mathbf m_t}{1-\beta_1^t}
+\quad
+\widehat{\mathbf v}_t = \frac{\mathbf v_t}{1-\beta_2^t}
+\]</span></p>
+<h3 id="step-4-parameter-update">Step 4: Parameter update</h3>
+<p><span class="math display">\[
+\boldsymbol \theta_t =
+\boldsymbol \theta_{t-1}
+-
+\frac{\eta}{\sqrt{\widehat{\mathbf v}_t} + \epsilon}
+\widehat{\mathbf m}_t
+\]</span></p>
+<p>Typical defaults:</p>
+<ul>
+<li><span class="math inline">\(\beta_1 = 0.9\)</span></li>
+<li><span class="math inline">\(\beta_2 = 0.999\)</span></li>
+<li><span class="math inline">\(\epsilon = 10^{-8}\)</span></li>
+</ul>
+</section>
+<section class="slide level2">
+
+<h3 id="intuition">Intuition</h3>
+<ul>
+<li>Momentum → smooth direction<br>
+</li>
+<li>RMSProp → adaptive step size<br>
+</li>
+<li>Bias correction → stabilizes early training</li>
+</ul>
+<p>Adam works well “out of the box” in most deep learning problems.</p>
+</section></section>
 <section>
 <section id="financial-applications" class="title-slide slide level1 center">
 <h1>Financial Applications</h1>

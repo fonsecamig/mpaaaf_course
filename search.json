@@ -329,13 +329,6 @@
     "text": "ReLU vs Sigmoid (Finance Insight)\nSigmoid:\n\nVanishing gradients\nSaturation\n\nReLU:\n\nSparse activation\nFaster convergence\nIndustry standard"
   },
   {
-    "objectID": "slides/feed_forward_neural_networks.html#loss-functions",
-    "href": "slides/feed_forward_neural_networks.html#loss-functions",
-    "title": "Feed-Forward Neural Networks in Finance",
-    "section": "Loss Functions",
-    "text": "Loss Functions"
-  },
-  {
     "objectID": "slides/feed_forward_neural_networks.html#loss-functions-why-do-we-need-them",
     "href": "slides/feed_forward_neural_networks.html#loss-functions-why-do-we-need-them",
     "title": "Feed-Forward Neural Networks in Finance",
@@ -378,32 +371,95 @@
     "text": "Multiclass Classification: Cross-Entropy\nUsed for:\n\nDigit recognition\nImage classification\nNLP tagging\n\nOutput: Softmax\n\\[\n\\widehat{y}_i =\n\\frac{e^{z_i}}{\\sum_j e^{z_j}}\n\\]\nLoss:\n\\[\n\\mathscr{L}_{CE}\n=\n- \\sum_{i=1}^K y_i \\log(\\widehat{y}_i)\n\\]\nWhere:\n\n\\(y_i\\) is one-hot encoded"
   },
   {
-    "objectID": "slides/feed_forward_neural_networks.html#gradient-descent",
-    "href": "slides/feed_forward_neural_networks.html#gradient-descent",
+    "objectID": "slides/feed_forward_neural_networks.html#training-a-neural-network",
+    "href": "slides/feed_forward_neural_networks.html#training-a-neural-network",
     "title": "Feed-Forward Neural Networks in Finance",
-    "section": "Gradient Descent",
-    "text": "Gradient Descent\nGoal:\n\\[\\min_\\theta \\mathscr{L}(\\theta)\\]\nUpdate:\n\\[\\theta_{t+1} = \\theta_t - \\eta \\nabla_\\theta \\mathscr{L}(\\theta)\\]"
-  },
-  {
-    "objectID": "slides/feed_forward_neural_networks.html#stochastic-gradient-descent-sgd",
-    "href": "slides/feed_forward_neural_networks.html#stochastic-gradient-descent-sgd",
-    "title": "Feed-Forward Neural Networks in Finance",
-    "section": "Stochastic Gradient Descent (SGD)",
-    "text": "Stochastic Gradient Descent (SGD)\n\nUses mini-batches\nNoisy but efficient\nScales to large financial datasets\n\nVariants:\n\nSGD\nMomentum\nAdam (default in practice)"
+    "section": "Training a Neural Network",
+    "text": "Training a Neural Network\nGoal: \\[\n\\min_{\\boldsymbol \\theta} \\; \\mathscr{L}(\\mathbf y, \\widehat{\\mathbf y})\n\\]\nSteps:\n\nForward pass\nCompute loss\nBackpropagate gradients\nUpdate parameters"
   },
   {
     "objectID": "slides/feed_forward_neural_networks.html#backpropagation-intuition",
     "href": "slides/feed_forward_neural_networks.html#backpropagation-intuition",
     "title": "Feed-Forward Neural Networks in Finance",
-    "section": "Backpropagation — Intuition",
-    "text": "Backpropagation — Intuition\nGoal:\nEfficiently compute how each weight affects the loss.\n\nNeural networks are compositions of functions\nLoss depends on outputs\nOutputs depend on weights\nUse the chain rule to propagate errors backward\n\n\n\n\n\n\n\nTip\n\n\n💡 Backpropagation is not an optimizer.\nIt is a gradient computation algorithm.\n\n\n\nKey idea\n\nErrors flow backwards\nInformation flows forwards"
+    "section": "Backpropagation: Intuition",
+    "text": "Backpropagation: Intuition\n\nEfficient application of the chain rule\nPropagates error backward\nComputes gradients for all weights"
   },
   {
-    "objectID": "slides/feed_forward_neural_networks.html#backpropagation-mathematical-view",
-    "href": "slides/feed_forward_neural_networks.html#backpropagation-mathematical-view",
+    "objectID": "slides/feed_forward_neural_networks.html#backpropagation-what-problem-are-we-solving",
+    "href": "slides/feed_forward_neural_networks.html#backpropagation-what-problem-are-we-solving",
     "title": "Feed-Forward Neural Networks in Finance",
-    "section": "Backpropagation — Mathematical View",
-    "text": "Backpropagation — Mathematical View\nConsider a 2-layer network:\n\\[\nz^{(1)} = W^{(1)}x,\\quad\nh = \\phi(z^{(1)}),\\quad\n\\widehat{y} = W^{(2)}h\n\\]\nLoss: \\[\n\\mathscr{L} = \\ell(y, \\widehat{y})\n\\]\nGradients (chain rule):\n\\[\n\\frac{\\partial \\mathscr{L}}{\\partial W^{(2)}} =\n\\frac{\\partial \\mathscr{L}}{\\partial \\widehat{y}}\n\\frac{\\partial \\widehat{y}}{\\partial W^{(2)}}\n\\]\n\\[\n\\frac{\\partial \\mathscr{L}}{\\partial W^{(1)}} =\n\\frac{\\partial \\mathscr{L}}{\\partial \\widehat{y}}\n\\frac{\\partial \\widehat{y}}{\\partial h}\n\\frac{\\partial h}{\\partial z^{(1)}}\n\\frac{\\partial z^{(1)}}{\\partial W^{(1)}}\n\\]\n\nGradients are reused → computational efficiency"
+    "section": "Backpropagation: What Problem Are We Solving?",
+    "text": "Backpropagation: What Problem Are We Solving?\nWe want to compute efficiently:\n\\[\n\\frac{\\partial \\mathscr{L}}{\\partial w^{(l)}_{jk}} \\quad \\text{for all layers } l\n\\]\nNaively:\n\nMany parameters\nRepeated computations\n\n\n\n\n\n\n\n\nKey idea\n\n\n\nReuse intermediate derivatives\nApply the chain rule systematically"
+  },
+  {
+    "objectID": "slides/feed_forward_neural_networks.html#backpropagation-chain-rule-view",
+    "href": "slides/feed_forward_neural_networks.html#backpropagation-chain-rule-view",
+    "title": "Feed-Forward Neural Networks in Finance",
+    "section": "Backpropagation: Chain Rule View",
+    "text": "Backpropagation: Chain Rule View\nForward pass: \\[\n\\mathbf x \\rightarrow \\mathbf z^{(1)} \\rightarrow \\mathbf h^{(1)} \\rightarrow \\mathbf z^{(2)} \\rightarrow \\widehat{\\mathbf y}\n\\]\nWhere: \\[\n\\mathbf z^{(l)} = \\mathbf W^{(l)} \\mathbf h^{(l-1)} + \\mathbf b^{(l)}\n\\] \\[\n\\mathbf h^{(l)} = \\sigma(\\mathbf z^{(l)}) =[\\sigma(z_1^{(l)}), \\ldots, \\sigma(z_{n_l}^{(l)})]^\\top\n\\]\nBackward pass: \\[\n\\frac{\\partial \\mathscr{L}}{\\partial \\mathbf z^{(l)}} =\n\\frac{\\partial \\mathscr{L}}{\\partial \\mathbf z^{(l+1)}}\n\\frac{\\partial \\mathbf z^{(l+1)}}{\\partial \\mathbf z^{(l)}}\n\\]\n\n\n\n\n\n\nNote\n\n\nErrors flow backwards, data flows forwards"
+  },
+  {
+    "objectID": "slides/feed_forward_neural_networks.html#backpropagation-error-terms",
+    "href": "slides/feed_forward_neural_networks.html#backpropagation-error-terms",
+    "title": "Feed-Forward Neural Networks in Finance",
+    "section": "Backpropagation: Error Terms",
+    "text": "Backpropagation: Error Terms\nDefine the error signal at layer \\(l\\):\n\\[\n\\boldsymbol \\delta^{(l)} = \\frac{\\partial \\mathscr{L}}{\\partial \\mathbf z^{(l)}}\n\\]\nOutput layer: \\[\n\\boldsymbol \\delta^{(L + 1)} =\n\\nabla_{\\widehat{\\mathbf y}} \\mathscr{L} \\odot \\sigma'(\\mathbf z^{(L + 1)})\n\\]\nHidden layers: \\[\\begin{align*}\n\\boldsymbol \\delta^{(l)}  &= \\frac{\\partial \\mathscr{L}}{\\partial \\mathbf z^{(l)}} \\\\\n& = \\frac{\\partial \\mathscr{L}}{\\partial \\mathbf z^{(l + 1)}} \\frac{\\partial \\mathbf z^{(l + 1)}}{\\partial \\mathbf h^{(l)}} \\frac{\\partial \\mathbf h^{(l)}}{\\partial \\mathbf z^{(l)}} \\\\\n& = \\boldsymbol \\delta^{(l+1)} \\left(\\mathbf W^{(l+1)}\\right)^\\top \\odot \\sigma'(\\mathbf z^{(l)})\n\\end{align*}\\]"
+  },
+  {
+    "objectID": "slides/feed_forward_neural_networks.html#gradients-at-each-layer",
+    "href": "slides/feed_forward_neural_networks.html#gradients-at-each-layer",
+    "title": "Feed-Forward Neural Networks in Finance",
+    "section": "Gradients at Each Layer",
+    "text": "Gradients at Each Layer\n\\[\n\\frac{\\partial \\mathscr L}{\\partial w^{(l)}_{jk}} = \\frac{\\partial \\mathscr L}{\\partial \\mathbf z^{(l)}} \\frac{\\partial \\mathbf z^{(l)}}{\\partial w^{(l)}_{jk}} = \\boldsymbol \\delta^{(l)} \\begin{bmatrix}0 \\\\ \\vdots \\\\ \\underbrace{h^{(l-1)}_k}_{k^{\\text{th}}\\text{ position}} \\\\ \\vdots \\\\ 0\\end{bmatrix} =\\delta^{(l)}_j h^{(l-1)}_k\n\\]\n\n\\[\n\\frac{\\partial \\mathscr L}{\\partial \\mathbf W^{(l)}} = \\boldsymbol \\delta^{(l)} \\left(\\mathbf h^{(l-1)}\\right)^\\top\n\\]"
+  },
+  {
+    "objectID": "slides/feed_forward_neural_networks.html#toy-example-one-hidden-neuron",
+    "href": "slides/feed_forward_neural_networks.html#toy-example-one-hidden-neuron",
+    "title": "Feed-Forward Neural Networks in Finance",
+    "section": "Toy Example: One Hidden Neuron",
+    "text": "Toy Example: One Hidden Neuron\nModel:\n\nInput: \\(x = 1\\)\nHidden: \\(h = \\sigma(w_1 x)\\)\nOutput: \\(\\widehat{y} = w_2 h\\)\nLoss: \\(\\mathscr{L} = \\frac{1}{2}(y - \\widehat{y})^2\\)\n\nForward: \\[\nh = \\sigma(w_1)\n\\]\n\\[\n\\widehat{y} = w_2 h\n\\]\nBackward:\n\\[\n\\frac{\\partial \\mathscr{L}}{\\partial w_2}\n= (\\widehat{y} - y) h\n\\]\n\\[\n\\frac{\\partial \\mathscr{L}}{\\partial w_1}\n= (\\widehat{y} - y) w_2 \\sigma'(w_1)\n\\]\n\n\n\n\n\n\nNote\n\n\nError at output propagates backward to earlier weights"
+  },
+  {
+    "objectID": "slides/feed_forward_neural_networks.html#gradient-descent",
+    "href": "slides/feed_forward_neural_networks.html#gradient-descent",
+    "title": "Feed-Forward Neural Networks in Finance",
+    "section": "Gradient Descent",
+    "text": "Gradient Descent\nGoal:\n\\[\n\\min_{\\boldsymbol \\theta} \\; \\mathscr{L}(\\boldsymbol \\theta)\n\\]\nUpdate rule:\n\\[\n\\boldsymbol \\theta \\leftarrow\n\\boldsymbol \\theta - \\eta \\nabla_{\\boldsymbol \\theta} \\mathscr{L}(\\boldsymbol \\theta)\n\\]\nWhere:\n\n\\(\\eta\\) = learning rate\n\\(\\nabla_{\\boldsymbol \\theta} \\mathscr{L}\\) = gradient\n\\(\\boldsymbol \\theta\\) = all weights and biases\n\nInterpretation:\n\nMove parameters in the direction of steepest decrease."
+  },
+  {
+    "objectID": "slides/feed_forward_neural_networks.html#stochastic-mini-batch-gradient-descent",
+    "href": "slides/feed_forward_neural_networks.html#stochastic-mini-batch-gradient-descent",
+    "title": "Feed-Forward Neural Networks in Finance",
+    "section": "Stochastic & Mini-Batch Gradient Descent",
+    "text": "Stochastic & Mini-Batch Gradient Descent\nFull gradient (expensive):\n\\[\n\\nabla_{\\boldsymbol \\theta} \\mathscr{L}\n=\n\\frac{1}{N}\n\\sum_{i=1}^{N}\n\\nabla_{\\boldsymbol \\theta} \\mathscr{L}_i\n\\]\nMini-batch gradient:\n\\[\n\\nabla_{\\boldsymbol \\theta} \\mathscr{L}_B\n=\n\\frac{1}{|B|}\n\\sum_{i \\in B}\n\\nabla_{\\boldsymbol \\theta} \\mathscr{L}_i\n\\]\nWeight update:\n\\[\n\\boldsymbol \\theta \\leftarrow\n\\boldsymbol \\theta - \\eta \\nabla_{\\boldsymbol \\theta} \\mathscr{L}_B\n\\]\nWhy batching works:\n\nThe mini-batch gradient is an unbiased estimator of the true gradient: \\[\n\\mathbb{E}[\\nabla_{\\boldsymbol \\theta} \\mathscr{L}_B]\n=\n\\nabla_{\\boldsymbol \\theta} \\mathscr{L}\n\\]\nMuch cheaper computationally\nAdds useful noise → helps escape shallow minima"
+  },
+  {
+    "objectID": "slides/feed_forward_neural_networks.html#batches-and-epochs",
+    "href": "slides/feed_forward_neural_networks.html#batches-and-epochs",
+    "title": "Feed-Forward Neural Networks in Finance",
+    "section": "Batches and Epochs",
+    "text": "Batches and Epochs\nDefinitions:\n\nBatch size = number of samples used per update\nIteration = one parameter update\nEpoch = one full pass through the dataset\n\nIf:\n\nDataset size = \\(N\\)\nBatch size = \\(B\\)\n\nThen:\n\nIterations per epoch = \\(\\frac{N}{B}\\)\n\n\n\n\n\nExample\n\n\n\\(N\\) = 10000\nBatch size = 100 → 100 updates per epoch\n\n\n\n\nWhy multiple epochs?\n\nOne pass is rarely enough\nWe refine weights gradually\nConvergence requires repeated updates"
+  },
+  {
+    "objectID": "slides/feed_forward_neural_networks.html#momentum-accelerating-gradient-descent",
+    "href": "slides/feed_forward_neural_networks.html#momentum-accelerating-gradient-descent",
+    "title": "Feed-Forward Neural Networks in Finance",
+    "section": "Momentum: Accelerating Gradient Descent",
+    "text": "Momentum: Accelerating Gradient Descent\nProblem with vanilla SGD:\n\nOscillates in narrow valleys\nSlow convergence\nSensitive to noisy gradients\n\n\n\n\n\n\n\n\nIdea\n\n\nAccumulate a velocity vector in the direction of consistent descent.\n\n\n\n\nVelocity update:\n\\[\n\\mathbf v_t = \\beta \\mathbf v_{t-1} + \\nabla_\\theta \\mathscr{L}_B\n\\]\nWeight update:\n\\[\n\\boldsymbol \\theta_t =\n\\boldsymbol \\theta_{t-1} - \\eta \\mathbf v_t\n\\]\nWhere:\n\n\\(\\beta \\in [0,1)\\) = momentum coefficient (e.g. 0.9)\n\\(\\mathbf v_t\\) = exponentially weighted moving average of gradients\n\nIntuition:\n\nSmooths noisy updates\n\nSpeeds up motion along shallow directions\n\nReduces zig-zag behaviour"
+  },
+  {
+    "objectID": "slides/feed_forward_neural_networks.html#rmsprop-adaptive-learning-rates",
+    "href": "slides/feed_forward_neural_networks.html#rmsprop-adaptive-learning-rates",
+    "title": "Feed-Forward Neural Networks in Finance",
+    "section": "RMSProp: Adaptive Learning Rates",
+    "text": "RMSProp: Adaptive Learning Rates\nProblem with SGD + Momentum:\n\nSame learning rate for all parameters\nSome directions require smaller steps\nExploding updates in steep dimensions\n\nIdea:\n\nScale the learning rate using a running average of squared gradients.\n\nCompute running average:\n\\[\n\\mathbf s_t = \\rho \\mathbf s_{t-1} + (1-\\rho)(\\nabla_{\\boldsymbol \\theta} \\mathscr{L}_B)^2\n\\]\nUpdate rule:\n\\[\n\\boldsymbol \\theta_t =\n\\boldsymbol \\theta_{t-1}\n-\n\\frac{\\eta}{\\sqrt{\\mathbf s_t} + \\epsilon}\n\\nabla_{\\boldsymbol \\theta} \\mathscr{L}_B\n\\]\nWhere:\n\n\\(\\rho \\approx 0.9\\)\n\\(\\epsilon \\approx 10^{-8}\\)\n\nIntuition:\n\nLarge gradients → smaller effective step\n\nSmall gradients → larger effective step\n\nEach parameter gets its own adaptive learning rate"
+  },
+  {
+    "objectID": "slides/feed_forward_neural_networks.html#adam-momentum-rmsprop",
+    "href": "slides/feed_forward_neural_networks.html#adam-momentum-rmsprop",
+    "title": "Feed-Forward Neural Networks in Finance",
+    "section": "Adam: Momentum + RMSProp",
+    "text": "Adam: Momentum + RMSProp\nAdam = Adaptive Moment Estimation\nCombines:\n\nMomentum (1st moment)\nRMSProp (2nd moment)\n\nStep 1: First moment (mean of gradients)\n\\[\n\\mathbf m_t = \\beta_1 \\mathbf m_{t-1} + (1-\\boldsymbol\\beta_1) \\nabla_\\theta \\mathscr{L}_B\n\\]\nStep 2: Second moment (mean of squared gradients)\n\\[\n\\mathbf v_t = \\beta_2 \\mathbf v_{t-1} + (1-\\beta_2) (\\nabla_\\theta \\mathscr{L}_B)^2\n\\]\nStep 3: Bias correction\n\\[\n\\widehat{\\mathbf m}_t = \\frac{\\mathbf m_t}{1-\\beta_1^t}\n\\quad\n\\widehat{\\mathbf v}_t = \\frac{\\mathbf v_t}{1-\\beta_2^t}\n\\]\nStep 4: Parameter update\n\\[\n\\boldsymbol \\theta_t =\n\\boldsymbol \\theta_{t-1}\n-\n\\frac{\\eta}{\\sqrt{\\widehat{\\mathbf v}_t} + \\epsilon}\n\\widehat{\\mathbf m}_t\n\\]\nTypical defaults:\n\n\\(\\beta_1 = 0.9\\)\n\\(\\beta_2 = 0.999\\)\n\\(\\epsilon = 10^{-8}\\)"
   },
   {
     "objectID": "slides/feed_forward_neural_networks.html#example-1-stock-return-prediction",
@@ -662,7 +718,7 @@
     "href": "index.html#feed-forward-neural-networks",
     "title": "Modeling, Programming and Machine Learning for Financial Analysis",
     "section": "Feed-Forward Neural Networks",
-    "text": "Feed-Forward Neural Networks\n\nSlides\n\n\nReading\n\nBishop, C. M., & Bishop, H. (2024). Deep learning: Foundations and concepts. Springer. https://www.bishopbook.com\n\nChapter 6: Deep Neural Networks\nChapter 7: Gradient Descent\nChapter 8: Backpropagation\n\nChollet, F. (2021). Deep learning with Python (2nd ed.). Manning Publications.\n\nChapter 2: The mathematical building blocksof neural networks\nChapter 4: Getting started with neural networks: Classification and regression\n\nJames, G., Witten, D., Hastie, T., Tibshirani, R., & Taylor, J. (2023). An introduction to statistical learning: With applications in Python. Springer. https://www.statlearning.com\n\nChapter 10: Deep Learning\n\nZhang, A., Lipton, Z. C., Li, M., & Smola, A. J. (2023). Dive into deep learning. Cambridge University Press. https://d2l.ai\n\nChapter 3: Linear Neural Networks for Regression\nChapter 4: Linear Neural Networks for Classification\nChapter 5: Multilayer Perceptrons"
+    "text": "Feed-Forward Neural Networks\n\nSlides\n\n\nReading\n\nBishop, C. M., & Bishop, H. (2024). Deep learning: Foundations and concepts. Springer. https://www.bishopbook.com\n\nChapter 6: Deep Neural Networks\nChapter 7: Gradient Descent\nChapter 8: Backpropagation\n\nChollet, F. (2021). Deep learning with Python (2nd ed.). Manning Publications.\n\nChapter 2: The mathematical building blocksof neural networks\nChapter 4: Getting started with neural networks: Classification and regression\n\nJames, G., Witten, D., Hastie, T., Tibshirani, R., & Taylor, J. (2023). An introduction to statistical learning: With applications in Python. Springer. https://www.statlearning.com\n\nChapter 10: Deep Learning\n\nZhang, A., Lipton, Z. C., Li, M., & Smola, A. J. (2023). Dive into deep learning. Cambridge University Press. https://d2l.ai\n\nChapter 3: Linear Neural Networks for Regression\nChapter 4: Linear Neural Networks for Classification\nChapter 5: Multilayer Perceptrons\n\n\n\n\nExercises\n\nExercise 1"
   },
   {
     "objectID": "index.html#references",
