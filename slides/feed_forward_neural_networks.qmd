@@ -216,7 +216,7 @@ ReLU:
 - Faster convergence
 - Industry standard
 
-## Loss Functions
+# Loss Functions
 
 ## Loss Functions: Why Do We Need Them?
 
@@ -371,100 +371,396 @@ Where:
 
 - $y_i$ is one-hot encoded
 
-# Optimization
+# Backpropagation
+
+## Training a Neural Network
+
+Goal:
+$$
+\min_{\boldsymbol \theta} \; \mathscr{L}(\mathbf y, \widehat{\mathbf y})
+$$
+
+Steps:
+
+1. Forward pass
+2. Compute loss
+3. Backpropagate gradients
+4. Update parameters
+
+---
+
+## Backpropagation: Intuition
+
+- Efficient application of the **chain rule**
+- Propagates error backward
+- Computes gradients for all weights
+
+---
+
+![Backpropagation](/images/backpropagation.png){width=100%}
+
+---
+
+## Backpropagation: What Problem Are We Solving?
+
+We want to compute efficiently:
+
+$$
+\frac{\partial \mathscr{L}}{\partial w^{(l)}_{jk}} \quad \text{for all layers } l
+$$
+
+Naively:
+
+- Many parameters
+- Repeated computations
+
+::: {.callout-important title="Key idea"}
+- **Reuse intermediate derivatives**
+- Apply the **chain rule systematically**
+:::
+
+---
+
+## Backpropagation: Chain Rule View
+
+Forward pass:
+$$
+\mathbf x \rightarrow \mathbf z^{(1)} \rightarrow \mathbf h^{(1)} \rightarrow \mathbf z^{(2)} \rightarrow \widehat{\mathbf y}
+$$
+
+Where:
+$$
+\mathbf z^{(l)} = \mathbf W^{(l)} \mathbf h^{(l-1)} + \mathbf b^{(l)}
+$$
+$$
+\mathbf h^{(l)} = \sigma(\mathbf z^{(l)}) =[\sigma(z_1^{(l)}), \ldots, \sigma(z_{n_l}^{(l)})]^\top
+$$
+
+Backward pass:
+$$
+\frac{\partial \mathscr{L}}{\partial \mathbf z^{(l)}} =
+\frac{\partial \mathscr{L}}{\partial \mathbf z^{(l+1)}}
+\frac{\partial \mathbf z^{(l+1)}}{\partial \mathbf z^{(l)}}
+$$
+
+::: {.callout-note}
+Errors flow **backwards**, data flows **forwards**
+:::
+
+---
+
+## Backpropagation: Error Terms
+
+Define the **error signal** at layer $l$:
+
+$$
+\boldsymbol \delta^{(l)} = \frac{\partial \mathscr{L}}{\partial \mathbf z^{(l)}}
+$$
+
+**Output layer:**
+$$
+\boldsymbol \delta^{(L + 1)} =
+\nabla_{\widehat{\mathbf y}} \mathscr{L} \odot \sigma'(\mathbf z^{(L + 1)})
+$$
+
+**Hidden layers:**
+\begin{align*}
+\boldsymbol \delta^{(l)}  &= \frac{\partial \mathscr{L}}{\partial \mathbf z^{(l)}} \\
+& = \frac{\partial \mathscr{L}}{\partial \mathbf z^{(l + 1)}} \frac{\partial \mathbf z^{(l + 1)}}{\partial \mathbf h^{(l)}} \frac{\partial \mathbf h^{(l)}}{\partial \mathbf z^{(l)}} \\
+& = \boldsymbol \delta^{(l+1)} \left(\mathbf W^{(l+1)}\right)^\top \odot \sigma'(\mathbf z^{(l)})
+\end{align*}
+
+---
+
+## Gradients at Each Layer
+
+$$
+\frac{\partial \mathscr L}{\partial w^{(l)}_{jk}} = \frac{\partial \mathscr L}{\partial \mathbf z^{(l)}} \frac{\partial \mathbf z^{(l)}}{\partial w^{(l)}_{jk}} = \boldsymbol \delta^{(l)} \begin{bmatrix}0 \\ \vdots \\ \underbrace{h^{(l-1)}_k}_{k^{\text{th}}\text{ position}} \\ \vdots \\ 0\end{bmatrix} =\delta^{(l)}_j h^{(l-1)}_k
+$$
+
+::: {.fragment}
+$$
+\frac{\partial \mathscr L}{\partial \mathbf W^{(l)}} = \boldsymbol \delta^{(l)} \left(\mathbf h^{(l-1)}\right)^\top
+$$
+:::
+
+
+---
+
+## Toy Example: One Hidden Neuron
+
+Model:
+
+- Input: $x = 1$
+- Hidden: $h = \sigma(w_1 x)$
+- Output: $\widehat{y} = w_2 h$
+- Loss: $\mathscr{L} = \frac{1}{2}(y - \widehat{y})^2$
+
+Forward:
+$$
+h = \sigma(w_1)
+$$
+
+$$
+\widehat{y} = w_2 h
+$$
+
+Backward:
+
+$$
+\frac{\partial \mathscr{L}}{\partial w_2}
+= (\widehat{y} - y) h
+$$
+
+$$
+\frac{\partial \mathscr{L}}{\partial w_1}
+= (\widehat{y} - y) w_2 \sigma'(w_1)
+$$
+
+:::{.callout-note}
+Error at output **propagates backward** to earlier weights
+:::
+
+---
 
 ## Gradient Descent
 
 Goal:
 
-$$\min_\theta \mathscr{L}(\theta)$$
+$$
+\min_{\boldsymbol \theta} \; \mathscr{L}(\boldsymbol \theta)
+$$
 
-Update:
+Update rule:
 
-$$\theta_{t+1} = \theta_t - \eta \nabla_\theta \mathscr{L}(\theta)$$
+$$
+\boldsymbol \theta \leftarrow
+\boldsymbol \theta - \eta \nabla_{\boldsymbol \theta} \mathscr{L}(\boldsymbol \theta)
+$$
 
----
+Where:
 
-## Stochastic Gradient Descent (SGD)
+- $\eta$ = learning rate
+- $\nabla_{\boldsymbol \theta} \mathscr{L}$ = gradient
+- $\boldsymbol \theta$ = all weights and biases
 
-- Uses mini-batches
-- Noisy but efficient
-- Scales to large financial datasets
+Interpretation:
 
-Variants:
-
-- SGD
-- Momentum
-- Adam (default in practice)
-
----
-
-![SGD Illustration](/images/sgd_vs_gd.png){width=70%}
+> Move parameters in the direction of steepest decrease.
 
 ---
 
-## Backpropagation — Intuition {.scrollable}
+## Stochastic & Mini-Batch Gradient Descent
 
-**Goal:**  
-Efficiently compute how each weight affects the loss.
+Full gradient (expensive):
 
-:::{.incremental}
-- Neural networks are compositions of functions
-- Loss depends on outputs
-- Outputs depend on weights
-- Use the **chain rule** to propagate errors backward
+$$
+\nabla_{\boldsymbol \theta} \mathscr{L}
+=
+\frac{1}{N}
+\sum_{i=1}^{N}
+\nabla_{\boldsymbol \theta} \mathscr{L}_i
+$$
+
+Mini-batch gradient:
+
+$$
+\nabla_{\boldsymbol \theta} \mathscr{L}_B
+=
+\frac{1}{|B|}
+\sum_{i \in B}
+\nabla_{\boldsymbol \theta} \mathscr{L}_i
+$$
+
+Weight update:
+
+$$
+\boldsymbol \theta \leftarrow
+\boldsymbol \theta - \eta \nabla_{\boldsymbol \theta} \mathscr{L}_B
+$$
+
+Why batching works:
+
+- The mini-batch gradient is an **unbiased estimator** of the true gradient:
+$$
+\mathbb{E}[\nabla_{\boldsymbol \theta} \mathscr{L}_B]
+=
+\nabla_{\boldsymbol \theta} \mathscr{L}
+$$
+
+- Much cheaper computationally
+- Adds useful noise → helps escape shallow minima
+
+---
+
+## Batches and Epochs
+
+Definitions:
+
+- **Batch size** = number of samples used per update
+- **Iteration** = one parameter update
+- **Epoch** = one full pass through the dataset
+
+If:
+
+- Dataset size = $N$
+- Batch size = $B$
+
+Then:
+
+- Iterations per epoch = $\frac{N}{B}$
+
+:::{.callout title="Example"}
+$N$ = 10000
+
+Batch size = 100
+→ 100 updates per epoch
 :::
 
-:::{.callout-tip}
-💡 Backpropagation is **not** an optimizer.  
-It is a **gradient computation algorithm**.
-:::
 
-**Key idea**
+Why multiple epochs?
 
-- Errors flow **backwards**
-- Information flows **forwards**
+- One pass is rarely enough
+- We refine weights gradually
+- Convergence requires repeated updates
 
 ---
 
-## Backpropagation — Mathematical View {.scrollable}
-
-Consider a 2-layer network:
-
-$$
-z^{(1)} = W^{(1)}x,\quad
-h = \phi(z^{(1)}),\quad
-\widehat{y} = W^{(2)}h
-$$
-
-Loss:
-$$
-\mathscr{L} = \ell(y, \widehat{y})
-$$
-
-**Gradients (chain rule):**
-
-$$
-\frac{\partial \mathscr{L}}{\partial W^{(2)}} =
-\frac{\partial \mathscr{L}}{\partial \widehat{y}}
-\frac{\partial \widehat{y}}{\partial W^{(2)}}
-$$
-
-$$
-\frac{\partial \mathscr{L}}{\partial W^{(1)}} =
-\frac{\partial \mathscr{L}}{\partial \widehat{y}}
-\frac{\partial \widehat{y}}{\partial h}
-\frac{\partial h}{\partial z^{(1)}}
-\frac{\partial z^{(1)}}{\partial W^{(1)}}
-$$
-
-:::{-callout-note}
-Gradients are reused → **computational efficiency**
-:::
+![](/images/sgd.png)
 
 ---
 
-![Backpropagation](/images/backpropagation.png){width=70%}
+## Momentum: Accelerating Gradient Descent
+
+Problem with vanilla SGD:
+
+- Oscillates in narrow valleys
+- Slow convergence
+- Sensitive to noisy gradients
+
+:::{.callout-note title="Idea"}
+Accumulate a velocity vector in the direction of consistent descent.
+:::
+
+Velocity update:
+
+$$
+\mathbf v_t = \beta \mathbf v_{t-1} + \nabla_\theta \mathscr{L}_B
+$$
+
+Weight update:
+
+$$
+\boldsymbol \theta_t =
+\boldsymbol \theta_{t-1} - \eta \mathbf v_t
+$$
+
+Where:
+
+- $\beta \in [0,1)$ = momentum coefficient (e.g. 0.9)
+- $\mathbf v_t$ = exponentially weighted moving average of gradients
+
+Intuition:
+
+- Smooths noisy updates  
+- Speeds up motion along shallow directions  
+- Reduces zig-zag behaviour  
+
+---
+
+## RMSProp: Adaptive Learning Rates
+
+Problem with SGD + Momentum:
+
+- Same learning rate for all parameters
+- Some directions require smaller steps
+- Exploding updates in steep dimensions
+
+Idea:
+
+> Scale the learning rate using a running average of squared gradients.
+
+Compute running average:
+
+$$
+\mathbf s_t = \rho \mathbf s_{t-1} + (1-\rho)(\nabla_{\boldsymbol \theta} \mathscr{L}_B)^2
+$$
+
+Update rule:
+
+$$
+\boldsymbol \theta_t =
+\boldsymbol \theta_{t-1}
+-
+\frac{\eta}{\sqrt{\mathbf s_t} + \epsilon}
+\nabla_{\boldsymbol \theta} \mathscr{L}_B
+$$
+
+Where:
+
+- $\rho \approx 0.9$
+- $\epsilon \approx 10^{-8}$
+
+Intuition:
+
+- Large gradients → smaller effective step  
+- Small gradients → larger effective step  
+- Each parameter gets its own adaptive learning rate
+
+## Adam: Momentum + RMSProp
+
+Adam = **Adaptive Moment Estimation**
+
+Combines:
+
+- Momentum (1st moment)
+- RMSProp (2nd moment)
+
+### Step 1: First moment (mean of gradients)
+
+$$
+\mathbf m_t = \beta_1 \mathbf m_{t-1} + (1-\boldsymbol\beta_1) \nabla_\theta \mathscr{L}_B
+$$
+
+### Step 2: Second moment (mean of squared gradients)
+
+$$
+\mathbf v_t = \beta_2 \mathbf v_{t-1} + (1-\beta_2) (\nabla_\theta \mathscr{L}_B)^2
+$$
+
+### Step 3: Bias correction
+
+$$
+\widehat{\mathbf m}_t = \frac{\mathbf m_t}{1-\beta_1^t}
+\quad
+\widehat{\mathbf v}_t = \frac{\mathbf v_t}{1-\beta_2^t}
+$$
+
+### Step 4: Parameter update
+
+$$
+\boldsymbol \theta_t =
+\boldsymbol \theta_{t-1}
+-
+\frac{\eta}{\sqrt{\widehat{\mathbf v}_t} + \epsilon}
+\widehat{\mathbf m}_t
+$$
+
+Typical defaults:
+
+- $\beta_1 = 0.9$
+- $\beta_2 = 0.999$
+- $\epsilon = 10^{-8}$
+
+---
+
+### Intuition
+
+- Momentum → smooth direction  
+- RMSProp → adaptive step size  
+- Bias correction → stabilizes early training  
+
+Adam works well "out of the box" in most deep learning problems.
 
 # Financial Applications
 

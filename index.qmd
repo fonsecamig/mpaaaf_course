@@ -59,6 +59,10 @@ sidebar:
   - Chapter 4: Linear Neural Networks for Classification
   - Chapter 5: Multilayer Perceptrons
 
+### Exercises
+
+- [Exercise 1](notebooks/exerc_xor_sgd.ipynb)
+
 ## References
 
 - Bishop, C. M., & Bishop, H. (2024). *Deep learning: Foundations and concepts.* Springer. [https://www.bishopbook.com](https://www.bishopbook.com)
