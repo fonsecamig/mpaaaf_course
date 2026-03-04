@@ -659,7 +659,7 @@ y \cdot \text{logit} (\widehat{y})
 <p><strong>Hidden layers:</strong> <span class="math display">\[\begin{align*}
 \boldsymbol \delta^{(l)}  &amp;= \frac{\partial \mathscr{L}}{\partial \mathbf z^{(l)}} \\
 &amp; = \frac{\partial \mathscr{L}}{\partial \mathbf z^{(l + 1)}} \frac{\partial \mathbf z^{(l + 1)}}{\partial \mathbf h^{(l)}} \frac{\partial \mathbf h^{(l)}}{\partial \mathbf z^{(l)}} \\
-&amp; = \boldsymbol \delta^{(l+1)} \left(\mathbf W^{(l+1)}\right)^\top \odot \sigma'(\mathbf z^{(l)})
+&amp; = \boldsymbol \delta^{(l+1)} \left(\mathbf W^{(l+1)}\right)^\top \sigma'(\mathbf z^{(l)})
 \end{align*}\]</span></p>
 </section>
 <section id="gradients-at-each-layer" class="slide level2">
