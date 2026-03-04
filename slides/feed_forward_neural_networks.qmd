@@ -548,7 +548,7 @@ $$
 Error at output **propagates backward** to earlier weights
 :::
 
----
+# Optimization Algorithms
 
 ## Gradient Descent
 
