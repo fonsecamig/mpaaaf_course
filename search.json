@@ -294,6 +294,13 @@
     "text": "Universal Approximation Theorem\n\nA feed-forward network with one hidden layer can approximate any continuous function on a compact domain.\n\nExpressiveness grows with:\n\nNumber of neurons\nDepth\nChoice of activation"
   },
   {
+    "objectID": "slides/feed_forward_neural_networks.html#shallow-vs-deep-networks",
+    "href": "slides/feed_forward_neural_networks.html#shallow-vs-deep-networks",
+    "title": "Feed-Forward Neural Networks in Finance",
+    "section": "Shallow vs Deep Networks",
+    "text": "Shallow vs Deep Networks\nArchitectural Differences\n\n\n\nProperty\nShallow Network\nDeep Network\n\n\n\n\nHidden Layers\n1 (or none)\n≥ 2 (often many)\n\n\nDepth\nLow\nHigh\n\n\nParameter Distribution\nWide layers\nStacked hierarchical layers\n\n\nFeature Learning\nLimited abstraction\nHierarchical abstraction\n\n\n\nRepresentation Power\nShallow:\n\nUniversal approximator (theoretically)\nMay require exponentially many neurons\nLearns mostly flat features\n\nDeep:\n\nCompositional representations\nParameter-efficient for structured problems\nLearns low → mid → high-level features"
+  },
+  {
     "objectID": "slides/feed_forward_neural_networks.html#why-activations-matter",
     "href": "slides/feed_forward_neural_networks.html#why-activations-matter",
     "title": "Feed-Forward Neural Networks in Finance",
@@ -354,7 +361,7 @@
     "href": "slides/feed_forward_neural_networks.html#binary-classification-binary-cross-entropy",
     "title": "Feed-Forward Neural Networks in Finance",
     "section": "Binary Classification: Binary Cross-Entropy",
-    "text": "Binary Classification: Binary Cross-Entropy\nUsed for:\n\nSpam detection\nCredit default\nMedical diagnosis\n\nOutput: probability\n\\[\n\\widehat{y} = \\sigma(z)\n\\]\nLoss:\n\\[\n\\mathscr{L}_{BCE}\n=\n- \\left[\ny \\log(\\widehat{y})\n+\n(1-y)\\log(1-\\widehat{y})\n\\right]\n\\]"
+    "text": "Binary Classification: Binary Cross-Entropy\nUsed for:\n\nSpam detection\nCredit default\nMedical diagnosis\n\nOutput: probability\n\\[\n\\widehat{y} = \\sigma(z)\n\\]\nLoss:\n\\[\n\\mathscr{L}_{BCE}\n=\n- \\left[\ny \\cdot \\text{logit} (\\widehat{y})\n+\n(1-y) \\cdot \\text{logit}(1-\\widehat{y})\n\\right]\n\\]"
   },
   {
     "objectID": "slides/feed_forward_neural_networks.html#why-not-use-mse-for-classification",

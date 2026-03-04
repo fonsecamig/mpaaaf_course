@@ -256,6 +256,54 @@ Miguel Fonseca
 <li>Depth</li>
 <li>Choice of activation</li>
 </ul>
+</section>
+<section id="shallow-vs-deep-networks" class="slide level2">
+<h2>Shallow vs Deep Networks</h2>
+<h3 id="architectural-differences">Architectural Differences</h3>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Property</th>
+<th>Shallow Network</th>
+<th>Deep Network</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Hidden Layers</td>
+<td>1 (or none)</td>
+<td>≥ 2 (often many)</td>
+</tr>
+<tr class="even">
+<td>Depth</td>
+<td>Low</td>
+<td>High</td>
+</tr>
+<tr class="odd">
+<td>Parameter Distribution</td>
+<td>Wide layers</td>
+<td>Stacked hierarchical layers</td>
+</tr>
+<tr class="even">
+<td>Feature Learning</td>
+<td>Limited abstraction</td>
+<td>Hierarchical abstraction</td>
+</tr>
+</tbody>
+</table>
+<h3 id="representation-power">Representation Power</h3>
+<p>Shallow:</p>
+<ul>
+<li>Universal approximator (theoretically)</li>
+<li>May require exponentially many neurons</li>
+<li>Learns mostly flat features</li>
+</ul>
+<p>Deep:</p>
+<ul>
+<li>Compositional representations</li>
+<li>Parameter-efficient for structured problems</li>
+<li>Learns low → mid → high-level features</li>
+</ul>
 </section></section>
 <section>
 <section id="activation-functions" class="title-slide slide level1 center">
@@ -461,9 +509,9 @@ P(y=1 \mid \mathbf{x}) = \sigma\big(\mathbf{W}^{(2)} \phi(\mathbf{W}^{(1)}\mathb
 \mathscr{L}_{BCE}
 =
 - \left[
-y \log(\widehat{y})
+y \cdot \text{logit} (\widehat{y})
 +
-(1-y)\log(1-\widehat{y})
+(1-y) \cdot \text{logit}(1-\widehat{y})
 \right]
 \]</span></p>
 </section>
@@ -758,7 +806,7 @@ h = \sigma(w_1)
 <section class="slide level2">
 
 
-<img data-src="../images/sgd.png" class="r-stretch"></section>
+<img data-src="../images/sgd_vs_gd.png" class="r-stretch"></section>
 <section id="momentum-accelerating-gradient-descent" class="slide level2">
 <h2>Momentum: Accelerating Gradient Descent</h2>
 <p>Problem with vanilla SGD:</p>
