@@ -97,6 +97,33 @@ Expressiveness grows with:
 - Depth
 - Choice of activation
 
+---
+
+## Shallow vs Deep Networks
+
+### Architectural Differences
+
+| Property | Shallow Network | Deep Network |
+|----------|-----------------|--------------|
+| Hidden Layers | 1 (or none) | ≥ 2 (often many) |
+| Depth | Low | High |
+| Parameter Distribution | Wide layers | Stacked hierarchical layers |
+| Feature Learning | Limited abstraction | Hierarchical abstraction |
+
+### Representation Power
+
+Shallow:
+
+- Universal approximator (theoretically)
+- May require exponentially many neurons
+- Learns mostly flat features
+
+Deep:
+
+- Compositional representations
+- Parameter-efficient for structured problems
+- Learns low → mid → high-level features
+
 # Activation Functions
 
 ## Why Activations Matter {.scrollable}
@@ -315,9 +342,9 @@ $$
 \mathscr{L}_{BCE}
 =
 - \left[
-y \log(\widehat{y})
+y \cdot \text{logit} (\widehat{y})
 +
-(1-y)\log(1-\widehat{y})
+(1-y) \cdot \text{logit}(1-\widehat{y})
 \right]
 $$
 
@@ -626,7 +653,7 @@ Why multiple epochs?
 
 ---
 
-![](/images/sgd.png)
+![](/images/sgd_vs_gd.png)
 
 ---
 
