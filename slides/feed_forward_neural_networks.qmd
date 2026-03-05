@@ -407,16 +407,14 @@ $$
 \min_{\boldsymbol \theta} \; \mathscr{L}(\mathbf y, \widehat{\mathbf y})
 $$
 
-Steps:
+### Steps
 
 1. Forward pass
 2. Compute loss
 3. Backpropagate gradients
 4. Update parameters
 
----
-
-## Backpropagation: Intuition
+### Backpropagation: Intuition
 
 - Efficient application of the **chain rule**
 - Propagates error backward
