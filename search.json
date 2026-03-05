@@ -382,14 +382,7 @@
     "href": "slides/feed_forward_neural_networks.html#training-a-neural-network",
     "title": "Feed-Forward Neural Networks in Finance",
     "section": "Training a Neural Network",
-    "text": "Training a Neural Network\nGoal: \\[\n\\min_{\\boldsymbol \\theta} \\; \\mathscr{L}(\\mathbf y, \\widehat{\\mathbf y})\n\\]\nSteps:\n\nForward pass\nCompute loss\nBackpropagate gradients\nUpdate parameters"
-  },
-  {
-    "objectID": "slides/feed_forward_neural_networks.html#backpropagation-intuition",
-    "href": "slides/feed_forward_neural_networks.html#backpropagation-intuition",
-    "title": "Feed-Forward Neural Networks in Finance",
-    "section": "Backpropagation: Intuition",
-    "text": "Backpropagation: Intuition\n\nEfficient application of the chain rule\nPropagates error backward\nComputes gradients for all weights"
+    "text": "Training a Neural Network\nGoal: \\[\n\\min_{\\boldsymbol \\theta} \\; \\mathscr{L}(\\mathbf y, \\widehat{\\mathbf y})\n\\]\nSteps\n\nForward pass\nCompute loss\nBackpropagate gradients\nUpdate parameters\n\nBackpropagation: Intuition\n\nEfficient application of the chain rule\nPropagates error backward\nComputes gradients for all weights"
   },
   {
     "objectID": "slides/feed_forward_neural_networks.html#backpropagation-what-problem-are-we-solving",
