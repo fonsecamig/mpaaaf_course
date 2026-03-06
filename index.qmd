@@ -63,6 +63,16 @@ sidebar:
 
 - [Exercise 1](notebooks/exerc_xor_sgd.ipynb)
 
+## TensorFlow 2
+
+- [Slides](slides/intro_tensorflow2.qmd)
+
+### Reading
+
+- [https://www.tensorflow.org/tutorials/quickstart/beginner](https://www.tensorflow.org/tutorials/quickstart/beginner)
+- [https://www.tensorflow.org/tutorials/keras/classification](https://www.tensorflow.org/tutorials/keras/classification)
+- [https://www.tensorflow.org/guide/keras](https://www.tensorflow.org/guide/keras)
+
 ## References
 
 - Bishop, C. M., & Bishop, H. (2024). *Deep learning: Foundations and concepts.* Springer. [https://www.bishopbook.com](https://www.bishopbook.com)
