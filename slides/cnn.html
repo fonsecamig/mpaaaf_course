@@ -10,7 +10,7 @@
   <meta name="generator" content="quarto-1.7.32">
 
   <meta name="author" content="Miguel Fonseca">
-  <title>MPAAAF – Convolutional Neural Networks (CNNs)</title>
+  <title>MPAAAF – Convolutional Neural Networks (CNN)</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -196,7 +196,7 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">Convolutional Neural Networks (CNNs)</h1>
+  <h1 class="title">Convolutional Neural Networks (CNN)</h1>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -245,10 +245,11 @@ Miguel Fonseca
 <section id="key-ideas-behind-cnns" class="slide level2 scrollable">
 <h2>Key Ideas Behind CNNs</h2>
 <ol type="1">
-<li class="fragment"><strong>Local connectivity</strong></li>
-<li class="fragment"><strong>Parameter sharing</strong></li>
-<li class="fragment"><strong>Translation equivariance</strong></li>
-<li class="fragment"><strong>Hierarchical feature learning</strong></li>
+<li class="fragment"><p><strong>Local connectivity</strong></p>
+<p>Earliest layers of the network focus on local regions.</p></li>
+<li class="fragment"><p><strong>Translation equivariance</strong></p>
+<p>The network should respond similarly to the same patch, regardless of where it appears in the image (<em>translation invariance</em>).</p></li>
+<li class="fragment"><p><strong>Hierarchical feature learning</strong> Deeper layers should be able to capture longer-range features of the image</p></li>
 </ol>
 </section></section>
 <section>
@@ -286,10 +287,14 @@ z[i] = \sum_{j=0}^{K-1} x[i-j] \cdot w[j]
 
 
 <img data-src="../images/discrete_convolution_anim.gif" class="r-stretch"></section>
-<section id="convolution-as-sliding-dot-product---kernel-filter-small-learnable-weight-matrix---slide-across-input" class="slide level2">
-<h2>Convolution as Sliding Dot Product - Kernel (filter) = small learnable weight matrix - Slide across input</h2>
+<section id="convolution-as-sliding-dot-product" class="slide level2">
+<h2>Convolution as Sliding Dot Product</h2>
 <ul>
+<li>Kernel (filter) = small learnable weight matrix
+<ul>
+<li>Slide across input</li>
 <li>Compute dot product</li>
+</ul></li>
 </ul>
 <p>This is:</p>
 <ul>
@@ -336,7 +341,7 @@ z[0] = 1*1 + 2*0 + 3*(-1)
 </section>
 <section id="d-convolution-in-tensorflow" class="slide level2">
 <h2>1D Convolution in TensorFlow</h2>
-<div id="d9ac4326" class="cell" data-execution_count="1">
+<div id="fe158d60" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> tensorflow <span class="im">as</span> tf</span>
 <span id="cb1-2"><a></a></span>
 <span id="cb1-3"><a></a>model <span class="op">=</span> tf.keras.Sequential([</span>
@@ -406,7 +411,7 @@ H' \times W' \times 64
 </section>
 <section id="d-convolution-in-tensorflow-1" class="slide level2">
 <h2>2D Convolution in TensorFlow</h2>
-<div id="78c3e794" class="cell" data-execution_count="2">
+<div id="1fbda32a" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>model <span class="op">=</span> tf.keras.Sequential([</span>
 <span id="cb2-2"><a></a>    tf.keras.layers.Conv2D(</span>
 <span id="cb2-3"><a></a>        filters<span class="op">=</span><span class="dv">32</span>,</span>
@@ -470,22 +475,21 @@ H_{out} = \frac{H + 2P - K}{S} + 1
 <li class="fragment">Add translation invariance</li>
 </ul>
 </section>
-<section id="max-pooling" class="slide level2">
-<h2>Max Pooling</h2>
+<section id="types-of-pooling" class="slide level2">
+<h2>Types of Pooling</h2>
+<h3 id="max-pooling">Max Pooling</h3>
 <p><span class="math display">\[Z = \max(x_{window})\]</span></p>
 <p>Keeps strongest activation.</p>
-</section>
-<section id="average-pooling" class="slide level2">
-<h2>Average Pooling</h2>
+<h3 id="average-pooling">Average Pooling</h3>
 <p><span class="math display">\[Z = \text{mean}(x_{window})\]</span></p>
 <p>Smoother representation.</p>
 </section>
 <section id="pooling-in-tensorflow" class="slide level2">
 <h2>Pooling in TensorFlow</h2>
-<div id="c54834db" class="cell" data-execution_count="3">
+<div id="e59dbe10" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>tf.keras.layers.MaxPooling2D(pool_size<span class="op">=</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="21">
-<pre><code>&lt;MaxPooling2D name=max_pooling2d_12, built=True&gt;</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<pre><code>&lt;MaxPooling2D name=max_pooling2d_4, built=True&gt;</code></pre>
 </div>
 </div>
 </section></section>
@@ -497,11 +501,11 @@ H_{out} = \frac{H + 2P - K}{S} + 1
 <section id="cnn-architecture-pattern" class="slide level2">
 <h2>CNN Architecture Pattern</h2>
 <p>Typical CNN:</p>
-<p>Conv → ReLU → Conv → ReLU → Pool Conv → ReLU → Conv → ReLU → Pool Flatten → Dense → Output</p>
-</section>
-<section id="example-cnn-mnist" class="slide level2">
-<h2>Example CNN (MNIST)</h2>
-<div id="a8f97d9c" class="cell" data-execution_count="4">
+<p>Conv → ReLU → Conv → ReLU → Pool</p>
+<p>Conv → ReLU → Conv → ReLU → Pool</p>
+<p>Flatten → Dense → Output</p>
+<h3 id="example-cnn-mnist">Example CNN (MNIST)</h3>
+<div id="b1901603" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>model <span class="op">=</span> tf.keras.Sequential([</span>
 <span id="cb5-2"><a></a>    tf.keras.layers.Conv2D(<span class="dv">32</span>, <span class="dv">3</span>, activation<span class="op">=</span><span class="st">'relu'</span>, padding<span class="op">=</span><span class="st">'same'</span>),</span>
 <span id="cb5-3"><a></a>    tf.keras.layers.MaxPooling2D(<span class="dv">2</span>),</span>
@@ -570,7 +574,7 @@ H(x) = F(x) + x
 </section>
 <section id="residual-block-in-tensorflow" class="slide level2">
 <h2>Residual Block in TensorFlow</h2>
-<div id="c6df2711" class="cell" data-execution_count="5">
+<div id="f86d3ae5" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a><span class="im">from</span> tensorflow.keras <span class="im">import</span> layers</span>
 <span id="cb6-2"><a></a></span>
 <span id="cb6-3"><a></a><span class="kw">def</span> residual_block(x, filters):</span>
@@ -587,7 +591,7 @@ H(x) = F(x) + x
 </section>
 <section id="full-cnn-with-residuals" class="slide level2">
 <h2>Full CNN with Residuals</h2>
-<div id="7e5dfa64" class="cell" data-execution_count="6">
+<div id="f3581c37" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a>inputs <span class="op">=</span> tf.keras.Input(shape<span class="op">=</span>(<span class="dv">32</span>,<span class="dv">32</span>,<span class="dv">3</span>))</span>
 <span id="cb7-2"><a></a>x <span class="op">=</span> tf.keras.layers.Conv2D(<span class="dv">32</span>, <span class="dv">3</span>, padding<span class="op">=</span><span class="st">'same'</span>)(inputs)</span>
 <span id="cb7-3"><a></a></span>
