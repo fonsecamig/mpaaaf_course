@@ -18,7 +18,7 @@ sidebar:
   - Chapter 5: Resampling Methods
 
 ### Exercises
-- [Exercise 1](notebooks/exerc_kfold_cv.ipynb)
+- [Exercise 1](https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_kfold_cv.ipynb)
 
 ## Decision Trees
 
@@ -36,8 +36,8 @@ sidebar:
 - [Slides](slides/advanced_decision_trees.qmd)
 
 ### Exercises
-- [Exercise 1](notebooks/exerc_decision_trees_01.ipynb)
-- [Exercise 2](notebooks/exerc_decision_trees_02.ipynb)
+- [Exercise 1](https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_decision_trees_01.ipynb)
+- [Exercise 2](https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_decision_trees_02.ipynb)
 
 ## Feed-Forward Neural Networks
 
@@ -61,7 +61,7 @@ sidebar:
 
 ### Exercises
 
-- [Exercise 1](notebooks/exerc_xor_sgd.ipynb)
+- [Exercise 1](https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_xor_sgd.ipynb)
 
 ## TensorFlow 2
 
@@ -75,8 +75,8 @@ sidebar:
 
 ## Exercises
 
-- [Exercise 1](notebooks/exerc_tf2-intro.ipynb)
-- [Exercise 2](notebooks/exerc-mlp-mnist.ipynb)
+- [Exercise 1](https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_tf2-intro.ipynb)
+- [Exercise 2](https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc-mlp-mnist.ipynb)
 
 ## References
 

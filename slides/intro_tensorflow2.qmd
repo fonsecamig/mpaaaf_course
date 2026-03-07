@@ -165,6 +165,12 @@ model.compile(
 
 ## Fit the Model {.scrollable}
 
+**Training concepts:**
+
+- Epoch
+- Batch
+- Validation set
+
 ```{python}
 X_train, y_train = np.random.rand(100, 10), np.random.rand(100, 1)  # Training data
 history = model.fit(
@@ -175,12 +181,6 @@ history = model.fit(
     validation_split=0.2
 )
 ```
-
-**Training concepts:**
-
-- Epoch
-- Batch
-- Validation set
 
 ---
 

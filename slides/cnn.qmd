@@ -1,5 +1,5 @@
 ---
-title: "Convolutional Neural Networks (CNNs)"
+title: "Convolutional Neural Networks (CNN)"
 author: "Miguel Fonseca"
 format:
   revealjs:
@@ -29,9 +29,14 @@ Problems:
 
 ::: {.incremental}
 1. **Local connectivity**
-2. **Parameter sharing**
+    
+    Earliest layers of the network focus on local regions.
+
 3. **Translation equivariance**
+    
+    The network should respond similarly to the same patch, regardless of where it appears in the image (*translation invariance*).
 4. **Hierarchical feature learning**
+    Deeper layers should be able to capture longer-range features of the image
 :::
 
 # Convolutions
@@ -72,8 +77,11 @@ $$
 
 ---
 
-## Convolution as Sliding Dot Product - Kernel (filter) = small learnable weight matrix - Slide across input
-- Compute dot product
+## Convolution as Sliding Dot Product
+
+- Kernel (filter) = small learnable weight matrix
+    - Slide across input
+    - Compute dot product
 
 This is:
 
@@ -274,15 +282,15 @@ Where:
 
 ---
 
-## Max Pooling
+## Types of Pooling
+
+### Max Pooling
 
 $$Z = \max(x_{window})$$
 
 Keeps strongest activation.
 
----
-
-## Average Pooling
+### Average Pooling
 
 $$Z = \text{mean}(x_{window})$$
 
@@ -302,12 +310,12 @@ tf.keras.layers.MaxPooling2D(pool_size=(2,2))
 Typical CNN:
 
 Conv → ReLU → Conv → ReLU → Pool
+
 Conv → ReLU → Conv → ReLU → Pool
+
 Flatten → Dense → Output
 
----
-
-## Example CNN (MNIST)
+### Example CNN (MNIST)
 
 ```{python}
 model = tf.keras.Sequential([
