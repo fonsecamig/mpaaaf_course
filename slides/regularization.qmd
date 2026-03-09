@@ -154,6 +154,9 @@ $$
 y = \gamma \widehat{x} + \beta
 $$
 
+- $\mu_B$ and $\sigma_B^2$ are batch statistics
+- $\gamma$ and $\beta$ are learnable parameters
+
 ---
 
 ## Why BatchNorm Works
@@ -273,4 +276,4 @@ Examples:
 - Methods are complementary
 - Validation performance is the final arbiter
 
-> Generalisation is engineered, not accidental.
+<!-- > Generalisation is engineered, not accidental. -->

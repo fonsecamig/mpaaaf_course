@@ -1,0 +1,89 @@
+---
+title: "Hyperparameter Tuning"
+subtitle: "Finding the Best Model Configuration"
+author: "Miguel Fonseca"
+format: 
+  revealjs:
+    toc: true
+---
+
+# Hyperparameters
+
+## Motivation
+
+Machine learning models have two types of parameters:
+
+:::{.incremental}
+- Model parameters
+    - learned automatically
+        - *e.g.* neural network weights
+- Hyperparameters
+    . defined before training
+    . control model behaviour
+    - Examples:
+        - learning rate
+        - tree depth
+        - number of layers
+        - regularisation strength
+:::
+
+:::{.callout title="Goal"}
+Find hyperparameters that maximize generalization performance.
+:::
+
+---
+
+## Hyperparameters vs Parameters
+| Type	| Examples	| Learned? |
+|---|---|---|
+| Model parameters	| weights, biases	| Yes |
+| Hyperparameters	| learning rate, depth	| No |
+
+Hyperparameters control:
+
+- model capacity
+- training dynamics
+- regularisation strength
+
+# Underfitting vs Overfitting
+
+## The Underfitting vs Overfitting Problem
+
+:::{.callout-info title="Key idea"}
+Model complexity must match the data.
+:::
+
+**Underfitting**
+
+- high bias
+- poor performance everywhere
+
+**Overfitting**
+
+- high variance
+- poor generalization
+
+---
+
+## Train vs Validation Loss Behaviour
+
+Typical behaviour:
+
+**Good fit**
+
+- training loss ↓
+- validation loss ↓
+
+**Overfitting**
+
+- training loss ↓
+- validation loss ↑
+- validation loss ↑
+
+**Underfitting**
+
+- both losses high
+
+---
+
+![](/images/train_validation_loss.jpeg)

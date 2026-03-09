@@ -278,6 +278,7 @@ The loss defines:
 ## Regression Loss: Mean Squared Error (MSE)
 
 Used for:
+
 - Regression
 - Continuous targets
 
@@ -485,7 +486,7 @@ $$
 **Output layer:**
 $$
 \boldsymbol \delta^{(L + 1)} =
-\nabla_{\widehat{\mathbf y}} \mathscr{L} \odot \sigma'(\mathbf z^{(L + 1)})
+\nabla_{\widehat{\mathbf y}} \mathscr{L} \cdot \sigma'(\mathbf z^{(L + 1)})
 $$
 
 **Hidden layers:**
