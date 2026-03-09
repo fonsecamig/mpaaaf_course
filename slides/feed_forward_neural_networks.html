@@ -460,7 +460,11 @@ P(y=1 \mid \mathbf{x}) = \sigma\big(\mathbf{W}^{(2)} \phi(\mathbf{W}^{(1)}\mathb
 </section>
 <section id="regression-loss-mean-squared-error-mse" class="slide level2">
 <h2>Regression Loss: Mean Squared Error (MSE)</h2>
-<p>Used for: - Regression - Continuous targets</p>
+<p>Used for:</p>
+<ul>
+<li>Regression</li>
+<li>Continuous targets</li>
+</ul>
 <p>Definition:</p>
 <p><span class="math display">\[
 \mathscr{L}_{MSE}
@@ -652,7 +656,7 @@ y \cdot \text{logit} (\widehat{y})
 \]</span></p>
 <p><strong>Output layer:</strong> <span class="math display">\[
 \boldsymbol \delta^{(L + 1)} =
-\nabla_{\widehat{\mathbf y}} \mathscr{L} \odot \sigma'(\mathbf z^{(L + 1)})
+\nabla_{\widehat{\mathbf y}} \mathscr{L} \cdot \sigma'(\mathbf z^{(L + 1)})
 \]</span></p>
 <p><strong>Hidden layers:</strong> <span class="math display">\[\begin{align*}
 \boldsymbol \delta^{(l)}  &amp;= \frac{\partial \mathscr{L}}{\partial \mathbf z^{(l)}} \\
