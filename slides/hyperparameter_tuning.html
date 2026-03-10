@@ -147,6 +147,9 @@ Miguel Fonseca
 <ul>
 <li><a href="#/hyperparameters" id="/toc-hyperparameters">Hyperparameters</a></li>
 <li><a href="#/underfitting-vs-overfitting" id="/toc-underfitting-vs-overfitting">Underfitting vs Overfitting</a></li>
+<li><a href="#/tuning" id="/toc-tuning">Tuning</a></li>
+<li><a href="#/tuning-strategies" id="/toc-tuning-strategies">Tuning Strategies</a></li>
+<li><a href="#/categories-of-hyperparameters" id="/toc-categories-of-hyperparameters">Categories of Hyperparameters</a></li>
 </ul>
 </nav>
 </section>
@@ -159,21 +162,23 @@ Miguel Fonseca
 <h2>Motivation</h2>
 <p>Machine learning models have two types of parameters:</p>
 <ul>
-<li class="fragment">Model parameters
+<li>Model parameters
 <ul>
-<li class="fragment">learned automatically
+<li>learned automatically
 <ul>
-<li class="fragment"><em>e.g.</em> neural network weights</li>
+<li><em>e.g.</em> neural network weights</li>
 </ul></li>
 </ul></li>
-<li class="fragment">Hyperparameters . defined before training . control model behaviour
+<li>Hyperparameters
 <ul>
-<li class="fragment">Examples:
+<li>defined before training</li>
+<li>control model behaviour</li>
+<li>Examples:
 <ul>
-<li class="fragment">learning rate</li>
-<li class="fragment">tree depth</li>
-<li class="fragment">number of layers</li>
-<li class="fragment">regularisation strength</li>
+<li>learning rate</li>
+<li>tree depth</li>
+<li>number of layers</li>
+<li>regularisation strength</li>
 </ul></li>
 </ul></li>
 </ul>
@@ -263,9 +268,254 @@ Miguel Fonseca
 <section class="slide level2">
 
 
-
-
 <img data-src="../images/train_validation_loss.jpeg" class="r-stretch"></section></section>
+<section>
+<section id="tuning" class="title-slide slide level1 center">
+<h1>Tuning</h1>
+
+</section>
+<section id="role-of-hyperparameters" class="slide level2">
+<h2>Role of Hyperparameters</h2>
+<p>Hyperparameters control:</p>
+<p><strong>Model capacity</strong></p>
+<ul>
+<li>number of layers</li>
+<li>tree depth</li>
+<li>number of neurons</li>
+</ul>
+<p><strong>Regularisation</strong></p>
+<ul>
+<li>L1 / L2 penalty</li>
+<li>dropout</li>
+</ul>
+<p><strong>Optimization</strong></p>
+<ul>
+<li>learning rate</li>
+<li>batch size</li>
+<li>momentum</li>
+</ul>
+</section>
+<section id="data-curation-and-feature-engineering" class="slide level2">
+<h2>Data Curation and Feature Engineering</h2>
+<blockquote>
+<p>Hyperparameter tuning is not the only lever.</p>
+</blockquote>
+<p>Performance depends heavily on:</p>
+<ul>
+<li>Data curation
+<ul>
+<li>removing corrupted samples</li>
+<li>class balancing</li>
+<li>deduplication</li>
+</ul></li>
+<li>Feature engineering
+<ul>
+<li>normalization</li>
+<li>feature selection</li>
+<li>domain features</li>
+</ul></li>
+</ul>
+<div title="Important rule">
+<div class="callout callout-warning callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Important rule</strong></p>
+</div>
+<div class="callout-content">
+<p>Better features often beat more complex models.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="hyperparameter-search-space" class="slide level2">
+<h2>Hyperparameter Search Space</h2>
+<p>Define a search space.</p>
+<p>Example: <span class="math display">\[
+\begin{eqnarray}
+\verb|learning_rate| \in [1e-5 , 1e-1] \\
+\verb|num_layers| \in {1,2,3,4} \\
+\verb|batch_size| \in {16,32,64} \\
+\verb|dropout| \in [0.0 , 0.5]
+\end{eqnarray}
+\]</span></p>
+<p>Choosing a good search space is critical.</p>
+</section>
+<section id="exploration-vs-exploitation" class="slide level2">
+<h2>Exploration vs Exploitation</h2>
+<p>Two competing goals:</p>
+<div title="Exploration">
+<div class="callout callout-none no-icon callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Exploration</strong></p>
+</div>
+<div class="callout-content">
+<p>Search new regions.</p>
+</div>
+</div>
+</div>
+</div>
+<div title="Exploitation">
+<div class="callout callout-none no-icon callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Exploitation</strong></p>
+</div>
+<div class="callout-content">
+<p>Refine promising areas.</p>
+</div>
+</div>
+</div>
+</div>
+<p>Good optimizers balance both.</p>
+</section></section>
+<section>
+<section id="tuning-strategies" class="title-slide slide level1 center">
+<h1>Tuning Strategies</h1>
+
+</section>
+<section id="grid-search" class="slide level2">
+<h2>Grid Search</h2>
+<p>Evaluate all combinations.</p>
+<div title="Pros">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Pros</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>simple</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div title="Cons">
+<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Cons</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>expensive</li>
+<li>scales poorly</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="random-search" class="slide level2">
+<h2>Random Search</h2>
+<p>Sample randomly from distributions.</p>
+<div title="Pros">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Pros</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>simple</li>
+<li>explores more dimensions efficiently</li>
+<li>often outperforms grid search</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div title="Cons">
+<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Cons</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>expensive</li>
+<li>scales poorly with dimensionality increase</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="bayesian-optimization" class="slide level2">
+<h2>Bayesian Optimization</h2>
+<p><strong>Strategy:</strong></p>
+<ul>
+<li>Build surrogate model with prior for hyperparameters</li>
+<li>Predict promising regions</li>
+<li>Evaluate there</li>
+<li>Update surrogate with new data</li>
+</ul>
+<p>Used by:</p>
+<ul>
+<li>Optuna</li>
+<li>Hyperopt</li>
+<li>Bayesian optimization frameworks</li>
+</ul>
+</section></section>
+<section>
+<section id="categories-of-hyperparameters" class="title-slide slide level1 center">
+<h1>Categories of Hyperparameters</h1>
+
+</section>
+<section id="scientific-hyperparameters" class="slide level2">
+<h2>Scientific hyperparameters</h2>
+<blockquote>
+<p>Model architecture.</p>
+</blockquote>
+<p>Examples:</p>
+<ul>
+<li>number of layers</li>
+<li>kernel size</li>
+<li>tree depth</li>
+</ul>
+</section>
+<section id="nuisance-hyperparameters" class="slide level2">
+<h2>Nuisance hyperparameters</h2>
+<blockquote>
+<p>Affect training but not model architecture.</p>
+</blockquote>
+<p>Examples:</p>
+<ul>
+<li>learning rate</li>
+<li>batch size</li>
+<li>optimizer parameters</li>
+</ul>
+</section>
+<section id="fixed-hyperparameters" class="slide level2">
+<h2>Fixed hyperparameters</h2>
+<blockquote>
+<p>Chosen once and rarely tuned.</p>
+</blockquote>
+<p>Examples:</p>
+<ul>
+<li>activation function</li>
+<li>optimizer choice</li>
+</ul>
+
+
+</section></section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">

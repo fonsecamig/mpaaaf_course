@@ -249,7 +249,7 @@
     "href": "slides/hyperparameter_tuning.html#motivation",
     "title": "Hyperparameter Tuning",
     "section": "Motivation",
-    "text": "Motivation\nMachine learning models have two types of parameters:\n\nModel parameters\n\nlearned automatically\n\ne.g. neural network weights\n\n\nHyperparameters . defined before training . control model behaviour\n\nExamples:\n\nlearning rate\ntree depth\nnumber of layers\nregularisation strength\n\n\n\n\n\n\n\nGoal\n\n\nFind hyperparameters that maximize generalization performance."
+    "text": "Motivation\nMachine learning models have two types of parameters:\n\nModel parameters\n\nlearned automatically\n\ne.g. neural network weights\n\n\nHyperparameters\n\ndefined before training\ncontrol model behaviour\nExamples:\n\nlearning rate\ntree depth\nnumber of layers\nregularisation strength\n\n\n\n\n\n\n\nGoal\n\n\nFind hyperparameters that maximize generalization performance."
   },
   {
     "objectID": "slides/hyperparameter_tuning.html#hyperparameters-vs-parameters",
@@ -271,6 +271,76 @@
     "title": "Hyperparameter Tuning",
     "section": "Train vs Validation Loss Behaviour",
     "text": "Train vs Validation Loss Behaviour\nTypical behaviour:\nGood fit\n\ntraining loss ↓\nvalidation loss ↓\n\nOverfitting\n\ntraining loss ↓\nvalidation loss ↑\nvalidation loss ↑\n\nUnderfitting\n\nboth losses high"
+  },
+  {
+    "objectID": "slides/hyperparameter_tuning.html#role-of-hyperparameters",
+    "href": "slides/hyperparameter_tuning.html#role-of-hyperparameters",
+    "title": "Hyperparameter Tuning",
+    "section": "Role of Hyperparameters",
+    "text": "Role of Hyperparameters\nHyperparameters control:\nModel capacity\n\nnumber of layers\ntree depth\nnumber of neurons\n\nRegularisation\n\nL1 / L2 penalty\ndropout\n\nOptimization\n\nlearning rate\nbatch size\nmomentum"
+  },
+  {
+    "objectID": "slides/hyperparameter_tuning.html#data-curation-and-feature-engineering",
+    "href": "slides/hyperparameter_tuning.html#data-curation-and-feature-engineering",
+    "title": "Hyperparameter Tuning",
+    "section": "Data Curation and Feature Engineering",
+    "text": "Data Curation and Feature Engineering\n\nHyperparameter tuning is not the only lever.\n\nPerformance depends heavily on:\n\nData curation\n\nremoving corrupted samples\nclass balancing\ndeduplication\n\nFeature engineering\n\nnormalization\nfeature selection\ndomain features\n\n\n\n\n\n\n\n\n\nImportant rule\n\n\nBetter features often beat more complex models."
+  },
+  {
+    "objectID": "slides/hyperparameter_tuning.html#hyperparameter-search-space",
+    "href": "slides/hyperparameter_tuning.html#hyperparameter-search-space",
+    "title": "Hyperparameter Tuning",
+    "section": "Hyperparameter Search Space",
+    "text": "Hyperparameter Search Space\nDefine a search space.\nExample: \\[\n\\begin{eqnarray}\n\\verb|learning_rate| \\in [1e-5 , 1e-1] \\\\\n\\verb|num_layers| \\in {1,2,3,4} \\\\\n\\verb|batch_size| \\in {16,32,64} \\\\\n\\verb|dropout| \\in [0.0 , 0.5]\n\\end{eqnarray}\n\\]\nChoosing a good search space is critical."
+  },
+  {
+    "objectID": "slides/hyperparameter_tuning.html#exploration-vs-exploitation",
+    "href": "slides/hyperparameter_tuning.html#exploration-vs-exploitation",
+    "title": "Hyperparameter Tuning",
+    "section": "Exploration vs Exploitation",
+    "text": "Exploration vs Exploitation\nTwo competing goals:\n\n\n\n\nExploration\n\n\nSearch new regions.\n\n\n\n\n\n\n\n\nExploitation\n\n\nRefine promising areas.\n\n\n\n\nGood optimizers balance both."
+  },
+  {
+    "objectID": "slides/hyperparameter_tuning.html#grid-search",
+    "href": "slides/hyperparameter_tuning.html#grid-search",
+    "title": "Hyperparameter Tuning",
+    "section": "Grid Search",
+    "text": "Grid Search\nEvaluate all combinations.\n\n\n\n\n\n\n\nPros\n\n\n\nsimple\n\n\n\n\n\n\n\n\n\n\n\n\nCons\n\n\n\nexpensive\nscales poorly"
+  },
+  {
+    "objectID": "slides/hyperparameter_tuning.html#random-search",
+    "href": "slides/hyperparameter_tuning.html#random-search",
+    "title": "Hyperparameter Tuning",
+    "section": "Random Search",
+    "text": "Random Search\nSample randomly from distributions.\n\n\n\n\n\n\n\nPros\n\n\n\nsimple\nexplores more dimensions efficiently\noften outperforms grid search\n\n\n\n\n\n\n\n\n\n\n\n\nCons\n\n\n\nexpensive\nscales poorly with dimensionality increase"
+  },
+  {
+    "objectID": "slides/hyperparameter_tuning.html#bayesian-optimization",
+    "href": "slides/hyperparameter_tuning.html#bayesian-optimization",
+    "title": "Hyperparameter Tuning",
+    "section": "Bayesian Optimization",
+    "text": "Bayesian Optimization\nStrategy:\n\nBuild surrogate model with prior for hyperparameters\nPredict promising regions\nEvaluate there\nUpdate surrogate with new data\n\nUsed by:\n\nOptuna\nHyperopt\nBayesian optimization frameworks"
+  },
+  {
+    "objectID": "slides/hyperparameter_tuning.html#scientific-hyperparameters",
+    "href": "slides/hyperparameter_tuning.html#scientific-hyperparameters",
+    "title": "Hyperparameter Tuning",
+    "section": "Scientific hyperparameters",
+    "text": "Scientific hyperparameters\n\nModel architecture.\n\nExamples:\n\nnumber of layers\nkernel size\ntree depth"
+  },
+  {
+    "objectID": "slides/hyperparameter_tuning.html#nuisance-hyperparameters",
+    "href": "slides/hyperparameter_tuning.html#nuisance-hyperparameters",
+    "title": "Hyperparameter Tuning",
+    "section": "Nuisance hyperparameters",
+    "text": "Nuisance hyperparameters\n\nAffect training but not model architecture.\n\nExamples:\n\nlearning rate\nbatch size\noptimizer parameters"
+  },
+  {
+    "objectID": "slides/hyperparameter_tuning.html#fixed-hyperparameters",
+    "href": "slides/hyperparameter_tuning.html#fixed-hyperparameters",
+    "title": "Hyperparameter Tuning",
+    "section": "Fixed hyperparameters",
+    "text": "Fixed hyperparameters\n\nChosen once and rarely tuned.\n\nExamples:\n\nactivation function\noptimizer choice"
   },
   {
     "objectID": "slides/decision_trees.html#why-decision-trees",
@@ -1040,14 +1110,21 @@
     "href": "slides/feed_forward_neural_networks.html#backpropagation-error-terms",
     "title": "Feed-Forward Neural Networks in Finance",
     "section": "Backpropagation: Error Terms",
-    "text": "Backpropagation: Error Terms\nDefine the error signal at layer \\(l\\):\n\\[\n\\boldsymbol \\delta^{(l)} = \\frac{\\partial \\mathscr{L}}{\\partial \\mathbf z^{(l)}}\n\\]\nOutput layer: \\[\n\\boldsymbol \\delta^{(L + 1)} =\n\\nabla_{\\widehat{\\mathbf y}} \\mathscr{L} \\cdot \\sigma'(\\mathbf z^{(L + 1)})\n\\]\nHidden layers: \\[\\begin{align*}\n\\boldsymbol \\delta^{(l)}  &= \\frac{\\partial \\mathscr{L}}{\\partial \\mathbf z^{(l)}} \\\\\n& = \\frac{\\partial \\mathscr{L}}{\\partial \\mathbf z^{(l + 1)}} \\frac{\\partial \\mathbf z^{(l + 1)}}{\\partial \\mathbf h^{(l)}} \\frac{\\partial \\mathbf h^{(l)}}{\\partial \\mathbf z^{(l)}} \\\\\n& = \\boldsymbol \\delta^{(l+1)} \\left(\\mathbf W^{(l+1)}\\right)^\\top \\sigma'(\\mathbf z^{(l)})\n\\end{align*}\\]"
+    "text": "Backpropagation: Error Terms\nDefine the error signal at layer \\(l\\):\n\\[\n\\boldsymbol \\delta^{(l)} = \\frac{\\partial \\mathscr{L}}{\\partial \\mathbf z^{(l)}}\n\\]\nOutput layer: \\[\n\\boldsymbol \\delta^{(L + 1)} =\n\\nabla_{\\widehat{\\mathbf y}} \\mathscr{L} \\cdot \\sigma'(\\mathbf z^{(L + 1)})\n\\]\nHidden layers: \\[\\begin{align*}\n\\boldsymbol \\delta^{(l)}  &= \\frac{\\partial \\mathscr{L}}{\\partial \\mathbf z^{(l)}} \\\\\n& = \\frac{\\partial \\mathscr{L}}{\\partial \\mathbf z^{(l + 1)}} \\frac{\\partial \\mathbf z^{(l + 1)}}{\\partial \\mathbf h^{(l)}} \\frac{\\partial \\mathbf h^{(l)}}{\\partial \\mathbf z^{(l)}} \\\\\n& = \\boldsymbol \\delta^{(l+1)} \\mathbf W^{(l+1)} \\text{diag}\\left(\\sigma'(\\mathbf z^{(l)})\\right)\n\\end{align*}\\]"
   },
   {
-    "objectID": "slides/feed_forward_neural_networks.html#gradients-at-each-layer",
-    "href": "slides/feed_forward_neural_networks.html#gradients-at-each-layer",
+    "objectID": "slides/feed_forward_neural_networks.html#weight-gradients-at-each-layer",
+    "href": "slides/feed_forward_neural_networks.html#weight-gradients-at-each-layer",
     "title": "Feed-Forward Neural Networks in Finance",
-    "section": "Gradients at Each Layer",
-    "text": "Gradients at Each Layer\n\\[\n\\frac{\\partial \\mathscr L}{\\partial w^{(l)}_{jk}} = \\frac{\\partial \\mathscr L}{\\partial \\mathbf z^{(l)}} \\frac{\\partial \\mathbf z^{(l)}}{\\partial w^{(l)}_{jk}} = \\boldsymbol \\delta^{(l)} \\begin{bmatrix}0 \\\\ \\vdots \\\\ \\underbrace{h^{(l-1)}_k}_{k^{\\text{th}}\\text{ position}} \\\\ \\vdots \\\\ 0\\end{bmatrix} =\\delta^{(l)}_j h^{(l-1)}_k\n\\]\n\n\\[\n\\frac{\\partial \\mathscr L}{\\partial \\mathbf W^{(l)}} = \\boldsymbol \\delta^{(l)} \\left(\\mathbf h^{(l-1)}\\right)^\\top\n\\]"
+    "section": "Weight Gradients at Each Layer",
+    "text": "Weight Gradients at Each Layer\n\\[\n\\frac{\\partial \\mathscr L}{\\partial w^{(l)}_{jk}} = \\frac{\\partial \\mathscr L}{\\partial \\mathbf z^{(l)}} \\frac{\\partial \\mathbf z^{(l)}}{\\partial w^{(l)}_{jk}} = \\boldsymbol \\delta^{(l)} \\begin{bmatrix}0 \\\\ \\vdots \\\\ \\underbrace{h^{(l-1)}_k}_{k^{\\text{th}}\\text{ position}} \\\\ \\vdots \\\\ 0\\end{bmatrix} =\\delta^{(l)}_j h^{(l-1)}_k\n\\]\n\n\\[\n\\frac{\\partial \\mathscr L}{\\partial \\mathbf W^{(l)}} = \\boldsymbol \\delta^{(l)} \\left(\\mathbf h^{(l-1)}\\right)^\\top\n\\]"
+  },
+  {
+    "objectID": "slides/feed_forward_neural_networks.html#bias-gradients-at-each-layer",
+    "href": "slides/feed_forward_neural_networks.html#bias-gradients-at-each-layer",
+    "title": "Feed-Forward Neural Networks in Finance",
+    "section": "Bias Gradients at Each Layer",
+    "text": "Bias Gradients at Each Layer\n\\[\n\\frac{\\partial \\mathscr L}{\\partial b^{(l)}_j} = \\frac{\\partial \\mathscr L}{\\partial \\mathbf z^{(l)}} \\frac{\\partial \\mathbf z^{(l)}}{\\partial b^{(l)}_j} = \\delta^{(l)}_j\n\\]\n\n\\[\n\\frac{\\partial \\mathscr L}{\\partial \\mathbf b^{(l)}} = \\boldsymbol \\delta^{(l)}\n\\]"
   },
   {
     "objectID": "slides/feed_forward_neural_networks.html#toy-example-one-hidden-neuron",

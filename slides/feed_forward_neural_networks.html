@@ -661,17 +661,28 @@ y \cdot \text{logit} (\widehat{y})
 <p><strong>Hidden layers:</strong> <span class="math display">\[\begin{align*}
 \boldsymbol \delta^{(l)}  &amp;= \frac{\partial \mathscr{L}}{\partial \mathbf z^{(l)}} \\
 &amp; = \frac{\partial \mathscr{L}}{\partial \mathbf z^{(l + 1)}} \frac{\partial \mathbf z^{(l + 1)}}{\partial \mathbf h^{(l)}} \frac{\partial \mathbf h^{(l)}}{\partial \mathbf z^{(l)}} \\
-&amp; = \boldsymbol \delta^{(l+1)} \left(\mathbf W^{(l+1)}\right)^\top \sigma'(\mathbf z^{(l)})
+&amp; = \boldsymbol \delta^{(l+1)} \mathbf W^{(l+1)} \text{diag}\left(\sigma'(\mathbf z^{(l)})\right)
 \end{align*}\]</span></p>
 </section>
-<section id="gradients-at-each-layer" class="slide level2">
-<h2>Gradients at Each Layer</h2>
+<section id="weight-gradients-at-each-layer" class="slide level2">
+<h2>Weight Gradients at Each Layer</h2>
 <p><span class="math display">\[
 \frac{\partial \mathscr L}{\partial w^{(l)}_{jk}} = \frac{\partial \mathscr L}{\partial \mathbf z^{(l)}} \frac{\partial \mathbf z^{(l)}}{\partial w^{(l)}_{jk}} = \boldsymbol \delta^{(l)} \begin{bmatrix}0 \\ \vdots \\ \underbrace{h^{(l-1)}_k}_{k^{\text{th}}\text{ position}} \\ \vdots \\ 0\end{bmatrix} =\delta^{(l)}_j h^{(l-1)}_k
 \]</span></p>
 <div class="fragment">
 <p><span class="math display">\[
 \frac{\partial \mathscr L}{\partial \mathbf W^{(l)}} = \boldsymbol \delta^{(l)} \left(\mathbf h^{(l-1)}\right)^\top
+\]</span></p>
+</div>
+</section>
+<section id="bias-gradients-at-each-layer" class="slide level2">
+<h2>Bias Gradients at Each Layer</h2>
+<p><span class="math display">\[
+\frac{\partial \mathscr L}{\partial b^{(l)}_j} = \frac{\partial \mathscr L}{\partial \mathbf z^{(l)}} \frac{\partial \mathbf z^{(l)}}{\partial b^{(l)}_j} = \delta^{(l)}_j
+\]</span></p>
+<div class="fragment">
+<p><span class="math display">\[
+\frac{\partial \mathscr L}{\partial \mathbf b^{(l)}} = \boldsymbol \delta^{(l)}
 \]</span></p>
 </div>
 </section>
