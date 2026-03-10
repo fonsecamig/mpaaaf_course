@@ -13,19 +13,17 @@ format:
 
 Machine learning models have two types of parameters:
 
-:::{.incremental}
 - Model parameters
     - learned automatically
         - *e.g.* neural network weights
 - Hyperparameters
-    . defined before training
-    . control model behaviour
+    - defined before training
+    - control model behaviour
     - Examples:
         - learning rate
         - tree depth
         - number of layers
         - regularisation strength
-:::
 
 :::{.callout title="Goal"}
 Find hyperparameters that maximize generalization performance.
@@ -87,3 +85,167 @@ Typical behaviour:
 ---
 
 ![](/images/train_validation_loss.jpeg)
+
+
+# Tuning
+
+---
+
+## Role of Hyperparameters
+
+Hyperparameters control:
+
+**Model capacity**
+
+- number of layers
+- tree depth
+- number of neurons
+
+**Regularisation**
+
+- L1 / L2 penalty
+- dropout
+
+**Optimization**
+
+- learning rate
+- batch size
+- momentum
+
+## Data Curation and Feature Engineering
+
+>Hyperparameter tuning is not the only lever.
+
+Performance depends heavily on:
+
+- Data curation
+    - removing corrupted samples
+    - class balancing
+    - deduplication
+
+- Feature engineering
+    - normalization
+    - feature selection
+    - domain features
+
+:::{.callout-warning title="Important rule"}
+Better features often beat more complex models.
+:::
+
+---
+
+## Hyperparameter Search Space
+
+Define a search space.
+
+Example:
+$$
+\begin{eqnarray}
+\verb|learning_rate| \in [1e-5 , 1e-1] \\
+\verb|num_layers| \in {1,2,3,4} \\
+\verb|batch_size| \in {16,32,64} \\
+\verb|dropout| \in [0.0 , 0.5]
+\end{eqnarray}
+$$
+
+Choosing a good search space is critical.
+
+---
+
+## Exploration vs Exploitation
+
+Two competing goals:
+
+:::{.callout title="Exploration"}
+Search new regions.
+:::
+
+:::{.callout title="Exploitation"}
+Refine promising areas.
+:::
+
+Good optimizers balance both.
+
+# Tuning Strategies
+
+## Grid Search
+
+Evaluate all combinations.
+
+:::{.callout-tip title="Pros"}
+- simple
+:::
+
+:::{.callout-important title="Cons"}
+- expensive
+- scales poorly
+:::
+
+---
+
+## Random Search
+
+Sample randomly from distributions.
+
+:::{.callout-tip title="Pros"}
+- simple
+- explores more dimensions efficiently
+- often outperforms grid search
+:::
+
+:::{.callout-important title="Cons"}
+- expensive
+- scales poorly with dimensionality increase
+:::
+
+---
+
+## Bayesian Optimization
+
+**Strategy:**
+
+- Build surrogate model with prior for hyperparameters
+- Predict promising regions
+- Evaluate there
+- Update surrogate with new data
+
+Used by:
+
+- Optuna
+- Hyperopt
+- Bayesian optimization frameworks
+
+# Categories of Hyperparameters
+
+## Scientific hyperparameters
+
+>Model architecture.
+
+Examples:
+
+- number of layers
+- kernel size
+- tree depth
+
+---
+
+## Nuisance hyperparameters
+
+>Affect training but not model architecture.
+
+Examples:
+
+- learning rate
+- batch size
+- optimizer parameters
+
+---
+
+## Fixed hyperparameters
+
+>Chosen once and rarely tuned.
+
+Examples:
+
+- activation function
+- optimizer choice
