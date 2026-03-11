@@ -483,18 +483,27 @@ $$
 \boldsymbol \delta^{(l)} = \frac{\partial \mathscr{L}}{\partial \mathbf z^{(l)}}
 $$
 
-**Output layer:**
-$$
-\boldsymbol \delta^{(L + 1)} =
-\nabla_{\widehat{\mathbf y}} \mathscr{L} \cdot \sigma'(\mathbf z^{(L + 1)})
-$$
+- represents how much the loss would change if the pre-activation at layer $l$ is changed
+- row vector of size $1 \times n_l$
 
+:::{.fragment}
+**Output layer:**
+\begin{align}
+\boldsymbol \delta^{(L + 1)} & =
+\frac{\partial \mathscr{L}}{\partial \widehat{\mathbf y}} \text{diag} \left( \sigma'(\mathbf z^{(L + 1)}) \right) \\
+& = \frac{\partial \mathscr{L}}{\partial \widehat{\mathbf y}} \odot \left( \sigma'\left(\mathbf z^{(L + 1)}\right) \right)^\top
+\end{align}
+:::
+
+:::{.fragment}
 **Hidden layers:**
 \begin{align*}
-\boldsymbol \delta^{(l)}  &= \frac{\partial \mathscr{L}}{\partial \mathbf z^{(l)}} \\
+\boldsymbol \delta^{(l)}  & = \frac{\partial \mathscr{L}}{\partial \mathbf z^{(l)}} \\
 & = \frac{\partial \mathscr{L}}{\partial \mathbf z^{(l + 1)}} \frac{\partial \mathbf z^{(l + 1)}}{\partial \mathbf h^{(l)}} \frac{\partial \mathbf h^{(l)}}{\partial \mathbf z^{(l)}} \\
-& = \boldsymbol \delta^{(l+1)} \mathbf W^{(l+1)} \text{diag}\left(\sigma'(\mathbf z^{(l)})\right)
+& = \boldsymbol \delta^{(l+1)} \left( \mathbf W^{(l+1)} \right)^\top \text{diag}\left(\sigma'\left(\mathbf z^{(l)}\right)\right) \\
+& = \left( \boldsymbol \delta^{(l+1)} \left( \mathbf W^{(l+1)} \right)^\top \right) \odot \left( \sigma'\left(\mathbf z^{(l)}\right) \right)^\top
 \end{align*}
+:::
 
 ---
 
@@ -506,7 +515,7 @@ $$
 
 ::: {.fragment}
 $$
-\frac{\partial \mathscr L}{\partial \mathbf W^{(l)}} = \boldsymbol \delta^{(l)} \left(\mathbf h^{(l-1)}\right)^\top
+\frac{\partial \mathscr L}{\partial \mathbf W^{(l)}} = \left(\boldsymbol \delta^{(l)}\right)^\top \left(\mathbf h^{(l-1)}\right)^\top
 $$
 :::
 
@@ -520,7 +529,7 @@ $$
 
 ::: {.fragment}
 $$
-\frac{\partial \mathscr L}{\partial \mathbf b^{(l)}} = \boldsymbol \delta^{(l)}
+\frac{\partial \mathscr L}{\partial \mathbf b^{(l)}} = \left(\boldsymbol \delta^{(l)}\right)^\top
 $$
 :::
 
