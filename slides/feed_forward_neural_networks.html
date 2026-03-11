@@ -654,15 +654,25 @@ y \cdot \text{logit} (\widehat{y})
 <p><span class="math display">\[
 \boldsymbol \delta^{(l)} = \frac{\partial \mathscr{L}}{\partial \mathbf z^{(l)}}
 \]</span></p>
-<p><strong>Output layer:</strong> <span class="math display">\[
-\boldsymbol \delta^{(L + 1)} =
-\nabla_{\widehat{\mathbf y}} \mathscr{L} \cdot \sigma'(\mathbf z^{(L + 1)})
-\]</span></p>
+<ul>
+<li>represents how much the loss would change if the pre-activation at layer <span class="math inline">\(l\)</span> is changed</li>
+<li>row vector of size <span class="math inline">\(1 \times n_l\)</span></li>
+</ul>
+<div class="fragment">
+<p><strong>Output layer:</strong> <span class="math display">\[\begin{align}
+\boldsymbol \delta^{(L + 1)} &amp; =
+\frac{\partial \mathscr{L}}{\partial \widehat{\mathbf y}} \text{diag} \left( \sigma'(\mathbf z^{(L + 1)}) \right) \\
+&amp; = \frac{\partial \mathscr{L}}{\partial \widehat{\mathbf y}} \odot \left( \sigma'\left(\mathbf z^{(L + 1)}\right) \right)^\top
+\end{align}\]</span></p>
+</div>
+<div class="fragment">
 <p><strong>Hidden layers:</strong> <span class="math display">\[\begin{align*}
-\boldsymbol \delta^{(l)}  &amp;= \frac{\partial \mathscr{L}}{\partial \mathbf z^{(l)}} \\
+\boldsymbol \delta^{(l)}  &amp; = \frac{\partial \mathscr{L}}{\partial \mathbf z^{(l)}} \\
 &amp; = \frac{\partial \mathscr{L}}{\partial \mathbf z^{(l + 1)}} \frac{\partial \mathbf z^{(l + 1)}}{\partial \mathbf h^{(l)}} \frac{\partial \mathbf h^{(l)}}{\partial \mathbf z^{(l)}} \\
-&amp; = \boldsymbol \delta^{(l+1)} \mathbf W^{(l+1)} \text{diag}\left(\sigma'(\mathbf z^{(l)})\right)
+&amp; = \boldsymbol \delta^{(l+1)} \left( \mathbf W^{(l+1)} \right)^\top \text{diag}\left(\sigma'\left(\mathbf z^{(l)}\right)\right) \\
+&amp; = \left( \boldsymbol \delta^{(l+1)} \left( \mathbf W^{(l+1)} \right)^\top \right) \odot \left( \sigma'\left(\mathbf z^{(l)}\right) \right)^\top
 \end{align*}\]</span></p>
+</div>
 </section>
 <section id="weight-gradients-at-each-layer" class="slide level2">
 <h2>Weight Gradients at Each Layer</h2>
@@ -671,7 +681,7 @@ y \cdot \text{logit} (\widehat{y})
 \]</span></p>
 <div class="fragment">
 <p><span class="math display">\[
-\frac{\partial \mathscr L}{\partial \mathbf W^{(l)}} = \boldsymbol \delta^{(l)} \left(\mathbf h^{(l-1)}\right)^\top
+\frac{\partial \mathscr L}{\partial \mathbf W^{(l)}} = \left(\boldsymbol \delta^{(l)}\right)^\top \left(\mathbf h^{(l-1)}\right)^\top
 \]</span></p>
 </div>
 </section>
@@ -682,7 +692,7 @@ y \cdot \text{logit} (\widehat{y})
 \]</span></p>
 <div class="fragment">
 <p><span class="math display">\[
-\frac{\partial \mathscr L}{\partial \mathbf b^{(l)}} = \boldsymbol \delta^{(l)}
+\frac{\partial \mathscr L}{\partial \mathbf b^{(l)}} = \left(\boldsymbol \delta^{(l)}\right)^\top
 \]</span></p>
 </div>
 </section>
