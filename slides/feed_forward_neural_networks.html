@@ -669,8 +669,8 @@ y \cdot \text{logit} (\widehat{y})
 <p><strong>Hidden layers:</strong> <span class="math display">\[\begin{align*}
 \boldsymbol \delta^{(l)}  &amp; = \frac{\partial \mathscr{L}}{\partial \mathbf z^{(l)}} \\
 &amp; = \frac{\partial \mathscr{L}}{\partial \mathbf z^{(l + 1)}} \frac{\partial \mathbf z^{(l + 1)}}{\partial \mathbf h^{(l)}} \frac{\partial \mathbf h^{(l)}}{\partial \mathbf z^{(l)}} \\
-&amp; = \boldsymbol \delta^{(l+1)} \left( \mathbf W^{(l+1)} \right)^\top \text{diag}\left(\sigma'\left(\mathbf z^{(l)}\right)\right) \\
-&amp; = \left( \boldsymbol \delta^{(l+1)} \left( \mathbf W^{(l+1)} \right)^\top \right) \odot \left( \sigma'\left(\mathbf z^{(l)}\right) \right)^\top
+&amp; = \boldsymbol \delta^{(l+1)} \mathbf W^{(l+1)} \text{diag}\left(\sigma'\left(\mathbf z^{(l)}\right)\right) \\
+&amp; = \left( \boldsymbol \delta^{(l+1)} \mathbf W^{(l+1)} \right) \odot \left( \sigma'\left(\mathbf z^{(l)}\right) \right)^\top
 \end{align*}\]</span></p>
 </div>
 </section>
