@@ -28,6 +28,72 @@
       margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-7f656d197a6d4d458420565151872bca.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
@@ -146,10 +212,10 @@ Miguel Fonseca
 <h2 id="toc-title">Table of contents</h2>
 <ul>
 <li><a href="#/hyperparameters" id="/toc-hyperparameters">Hyperparameters</a></li>
+<li><a href="#/categories-of-hyperparameters" id="/toc-categories-of-hyperparameters">Categories of Hyperparameters</a></li>
 <li><a href="#/underfitting-vs-overfitting" id="/toc-underfitting-vs-overfitting">Underfitting vs Overfitting</a></li>
 <li><a href="#/tuning" id="/toc-tuning">Tuning</a></li>
 <li><a href="#/tuning-strategies" id="/toc-tuning-strategies">Tuning Strategies</a></li>
-<li><a href="#/categories-of-hyperparameters" id="/toc-categories-of-hyperparameters">Categories of Hyperparameters</a></li>
 </ul>
 </nav>
 </section>
@@ -226,6 +292,90 @@ Miguel Fonseca
 </ul>
 </section></section>
 <section>
+<section id="categories-of-hyperparameters" class="title-slide slide level1 center">
+<h1>Categories of Hyperparameters</h1>
+
+</section>
+<section id="scientific-hyperparameters" class="slide level2">
+<h2>Scientific hyperparameters</h2>
+<blockquote>
+<p>Model architecture.</p>
+</blockquote>
+<p>Examples:</p>
+<ul>
+<li>number of layers</li>
+<li>kernel size</li>
+<li>tree depth</li>
+</ul>
+</section>
+<section id="nuisance-hyperparameters" class="slide level2">
+<h2>Nuisance hyperparameters</h2>
+<blockquote>
+<p>Affect training but not model architecture.</p>
+</blockquote>
+<p>Examples:</p>
+<ul>
+<li>learning rate</li>
+<li>batch size</li>
+<li>optimizer parameters</li>
+</ul>
+</section>
+<section id="fixed-hyperparameters" class="slide level2">
+<h2>Fixed hyperparameters</h2>
+<blockquote>
+<p>Chosen once and rarely tuned.</p>
+</blockquote>
+<p>Examples:</p>
+<ul>
+<li>activation function</li>
+<li>optimizer choice</li>
+</ul>
+</section>
+<section id="genetic-algorithms-for-hyperparameter-optimization" class="slide level2 scrollable">
+<h2>Genetic Algorithms for Hyperparameter Optimization</h2>
+<h3 id="idea">Idea</h3>
+<p>Treat each <strong>hyperparameter configuration</strong> as an individual in a population.</p>
+<p>Example genome:</p>
+<p><span class="math display">\[
+\theta = (learning\ rate,\ batch\ size,\ dropout,\ layers)
+\]</span></p>
+<p>Each individual is evaluated by training the model and measuring <strong>validation performance</strong>.</p>
+<div class="fragment">
+<h3 id="evolutionary-process">Evolutionary Process</h3>
+<ol type="1">
+<li><strong>Initialize population</strong> with random hyperparameters</li>
+<li><strong>Evaluate fitness</strong></li>
+</ol>
+<p><span class="math display">\[
+fitness = - \text{validation loss}
+\]</span></p>
+<ol start="3" type="1">
+<li><strong>Selection</strong></li>
+</ol>
+<p>Choose best-performing individuals</p>
+<ol start="4" type="1">
+<li><strong>Crossover</strong></li>
+</ol>
+<p>Combine hyperparameters from two parents</p>
+<ol start="5" type="1">
+<li><strong>Mutation</strong></li>
+</ol>
+<p>Randomly change some hyperparameters</p>
+<ol start="6" type="1">
+<li>Repeat for multiple generations</li>
+</ol>
+</div>
+<div class="fragment">
+<h3 id="advantages">Advantages</h3>
+<p>✔ Works with <strong>non-differentiable objectives</strong><br>
+✔ Naturally handles <strong>mixed hyperparameters</strong><br>
+✔ Global search</p>
+</div>
+<h3 id="limitations">Limitations</h3>
+<p>✖ Computationally expensive<br>
+✖ Slower convergence than Bayesian optimisation</p>
+</section></section>
+<section>
 <section id="underfitting-vs-overfitting" class="title-slide slide level1 center">
 <h1>Underfitting vs Overfitting</h1>
 
@@ -257,7 +407,6 @@ Miguel Fonseca
 <p><strong>Overfitting</strong></p>
 <ul>
 <li>training loss ↓</li>
-<li>validation loss ↑</li>
 <li>validation loss ↑</li>
 </ul>
 <p><strong>Underfitting</strong></p>
@@ -458,63 +607,726 @@ Miguel Fonseca
 </div>
 </div>
 </section>
-<section id="bayesian-optimization" class="slide level2">
-<h2>Bayesian Optimization</h2>
-<p><strong>Strategy:</strong></p>
+<section id="bayesian-hyperparameter-optimization" class="slide level2 scrollable">
+<h2>Bayesian Hyperparameter Optimization</h2>
+<h3 id="problem">Problem</h3>
+<p>Training a model with hyperparameters:</p>
+<p><span class="math display">\[
+\theta^* = \arg\min_{\theta} f(\theta)
+\]</span></p>
+<p>where</p>
 <ul>
-<li>Build surrogate model with prior for hyperparameters</li>
-<li>Predict promising regions</li>
-<li>Evaluate there</li>
-<li>Update surrogate with new data</li>
+<li><span class="math inline">\(\theta\)</span> - hyperparameters<br>
+</li>
+<li><span class="math inline">\(f(\theta)\)</span> - validation loss after training</li>
 </ul>
-<p>Used by:</p>
+<p>Training the model is <strong>expensive</strong>, so we want to evaluate <strong>as few configurations as possible</strong>.</p>
+<div class="fragment">
+<h3 id="key-idea">Key Idea</h3>
+<p>Instead of blind search, we <strong>build a probabilistic model of the objective function</strong>.</p>
+<p>Typical surrogate models:</p>
 <ul>
-<li>Optuna</li>
-<li>Hyperopt</li>
-<li>Bayesian optimization frameworks</li>
+<li>Gaussian Processes</li>
+<li>Tree Parzen Estimators (Optuna)</li>
+<li>Random Forest Surrogates</li>
 </ul>
-</section></section>
-<section>
-<section id="categories-of-hyperparameters" class="title-slide slide level1 center">
-<h1>Categories of Hyperparameters</h1>
+</div>
+<div class="fragment">
+<h3 id="intuition">Intuition</h3>
+<ol type="1">
+<li>Train model with hyperparameters ( _1 )</li>
+<li>Observe validation loss</li>
+<li>Update surrogate model</li>
+<li>Choose <strong>next hyperparameters intelligently</strong></li>
+</ol>
+</div>
+</section>
+<section id="bayesian-optimization-workflow" class="slide level2 scrollable">
+<h2>Bayesian Optimization Workflow</h2>
+<h3 id="algorithm">Algorithm</h3>
+<ol type="1">
+<li>Sample a few hyperparameters randomly</li>
+<li>Fit a <strong>surrogate model</strong></li>
+</ol>
+<p><span class="math display">\[
+\hat{f}(\theta)
+\]</span></p>
+<ol start="3" type="1">
+<li>Use an <strong>acquisition function</strong> to choose next hyperparameters</li>
+</ol>
+<p>Common acquisition functions:</p>
+<ul>
+<li>Expected Improvement (EI)</li>
+<li>Probability of Improvement</li>
+<li>Upper Confidence Bound</li>
+</ul>
+<div class="fragment">
+<h3 id="exploration-vs-exploitation-1">Exploration vs Exploitation</h3>
+<p>The acquisition function balances:</p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Exploration</th>
+<th>Exploitation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Try uncertain regions</td>
+<td>Try promising regions</td>
+</tr>
+<tr class="even">
+<td>Learn about space</td>
+<td>Improve best result</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fragment">
+<h3 id="result">Result</h3>
+<p>Bayesian optimisation finds <strong>good hyperparameters with far fewer trials</strong> than:</p>
+<ul>
+<li>Grid search</li>
+<li>Random search</li>
+</ul>
+</div>
+</section>
+<section id="visual-intuition-of-bayesian-optimization" class="slide level2">
+<h2>Visual Intuition of Bayesian Optimization</h2>
+
+<img data-src="https://upload.wikimedia.org/wikipedia/commons/3/35/Bayesian_optimization.svg" style="width:70.0%" class="r-stretch"><h3 id="surrogate-model">Surrogate Model</h3>
+<p>The expensive objective function (f()) is approximated by a probabilistic model:</p>
+<p><span class="math display">\[
+\hat{f}(\theta)
+\]</span></p>
+<p>Typically a <strong>Gaussian Process</strong>.</p>
+<p>The model provides:</p>
+<ul>
+<li>predicted mean</li>
+<li>uncertainty estimate</li>
+</ul>
+<div class="fragment">
+<h3 id="acquisition-function">Acquisition Function</h3>
+<p>The acquisition function selects the <strong>next hyperparameter configuration</strong>.</p>
+<p>Example: <strong>Expected Improvement</strong></p>
+<p><span class="math display">\[
+EI(\theta) = \mathbb{E}[\max(f_{best} - f(\theta),0)]
+\]</span></p>
+</div>
+<div class="fragment">
+<h3 id="key-insight">Key Insight</h3>
+<p>The next evaluation is chosen where we expect <strong>maximum improvement</strong>, balancing:</p>
+<ul>
+<li>promising regions<br>
+</li>
+<li>uncertain regions</li>
+</ul>
+</div>
+</section>
+<section id="hyperband-algorithm-for-hyperparameter-optimization" class="slide level2 scrollable">
+<h2>Hyperband Algorithm for Hyperparameter Optimization</h2>
+<h3 id="motivation-1">Motivation</h3>
+<p>Training models with many hyperparameter configurations is <strong>expensive</strong>.</p>
+<p>Instead of fully training every configuration, Hyperband:</p>
+<blockquote>
+<p>Quickly eliminates poor configurations and allocates resources to promising ones.</p>
+</blockquote>
+<div class="fragment">
+<h3 id="core-idea">Core Idea</h3>
+<p>Hyperband uses <strong>successive halving</strong>.</p>
+<ol type="1">
+<li>Start with <strong>many hyperparameter configurations</strong></li>
+<li>Train each for a <strong>small number of epochs</strong></li>
+<li>Keep the <strong>best fraction</strong></li>
+<li>Increase training budget for survivors</li>
+<li>Repeat until one configuration remains</li>
+</ol>
+</div>
+<h3 id="example">Example</h3>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Round</th>
+<th>Configurations</th>
+<th>Training Epochs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>81</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>27</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>9</td>
+<td>9</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>3</td>
+<td>27</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>1</td>
+<td>81</td>
+</tr>
+</tbody>
+</table>
+<p>Poor models are discarded early.</p>
+<div class="fragment">
+<h3 id="advantages-1">Advantages</h3>
+<p>✔ Very efficient use of computation<br>
+✔ Works well for deep learning<br>
+✔ Parallelizable</p>
+<h3 id="used-in">Used in</h3>
+<ul>
+<li><strong>Keras Tuner</strong></li>
+<li><strong>Ray Tune</strong></li>
+<li><strong>Google Vizier</strong></li>
+</ul>
+<hr>
+<section id="example-1" class="title-slide slide level1 center">
+<h1>Example</h1>
 
 </section>
-<section id="scientific-hyperparameters" class="slide level2">
-<h2>Scientific hyperparameters</h2>
-<blockquote>
-<p>Model architecture.</p>
-</blockquote>
-<p>Examples:</p>
-<ul>
-<li>number of layers</li>
-<li>kernel size</li>
-<li>tree depth</li>
-</ul>
+<section id="optuna" class="slide level2">
+<h2>Optuna</h2>
+<div id="4c94a9ea" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> make_regression</span>
+<span id="cb1-2"><a></a><span class="im">import</span> optuna</span>
+<span id="cb1-3"><a></a><span class="im">import</span> tensorflow <span class="im">as</span> tf</span>
+<span id="cb1-4"><a></a><span class="im">from</span> tensorflow <span class="im">import</span> keras</span>
+<span id="cb1-5"><a></a></span>
+<span id="cb1-6"><a></a>X_train, y_train <span class="op">=</span> make_regression(</span>
+<span id="cb1-7"><a></a>    n_samples<span class="op">=</span><span class="dv">100</span>, n_features<span class="op">=</span><span class="dv">5</span>, noise<span class="op">=</span><span class="fl">0.1</span></span>
+<span id="cb1-8"><a></a>)</span>
+<span id="cb1-9"><a></a>X_val, y_val <span class="op">=</span> make_regression(</span>
+<span id="cb1-10"><a></a>    n_samples<span class="op">=</span><span class="dv">20</span>, n_features<span class="op">=</span><span class="dv">5</span>, noise<span class="op">=</span><span class="fl">0.1</span></span>
+<span id="cb1-11"><a></a>)</span>
+<span id="cb1-12"><a></a></span>
+<span id="cb1-13"><a></a><span class="kw">def</span> objective(trial):</span>
+<span id="cb1-14"><a></a></span>
+<span id="cb1-15"><a></a>    learning_rate <span class="op">=</span> trial.suggest_float(</span>
+<span id="cb1-16"><a></a>        <span class="st">"lr"</span>, <span class="fl">1e-5</span>, <span class="fl">1e-2</span>, log<span class="op">=</span><span class="va">True</span></span>
+<span id="cb1-17"><a></a>    )</span>
+<span id="cb1-18"><a></a></span>
+<span id="cb1-19"><a></a>    n_units <span class="op">=</span> trial.suggest_int(<span class="st">"units"</span>, <span class="dv">32</span>, <span class="dv">128</span>)</span>
+<span id="cb1-20"><a></a></span>
+<span id="cb1-21"><a></a>    model <span class="op">=</span> keras.Sequential([</span>
+<span id="cb1-22"><a></a>        keras.layers.Dense(n_units, activation<span class="op">=</span><span class="st">"relu"</span>),</span>
+<span id="cb1-23"><a></a>        keras.layers.Dense(<span class="dv">1</span>)</span>
+<span id="cb1-24"><a></a>    ])</span>
+<span id="cb1-25"><a></a></span>
+<span id="cb1-26"><a></a>    optimizer <span class="op">=</span> keras.optimizers.Adam(</span>
+<span id="cb1-27"><a></a>        learning_rate<span class="op">=</span>learning_rate</span>
+<span id="cb1-28"><a></a>    )</span>
+<span id="cb1-29"><a></a></span>
+<span id="cb1-30"><a></a>    model.<span class="bu">compile</span>(</span>
+<span id="cb1-31"><a></a>        optimizer<span class="op">=</span>optimizer,</span>
+<span id="cb1-32"><a></a>        loss<span class="op">=</span><span class="st">"mse"</span></span>
+<span id="cb1-33"><a></a>    )</span>
+<span id="cb1-34"><a></a></span>
+<span id="cb1-35"><a></a>    model.fit(X_train, y_train,</span>
+<span id="cb1-36"><a></a>              validation_data<span class="op">=</span>(X_val,y_val),</span>
+<span id="cb1-37"><a></a>              epochs<span class="op">=</span><span class="dv">10</span>,</span>
+<span id="cb1-38"><a></a>              verbose<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb1-39"><a></a></span>
+<span id="cb1-40"><a></a>    loss <span class="op">=</span> model.evaluate(X_val, y_val)</span>
+<span id="cb1-41"><a></a></span>
+<span id="cb1-42"><a></a>    <span class="cf">return</span> loss</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<hr>
 </section>
-<section id="nuisance-hyperparameters" class="slide level2">
-<h2>Nuisance hyperparameters</h2>
-<blockquote>
-<p>Affect training but not model architecture.</p>
-</blockquote>
-<p>Examples:</p>
-<ul>
-<li>learning rate</li>
-<li>batch size</li>
-<li>optimizer parameters</li>
-</ul>
+<section id="running-optuna" class="slide level2">
+<h2>Running Optuna</h2>
+<div id="cc668ba6" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>study <span class="op">=</span> optuna.create_study(</span>
+<span id="cb2-2"><a></a>    direction<span class="op">=</span><span class="st">"minimize"</span></span>
+<span id="cb2-3"><a></a>)</span>
+<span id="cb2-4"><a></a></span>
+<span id="cb2-5"><a></a>study.optimize(objective, n_trials<span class="op">=</span><span class="dv">50</span>)</span>
+<span id="cb2-6"><a></a></span>
+<span id="cb2-7"><a></a><span class="bu">print</span>(study.best_params)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 14962.9561
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 14962.9561
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 14768.0264
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 14768.0264
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 14886.0645
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 14886.0645
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 14937.0566
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 14937.0566
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 6ms/step - loss: 14949.5361
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 11ms/step - loss: 14949.5361
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 6ms/step - loss: 14183.3535
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 14183.3535
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 14944.9688
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 14944.9688
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 14924.1562
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 14924.1562
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 14917.3799
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 14917.3799
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 14962.5625
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 14962.5625
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 14541.9814
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 14541.9814
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 12933.3008
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 12933.3008
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 11663.2803
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 11663.2803
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 11271.0879
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 11271.0879
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 11682.3379
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 11682.3379
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 14988.6562
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 14988.6562
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 11962.5107
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 11962.5107
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 14578.4111
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 14578.4111
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 14675.6406
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 14675.6406
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 14896.2168
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 14896.2168
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 14972.2441
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 14972.2441
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 10510.3877
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 10510.3877
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 14079.0156
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 14079.0156
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 10224.0654
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 10224.0654
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 13835.3906
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 13835.3906
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 14665.1191
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 14665.1191
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 14221.9062
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 14221.9062
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 13238.3145
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 13238.3145
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 14919.5410
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 14919.5410
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 14757.9092
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 14757.9092
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 13445.5498
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 13445.5498
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 11831.5000
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 11831.5000
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 11819.5029
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 11819.5029
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 14330.9531
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 14330.9531
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 13259.6846
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 13259.6846
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 14636.4580
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 14636.4580
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 14101.5127
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 14101.5127
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 13884.2285
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 13884.2285
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 14909.9502
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 11ms/step - loss: 14909.9502
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 6ms/step - loss: 14314.5215
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 11ms/step - loss: 14314.5215
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 14907.3262
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 11ms/step - loss: 14907.3262
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 11234.2324
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 11234.2324
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 6ms/step - loss: 12393.3291
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 11ms/step - loss: 12393.3291
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 6ms/step - loss: 11444.6689
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 11ms/step - loss: 11444.6689
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 6ms/step - loss: 14544.1514
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 11ms/step - loss: 14544.1514
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 6ms/step - loss: 14939.8750
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 11ms/step - loss: 14939.8750
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 14935.1348
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 10ms/step - loss: 14935.1348
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 6ms/step - loss: 14583.0156
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 11ms/step - loss: 14583.0156
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 6ms/step - loss: 14754.5215
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 12ms/step - loss: 14754.5215
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 7ms/step - loss: 13194.5996
+
+<span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 13ms/step - loss: 13194.5996
+</pre>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>{'lr': 0.009665021263247479, 'units': 120}</code></pre>
+</div>
+</div>
+<hr>
 </section>
-<section id="fixed-hyperparameters" class="slide level2">
-<h2>Fixed hyperparameters</h2>
-<blockquote>
-<p>Chosen once and rarely tuned.</p>
-</blockquote>
-<p>Examples:</p>
-<ul>
-<li>activation function</li>
-<li>optimizer choice</li>
-</ul>
+<section id="keras-tuner-example" class="slide level2">
+<h2>Keras Tuner Example</h2>
+<div id="867093d7" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> make_regression</span>
+<span id="cb4-2"><a></a><span class="im">import</span> keras_tuner <span class="im">as</span> kt</span>
+<span id="cb4-3"><a></a><span class="im">from</span> tensorflow <span class="im">import</span> keras</span>
+<span id="cb4-4"><a></a></span>
+<span id="cb4-5"><a></a>X_train, y_train <span class="op">=</span> make_regression(</span>
+<span id="cb4-6"><a></a>    n_samples<span class="op">=</span><span class="dv">1000</span>, n_features<span class="op">=</span><span class="dv">20</span>, noise<span class="op">=</span><span class="fl">0.1</span></span>
+<span id="cb4-7"><a></a>)</span>
+<span id="cb4-8"><a></a>X_val, y_val <span class="op">=</span> make_regression(</span>
+<span id="cb4-9"><a></a>    n_samples<span class="op">=</span><span class="dv">200</span>, n_features<span class="op">=</span><span class="dv">20</span>, noise<span class="op">=</span><span class="fl">0.1</span></span>
+<span id="cb4-10"><a></a>)</span>
+<span id="cb4-11"><a></a></span>
+<span id="cb4-12"><a></a><span class="kw">def</span> build_model(hp):</span>
+<span id="cb4-13"><a></a></span>
+<span id="cb4-14"><a></a>    model <span class="op">=</span> keras.Sequential()</span>
+<span id="cb4-15"><a></a></span>
+<span id="cb4-16"><a></a>    units <span class="op">=</span> hp.Int(<span class="st">"units"</span>, <span class="dv">32</span>, <span class="dv">128</span>, step<span class="op">=</span><span class="dv">32</span>)</span>
+<span id="cb4-17"><a></a></span>
+<span id="cb4-18"><a></a>    model.add(</span>
+<span id="cb4-19"><a></a>        keras.layers.Dense(units, activation<span class="op">=</span><span class="st">"relu"</span>)</span>
+<span id="cb4-20"><a></a>    )</span>
+<span id="cb4-21"><a></a></span>
+<span id="cb4-22"><a></a>    model.add(</span>
+<span id="cb4-23"><a></a>        keras.layers.Dense(<span class="dv">1</span>)</span>
+<span id="cb4-24"><a></a>    )</span>
+<span id="cb4-25"><a></a></span>
+<span id="cb4-26"><a></a>    lr <span class="op">=</span> hp.Float(<span class="st">"lr"</span>, <span class="fl">1e-5</span>, <span class="fl">1e-2</span>, sampling<span class="op">=</span><span class="st">"log"</span>)</span>
+<span id="cb4-27"><a></a></span>
+<span id="cb4-28"><a></a>    model.<span class="bu">compile</span>(</span>
+<span id="cb4-29"><a></a>        optimizer<span class="op">=</span>keras.optimizers.Adam(lr),</span>
+<span id="cb4-30"><a></a>        loss<span class="op">=</span><span class="st">"mse"</span></span>
+<span id="cb4-31"><a></a>    )</span>
+<span id="cb4-32"><a></a></span>
+<span id="cb4-33"><a></a>    <span class="cf">return</span> model</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="running-keras-tuner" class="slide level2">
+<h2>Running Keras Tuner</h2>
+<div id="9d100f19" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>tuner <span class="op">=</span> kt.Hyperband(</span>
+<span id="cb5-2"><a></a>    build_model,</span>
+<span id="cb5-3"><a></a>    objective<span class="op">=</span><span class="st">"val_loss"</span>,</span>
+<span id="cb5-4"><a></a>    max_epochs<span class="op">=</span><span class="dv">20</span></span>
+<span id="cb5-5"><a></a>)</span>
+<span id="cb5-6"><a></a></span>
+<span id="cb5-7"><a></a>tuner.search(</span>
+<span id="cb5-8"><a></a>    X_train, y_train,</span>
+<span id="cb5-9"><a></a>    validation_data<span class="op">=</span>(X_val,y_val)</span>
+<span id="cb5-10"><a></a>)</span>
+<span id="cb5-11"><a></a></span>
+<span id="cb5-12"><a></a>best_model <span class="op">=</span> tuner.get_best_models(<span class="dv">1</span>)[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Trial 26 Complete [00h 00m 01s]
+val_loss: 34662.3359375
+
+Best val_loss So Far: 34662.3359375
+Total elapsed time: 00h 01m 34s</code></pre>
+</div>
+</div>
+<p>```</p>
 
 
+</section>
+
+</div>
 </section></section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
