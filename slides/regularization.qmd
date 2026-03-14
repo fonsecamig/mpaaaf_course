@@ -92,6 +92,39 @@ $$
 | Weight shrinkage | Hard | Smooth |
 | Interpretability | Higher | Lower |
 
+---
+
+## Tensorflow Implementation
+
+```{python}
+from tensorflow import keras
+from tensorflow.keras import layers
+
+model = keras.Sequential([
+    layers.Dense(
+        128,
+        activation="relu",
+        kernel_regularizer=keras.regularizers.l2(1e-3) ## L2 regularisation on weights
+    ),
+    layers.Dense(
+        128,
+        activation="relu",
+        kernel_regularizer=keras.regularizers.l1(1e-3) ## L1 regularisation on weights
+    ),
+     layers.Dense(
+        128,
+        activation="relu",
+        kernel_regularizer=keras.regularizers.l1_l2(1e-3) ## L1 and L2 regularisation on weights
+    ),
+    layers.Dense(1)
+])
+
+model.compile(
+    optimizer="adam",
+    loss="mse"
+)
+```
+
 # Stochastic regularisation
 
 ## Stochastic Regularisation
@@ -123,6 +156,9 @@ $$
 - Approximate ensemble learning
 - Strong regularisation effect
 
+:::{.callout-warning}
+Not to be used on inference time!
+:::
 ---
 
 ## Dropout: Practical Notes
@@ -130,6 +166,25 @@ $$
 - Most effective in fully-connected layers
 - Typical rates: 0.1–0.5
 - Often unnecessary with BatchNorm
+
+### Tensorflow Implementation
+
+```{python}
+model = keras.Sequential([
+    layers.Dense(128, activation="relu"),
+    layers.Dropout(0.3),
+
+    layers.Dense(128, activation="relu"),
+    layers.Dropout(0.3),
+
+    layers.Dense(1)
+])
+
+model.compile(
+    optimizer="adam",
+    loss="mse"
+)
+```
 
 # Normalisation layers
 
@@ -189,7 +244,27 @@ $$
   - Online learning
   - Transformers
 
+:::: {.callout-note}
+For inference, use moving averages of $\mu$ and $\sigma$ from training.
+:::
+
 ---
+
+## BatchNorm - TensorFlow Implementation
+
+```{python}
+model = keras.Sequential([
+    layers.Dense(128, use_bias=False),
+    layers.BatchNormalization(),
+    layers.Activation("relu"),
+
+    layers.Dense(128, use_bias=False),
+    layers.BatchNormalization(),
+    layers.Activation("relu"),
+
+    layers.Dense(1)
+])
+```
 
 ## Layer Normalization
 
@@ -211,6 +286,24 @@ $$
 
 - Smoother optimisation landscape
 - Less noise than BatchNorm
+
+---
+
+## LayerNorm - TensorFlow Implementation
+
+```{python}
+model = keras.Sequential([
+    layers.Dense(128, use_bias=False),
+    layers.LayerNormalization(),
+    layers.Activation("relu"),
+
+    layers.Dense(128, use_bias=False),
+    layers.LayerNormalization(),
+    layers.Activation("relu"),
+
+    layers.Dense(1)
+])
+```
 
 ---
 
@@ -245,6 +338,43 @@ Examples:
 **Theory**
 
 - Equivalent to L2 in linear models
+
+---
+
+```{python}
+import numpy as np
+from sklearn.model_selection import train_test_split
+
+X = np.random.uniform(-3,3,(1000,1))
+y = np.sin(X) + 0.3*np.random.randn(1000,1)
+
+X_train, X_val, y_train, y_val = train_test_split(
+    X, y, test_size=0.3, random_state=42
+)
+
+model = keras.Sequential([
+    layers.Dense(128, use_bias=False),
+    layers.Activation("relu"),
+    layers.Dense(128, use_bias=False),
+    layers.Activation("relu"),
+    layers.Dense(1)
+])
+
+## Save Best Model (ModelCheckpoint)
+checkpoint = keras.callbacks.ModelCheckpoint(
+    "best_model.keras",
+    monitor="val_loss",
+    save_best_only=True
+)
+
+## Early Stopping
+early_stop = keras.callbacks.EarlyStopping(
+    monitor="val_loss",
+    patience=10,
+    restore_best_weights=True
+)
+````
+
 
 # Practical guidelines
 

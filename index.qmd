@@ -78,6 +78,27 @@ sidebar:
 - [Exercise 1](https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_tf2-intro.ipynb)
 - [Exercise 2](https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc-mlp-mnist.ipynb)
 
+## Hyperparameter Tuning & Regularisation
+
+- [Slides - Hyperparameter Tuning](slides/hyperparameter_tuning.qmd)
+- [Slides - Regularisation](slides/regularization.qmd)
+
+### Reading
+
+- Bishop, C. M., & Bishop, H. (2024). *Deep learning: Foundations and concepts.* Springer. [https://www.bishopbook.com](https://www.bishopbook.com)
+  - Chapter 9: Regularisation
+- Chollet, F. (2021). *Deep learning with Python (2nd ed.).* Manning Publications.
+  - Chapter 5: Fundamentals of machine learning
+  - Chapter 13: Best practices for the real world, Section 1.1
+- Zhang, A., Lipton, Z. C., Li, M., & Smola, A. J. (2023). *Dive into deep learning.* Cambridge University Press. [https://d2l.ai](https://d2l.ai)
+  - [Chapter 19: Hyperparameter Optimization](https://d2l.ai/chapter_hyperparameter-optimization/index.html)
+- [Deep Learning Tuning Playbook](https://github.com/google-research/tuning_playbook)
+
+### Exercises
+
+- [Exercise 1](https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_mnist_hptuning.ipynb)
+- [Exercise 2](https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_california_house_price.ipynb)
+
 ## References
 
 - Bishop, C. M., & Bishop, H. (2024). *Deep learning: Foundations and concepts.* Springer. [https://www.bishopbook.com](https://www.bishopbook.com)
