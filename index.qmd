@@ -73,7 +73,7 @@ sidebar:
 - [https://www.tensorflow.org/tutorials/keras/classification](https://www.tensorflow.org/tutorials/keras/classification)
 - [https://www.tensorflow.org/guide/keras](https://www.tensorflow.org/guide/keras)
 
-## Exercises
+### Exercises
 
 - [Exercise 1](https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_tf2-intro.ipynb)
 - [Exercise 2](https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc-mlp-mnist.ipynb)

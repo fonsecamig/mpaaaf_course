@@ -100,8 +100,6 @@ $$
 
 (No flipping.)
 
-We still call it "convolution".
-
 # 1D Convolutions
 
 ## When do we use them?
