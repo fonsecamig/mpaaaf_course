@@ -795,14 +795,7 @@
     "href": "index.html#tensorflow-2",
     "title": "Modeling, Programming and Machine Learning for Financial Analysis",
     "section": "TensorFlow 2",
-    "text": "TensorFlow 2\n\nSlides\n\n\nReading\n\nhttps://www.tensorflow.org/tutorials/quickstart/beginner\nhttps://www.tensorflow.org/tutorials/keras/classification\nhttps://www.tensorflow.org/guide/keras"
-  },
-  {
-    "objectID": "index.html#exercises-3",
-    "href": "index.html#exercises-3",
-    "title": "Modeling, Programming and Machine Learning for Financial Analysis",
-    "section": "Exercises",
-    "text": "Exercises\n\nExercise 1\nExercise 2"
+    "text": "TensorFlow 2\n\nSlides\n\n\nReading\n\nhttps://www.tensorflow.org/tutorials/quickstart/beginner\nhttps://www.tensorflow.org/tutorials/keras/classification\nhttps://www.tensorflow.org/guide/keras\n\n\n\nExercises\n\nExercise 1\nExercise 2"
   },
   {
     "objectID": "index.html#hyperparameter-tuning-regularisation",
@@ -858,7 +851,7 @@
     "href": "slides/cnn.html#convolution-vs-cross-correlation",
     "title": "Convolutional Neural Networks (CNN)",
     "section": "Convolution vs Cross-Correlation",
-    "text": "Convolution vs Cross-Correlation\nDeep learning frameworks usually compute:\n\\[\nz[i] = \\sum_{j=0}^{K-1} x[i+j] w[j]\n\\]\n(No flipping.)\nWe still call it “convolution”."
+    "text": "Convolution vs Cross-Correlation\nDeep learning frameworks usually compute:\n\\[\nz[i] = \\sum_{j=0}^{K-1} x[i+j] w[j]\n\\]\n(No flipping.)"
   },
   {
     "objectID": "slides/cnn.html#when-do-we-use-them",
