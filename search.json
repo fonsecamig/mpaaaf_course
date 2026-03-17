@@ -1582,20 +1582,6 @@
     "text": "Early Stopping\n\nStop training when validation loss increases\nPrevents late-stage memorisation\n\nTheory\n\nEquivalent to L2 in linear models"
   },
   {
-    "objectID": "slides/regularization.html#save-best-model-modelcheckpoint",
-    "href": "slides/regularization.html#save-best-model-modelcheckpoint",
-    "title": "Regularisation for Neural Networks",
-    "section": "Save Best Model (ModelCheckpoint)",
-    "text": "Save Best Model (ModelCheckpoint)\ncheckpoint = keras.callbacks.ModelCheckpoint( “best_model.keras”, monitor=“val_loss”, save_best_only=True )"
-  },
-  {
-    "objectID": "slides/regularization.html#early-stopping-1",
-    "href": "slides/regularization.html#early-stopping-1",
-    "title": "Regularisation for Neural Networks",
-    "section": "Early Stopping",
-    "text": "Early Stopping\nearly_stop = keras.callbacks.EarlyStopping( monitor=“val_loss”, patience=10, restore_best_weights=True ) ````"
-  },
-  {
     "objectID": "slides/regularization.html#regularisation-strategy",
     "href": "slides/regularization.html#regularisation-strategy",
     "title": "Regularisation for Neural Networks",
