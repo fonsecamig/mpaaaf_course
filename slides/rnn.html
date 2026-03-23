@@ -214,7 +214,7 @@ Miguel Fonseca
 <nav role="doc-toc"> 
 <h2 id="toc-title">Table of contents</h2>
 <ul>
-<li><a href="#/why-do-we-need-rnns" id="/toc-why-do-we-need-rnns">Why Do We Need RNNs?</a></li>
+<li><a href="#/feedforward-networks-vs.-recurrent-networks" id="/toc-feedforward-networks-vs.-recurrent-networks">Feedforward Networks vs.&nbsp;Recurrent Networks</a></li>
 <li><a href="#/the-recurrent-neural-network-rnn" id="/toc-the-recurrent-neural-network-rnn">The Recurrent Neural Network (RNN)</a></li>
 <li><a href="#/long-short-term-memory-lstm" id="/toc-long-short-term-memory-lstm">Long Short-Term Memory (LSTM)</a></li>
 <li><a href="#/gated-recurrent-unit-gru" id="/toc-gated-recurrent-unit-gru">Gated Recurrent Unit (GRU)</a></li>
@@ -225,17 +225,26 @@ Miguel Fonseca
 </nav>
 </section>
 <section>
-<section id="why-do-we-need-rnns" class="title-slide slide level1 center">
-<h1>Why Do We Need RNNs?</h1>
+<section id="feedforward-networks-vs.-recurrent-networks" class="title-slide slide level1 center">
+<h1>Feedforward Networks vs.&nbsp;Recurrent Networks</h1>
 
 </section>
-<section id="feedforward-networks-assume-independence" class="slide level2">
-<h2>Feedforward Networks Assume Independence</h2>
+<section id="why-do-we-need-rnns" class="slide level2">
+<h2>Why Do We Need RNNs?</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<h3 id="feedforward-networks-assume-independence">Feedforward Networks Assume Independence</h3>
 <p>For MLPs:</p>
 <p><span class="math display">\[
-x_i \perp x_j
+\mathbf x_i \perp \mathbf x_j
 \]</span></p>
-<p>But many datasets are sequential:</p>
+<p>But many datasets are sequential!</p>
+</div><div class="column" style="width:50%;">
+<h3 id="recurrent-networks-capture-dependencies">Recurrent Networks Capture Dependencies</h3>
+<p><span class="math display">\[
+P(\mathbf x_t | \mathbf x_{t-1}, \mathbf x_{t-2}, ..., \mathbf x_1)
+\]</span></p>
+<p>Cases where RNNs are useful:</p>
 <ul>
 <li>Text</li>
 <li>Speech</li>
@@ -243,14 +252,7 @@ x_i \perp x_j
 <li>Biological sequences</li>
 <li>Sensor signals</li>
 </ul>
-</section>
-<section id="sequential-dependency" class="slide level2">
-<h2>Sequential Dependency</h2>
-<p>Language modeling:</p>
-<p><span class="math display">\[
-P(w_t | w_{t-1}, w_{t-2}, ..., w_1)
-\]</span></p>
-<p>The past matters.</p>
+</div></div>
 </section>
 <section id="applications" class="slide level2">
 <h2>Applications</h2>
@@ -271,20 +273,23 @@ P(w_t | w_{t-1}, w_{t-2}, ..., w_1)
 <section id="core-recurrence" class="slide level2">
 <h2>Core Recurrence</h2>
 <p><span class="math display">\[
-h_t = \sigma(W_h h_{t-1} + W_x x_t + b)
+\mathbf z_t =\mathbf W_h \mathbf h_{t-1} + \mathbf W_x \mathbf x_t + \mathbf b
 \]</span></p>
 <p><span class="math display">\[
-y_t = W_y h_t
+\mathbf h_t = \sigma(\mathbf z_t)
+\]</span></p>
+<p><span class="math display">\[
+\mathbf y_t = \mathbf W_y \mathbf h_t
 \]</span></p>
 <p>Same weights reused across time.</p>
 </section>
 <section id="unrolled-through-time" class="slide level2">
 <h2>Unrolled Through Time</h2>
 
-<img data-src="../images/rnn_unrolled.png" class="r-stretch quarto-figure-center"><p class="caption">Unrolled RNN</p></section>
+<img data-src="../images/rnn_unrolled.svg" class="r-stretch quarto-figure-center"><p class="caption">Unrolled RNN</p></section>
 <section id="tensorflow-simple-rnn" class="slide level2">
 <h2>TensorFlow: Simple RNN</h2>
-<div id="38471d06" class="cell" data-execution_count="1">
+<div id="111068db" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> tensorflow <span class="im">as</span> tf</span>
 <span id="cb1-2"><a></a><span class="im">from</span> tensorflow <span class="im">import</span> keras</span>
 <span id="cb1-3"><a></a><span class="im">from</span> tensorflow.keras <span class="im">import</span> layers</span>
@@ -331,78 +336,66 @@ y_t = W_y h_t
 <h2>Backpropagation Through Time (BPTT)</h2>
 <p>Training objective:</p>
 <p><span class="math display">\[
-\frac{\partial L}{\partial W} =\sum_{t=1}^{T}\frac{\partial L}{\partial h_t}\frac{\partial h_t}{\partial W}
+\frac{\partial \mathscr L}{\partial \mathbf W_h} =\sum_{t=1}^{T}\frac{\partial \mathscr L}{\partial \mathbf h_t}\frac{\partial \mathbf h_t}{\partial \mathbf W_h}
 \]</span></p>
 <p>But:</p>
 <p><span class="math display">\[
-\frac{\partial h_t}{\partial h_{t-k}}=\prod_{i=t-k+1}^{t}\frac{\partial h_i}{\partial h_{i-1}}
+\frac{\partial \mathbf h_t}{\partial \mathbf h_{t-k}}=\prod_{i=t-k+1}^{t}\frac{\partial \mathbf h_i}{\partial \mathbf h_{i-1}}
+\]</span></p>
+<p>with:</p>
+<p><span class="math display">\[
+\frac{\partial \mathbf h_i}{\partial \mathbf h_{i-1}}
+=\mathbf W_h \cdot \text{diag}(\sigma'(\mathbf z_t))
 \]</span></p>
 <p>Repeated matrix multiplication → instability.</p>
-<!-- ## The Vanishing Gradient Problem
-
-Simplified Recurrence
-
-$$
+</section>
+<section id="the-vanishing-gradient-problem" class="slide level2">
+<h2>The Vanishing Gradient Problem</h2>
+<p>Simplified Recurrence</p>
+<p><span class="math display">\[
 h_t = \sigma(W_h h_{t-1})
-$$
-
-Derivative:
-
-$$
+\]</span></p>
+<p>Derivative:</p>
+<p><span class="math display">\[
 \frac{\partial h_t}{\partial h_{t-1}}
 =
 W_h \cdot \text{diag}(1 - \sigma^2(z))
-$$
-
-Since:
-
-$$
+\]</span></p>
+<p>Since:</p>
+<p><span class="math display">\[
 |1 - \sigma^2(z)| \le 1
-$$
-
-Repeated products:
-
-$$
+\]</span></p>
+<p>Repeated products:</p>
+<p><span class="math display">\[
 \prod_{i=1}^{k} W_h \lambda_i
-$$
-
-
-:::{.columns}
-
-::::{.column width="50%"}
-If:
-
-$$
-\rho(W_h) < 1
-$$
-
->Gradient vanishes.
-
-::::
-
-::::{.column width="50%"}
-
-If:
-
-$$
-\rho(W_h) > 1
-$$
-
->Exploding gradient.
-
-::::
-
-::: -->
+\]</span></p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>If:</p>
+<p><span class="math display">\[
+\rho(W_h) &lt; 1
+\]</span></p>
+<blockquote>
+<p>Gradient vanishes.</p>
+</blockquote>
+</div><div class="column" style="width:50%;">
+<p>If:</p>
+<p><span class="math display">\[
+\rho(W_h) &gt; 1
+\]</span></p>
+<blockquote>
+<p>Exploding gradient.</p>
+</blockquote>
+</div></div>
 </section></section>
 <section>
 <section id="long-short-term-memory-lstm" class="title-slide slide level1 center">
 <h1>Long Short-Term Memory (LSTM)</h1>
 
 </section>
-<section id="key-idea" class="slide level2">
-<h2>Key Idea</h2>
-
-<img data-src="../images/lstm_architecture.png" class="r-stretch quarto-figure-center"><p class="caption">LSTM Cell</p><div class="callout callout-note callout-titled callout-style-default">
+<section id="lstm-gate-equations" class="slide level2">
+<h2>LSTM Gate Equations</h2>
+<div class="callout callout-note callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
@@ -415,35 +408,49 @@ $$
 </div>
 </div>
 </div>
-</section>
-<section id="lstm-equations" class="slide level2">
-<h2>LSTM Equations</h2>
 <p><strong>Forget gate:</strong></p>
 <p><span class="math display">\[
-f_t = \sigma(W_f [h_{t-1}, x_t])
+\mathbf f_t = \sigma\left(\mathbf W_f [\mathbf h_{t-1} \, \mathbf x_t] + \mathbf b_f\right)
 \]</span></p>
 <p><strong>Input gate:</strong></p>
 <p><span class="math display">\[
-i_t = \sigma(W_i [h_{t-1}, x_t])
-\]</span></p>
-<p><strong>Cell update:</strong></p>
-<p><span class="math display">\[
-c_t = f_t \odot c_{t-1} + i_t \odot \tilde{c}_t
+\mathbf i_t = \sigma\left(\mathbf W_i [\mathbf h_{t-1} \, \mathbf x_t] + \mathbf b_i\right)
 \]</span></p>
 <p><strong>Output:</strong></p>
 <p><span class="math display">\[
-h_t = o_t \odot \tanh(c_t)
+\mathbf o_t = \sigma\left(\mathbf W_o [\mathbf h_{t-1} \, \mathbf x_t] + \mathbf b_o\right)
+\]</span></p>
+<p><strong>Input Node</strong></p>
+<p><span class="math display">\[
+\widetilde{\mathbf c} = \tanh\left(\mathbf W_c [\mathbf h_{t-1} \, \mathbf x_t] + \mathbf b_c\right)
 \]</span></p>
 </section>
+<section class="slide level2">
+
+
+<img data-src="../images/lstm-1.svg" style="width:70.0%" class="r-stretch quarto-figure-center"><p class="caption">LSTM Cell Update with Input</p></section>
+<section id="cell-update" class="slide level2">
+<h2>Cell update</h2>
+<p><span class="math display">\[
+\mathbf c_t = \mathbf f_t \odot \mathbf c_{t-1} + \mathbf i_t \odot \tilde{\mathbf c}_t
+\]</span></p>
+<p><span class="math display">\[
+\mathbf h_t = \mathbf o_t \odot \tanh(\mathbf c_t)
+\]</span></p>
+</section>
+<section class="slide level2">
+
+
+<img data-src="../images/lstm-3.svg" style="width:70.0%" class="r-stretch quarto-figure-center"><p class="caption">LSTM cell</p></section>
 <section id="why-lstm-works" class="slide level2">
 <h2>Why LSTM Works</h2>
 <p>If:</p>
 <p><span class="math display">\[
-f_t \approx 1
+\mathbf f_t \approx 1
 \]</span></p>
 <p>Then:</p>
 <p><span class="math display">\[
-\frac{\partial c_t}{\partial c_{t-1}} \approx 1
+\frac{\partial \mathbf c_t}{\partial \mathbf c_{t-1}} \approx 1
 \]</span></p>
 <blockquote>
 <p>Gradient preserved.</p>
@@ -451,7 +458,7 @@ f_t \approx 1
 </section>
 <section id="tensorflow-lstm" class="slide level2">
 <h2>Tensorflow: LSTM</h2>
-<div id="19d42ecf" class="cell" data-execution_count="2">
+<div id="703ce57b" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>model <span class="op">=</span> keras.Sequential([</span>
 <span id="cb2-2"><a></a>    layers.LSTM(<span class="dv">64</span>, return_sequences<span class="op">=</span><span class="va">True</span>),</span>
 <span id="cb2-3"><a></a>    layers.LSTM(<span class="dv">32</span>),</span>
@@ -466,31 +473,40 @@ f_t \approx 1
 <h1>Gated Recurrent Unit (GRU)</h1>
 
 </section>
-<section id="gru-architecture" class="slide level2">
-<h2>GRU Architecture</h2>
+<section id="gru-equations" class="slide level2">
+<h2>GRU Equations</h2>
 <blockquote>
 <p>Simpler alternative to LSTM.</p>
 </blockquote>
-
-<img data-src="../images/gru_architecture.png" class="r-stretch quarto-figure-center"><p class="caption">GRU Cell</p></section>
-<section id="gru-equations" class="slide level2">
-<h2>GRU Equations</h2>
 <p><strong>Update gate:</strong></p>
 <p><span class="math display">\[
-z_t = \sigma(W_z [h_{t-1}, x_t])
+\mathbf z_t = \sigma\left(\mathbf W_z [\mathbf h_{t-1} \, \mathbf x_t] + \mathbf b_z\right)
 \]</span></p>
 <p><strong>Reset gate:</strong></p>
 <p><span class="math display">\[
-r_t = \sigma(W_r [h_{t-1}, x_t])
+\mathbf r_t = \sigma\left(\mathbf W_r [\mathbf h_{t-1} \, \mathbf x_t] + \mathbf b_r\right)
 \]</span></p>
-<p><strong>Final Update:</strong></p>
+<p><strong>Candidate cell state:</strong></p>
 <p><span class="math display">\[
-h_t = (1 - z_t) \odot h_{t-1} + z_t \odot \widetilde{h}_t
+\widetilde{\mathbf h}_t = \tanh\left(\mathbf W_h [\mathbf r_t \! \odot \! \mathbf h_{t-1} \, \mathbf x_t] + \mathbf b_h\right)
 \]</span></p>
+</section>
+<section class="slide level2">
+
+
+<img data-src="../images/gru-2.svg" class="r-stretch quarto-figure-center"><p class="caption">GRU Cell Update</p></section>
+<section id="gru-update" class="slide level2">
+<h2>GRU Update</h2>
+<p><span class="math display">\[
+\mathbf h_t = (1 - \mathbf z_t) \odot \mathbf h_{t-1} + \mathbf z_t \odot \widetilde{\mathbf h}_t
+\]</span></p>
+</section>
+<section id="gru-cell" class="slide level2">
+<h2><img data-src="../images/gru-3.svg" alt="GRU Cell"></h2>
 </section>
 <section id="tensorflow-gru" class="slide level2">
 <h2>Tensorflow: GRU</h2>
-<div id="548ec3ed" class="cell" data-execution_count="3">
+<div id="cf6f93e1" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>model <span class="op">=</span> keras.Sequential([</span>
 <span id="cb3-2"><a></a>    layers.GRU(<span class="dv">64</span>, return_sequences<span class="op">=</span><span class="va">True</span>),</span>
 <span id="cb3-3"><a></a>    layers.GRU(<span class="dv">32</span>),</span>
@@ -514,7 +530,7 @@ h_t = (1 - z_t) \odot h_{t-1} + z_t \odot \widetilde{h}_t
 </section>
 <section id="tensorflow-recurrent-dropout" class="slide level2">
 <h2>TensorFlow: Recurrent Dropout</h2>
-<div id="3bc50a0f" class="cell" data-execution_count="4">
+<div id="f4498b28" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a>model <span class="op">=</span> keras.Sequential([</span>
 <span id="cb4-2"><a></a>    layers.LSTM(</span>
 <span id="cb4-3"><a></a>        <span class="dv">64</span>,</span>
@@ -530,10 +546,10 @@ h_t = (1 - z_t) \odot h_{t-1} + z_t \odot \widetilde{h}_t
 <section id="gradient-clipping" class="slide level2">
 <h2>Gradient Clipping</h2>
 <p><span class="math display">\[
-\nabla_\theta L \leftarrow \frac{\nabla_\theta L}{\max(1, \frac{||\nabla_\theta L||}{\text{clipnorm}})}
+\nabla_{\boldsymbol \theta} \mathscr L \leftarrow \frac{\nabla_{\boldsymbol \theta} \mathscr L}{\max(1, \frac{||\nabla_{\boldsymbol \theta} \mathscr L||}{\lambda})}
 \]</span></p>
 <p>Prevent exploding gradients:</p>
-<div id="c66c1832" class="cell" data-execution_count="5">
+<div id="08b6fff7" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>optimizer <span class="op">=</span> tf.keras.optimizers.Adam(</span>
 <span id="cb5-2"><a></a>    learning_rate<span class="op">=</span><span class="fl">0.001</span>,</span>
 <span id="cb5-3"><a></a>    clipnorm<span class="op">=</span><span class="fl">1.0</span></span>
@@ -549,12 +565,12 @@ h_t = (1 - z_t) \odot h_{t-1} + z_t \odot \widetilde{h}_t
 <h2>Deep RNNs</h2>
 <p>Stack multiple RNN layers for hierarchical representations:</p>
 
-<img data-src="../images/deep_rnn.png" class="r-stretch quarto-figure-center"><p class="caption">Deep RNN</p></section>
+<img data-src="../images/rnn_deep.svg" class="r-stretch quarto-figure-center"><p class="caption">Deep RNN</p></section>
 <section id="bidirectional-rnns" class="slide level2">
 <h2>Bidirectional RNNs</h2>
 <p>Process sequences in both directions:</p>
 
-<img data-src="../images/bidirectional_rnn.png" class="r-stretch quarto-figure-center"><p class="caption">Bidirectional RNN</p></section></section>
+<img data-src="../images/rnn_bidirectional.svg" class="r-stretch quarto-figure-center"><p class="caption">Bidirectional RNN</p></section></section>
 <section>
 <section id="final-notes" class="title-slide slide level1 center">
 <h1>Final Notes</h1>

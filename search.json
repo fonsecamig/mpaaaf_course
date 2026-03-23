@@ -1,17 +1,10 @@
 [
   {
-    "objectID": "slides/rnn.html#feedforward-networks-assume-independence",
-    "href": "slides/rnn.html#feedforward-networks-assume-independence",
+    "objectID": "slides/rnn.html#why-do-we-need-rnns",
+    "href": "slides/rnn.html#why-do-we-need-rnns",
     "title": "Recurrent Neural Networks",
-    "section": "Feedforward Networks Assume Independence",
-    "text": "Feedforward Networks Assume Independence\nFor MLPs:\n\\[\nx_i \\perp x_j\n\\]\nBut many datasets are sequential:\n\nText\nSpeech\nFinancial time-series\nBiological sequences\nSensor signals"
-  },
-  {
-    "objectID": "slides/rnn.html#sequential-dependency",
-    "href": "slides/rnn.html#sequential-dependency",
-    "title": "Recurrent Neural Networks",
-    "section": "Sequential Dependency",
-    "text": "Sequential Dependency\nLanguage modeling:\n\\[\nP(w_t | w_{t-1}, w_{t-2}, ..., w_1)\n\\]\nThe past matters."
+    "section": "Why Do We Need RNNs?",
+    "text": "Why Do We Need RNNs?\n\n\nFeedforward Networks Assume Independence\nFor MLPs:\n\\[\n\\mathbf x_i \\perp \\mathbf x_j\n\\]\nBut many datasets are sequential!\n\nRecurrent Networks Capture Dependencies\n\\[\nP(\\mathbf x_t | \\mathbf x_{t-1}, \\mathbf x_{t-2}, ..., \\mathbf x_1)\n\\]\nCases where RNNs are useful:\n\nText\nSpeech\nFinancial time-series\nBiological sequences\nSensor signals"
   },
   {
     "objectID": "slides/rnn.html#applications",
@@ -25,7 +18,7 @@
     "href": "slides/rnn.html#core-recurrence",
     "title": "Recurrent Neural Networks",
     "section": "Core Recurrence",
-    "text": "Core Recurrence\n\\[\nh_t = \\sigma(W_h h_{t-1} + W_x x_t + b)\n\\]\n\\[\ny_t = W_y h_t\n\\]\nSame weights reused across time."
+    "text": "Core Recurrence\n\\[\n\\mathbf z_t =\\mathbf W_h \\mathbf h_{t-1} + \\mathbf W_x \\mathbf x_t + \\mathbf b\n\\]\n\\[\n\\mathbf h_t = \\sigma(\\mathbf z_t)\n\\]\n\\[\n\\mathbf y_t = \\mathbf W_y \\mathbf h_t\n\\]\nSame weights reused across time."
   },
   {
     "objectID": "slides/rnn.html#unrolled-through-time",
@@ -46,28 +39,35 @@
     "href": "slides/rnn.html#backpropagation-through-time-bptt",
     "title": "Recurrent Neural Networks",
     "section": "Backpropagation Through Time (BPTT)",
-    "text": "Backpropagation Through Time (BPTT)\nTraining objective:\n\\[\n\\frac{\\partial L}{\\partial W} =\\sum_{t=1}^{T}\\frac{\\partial L}{\\partial h_t}\\frac{\\partial h_t}{\\partial W}\n\\]\nBut:\n\\[\n\\frac{\\partial h_t}{\\partial h_{t-k}}=\\prod_{i=t-k+1}^{t}\\frac{\\partial h_i}{\\partial h_{i-1}}\n\\]\nRepeated matrix multiplication → instability."
+    "text": "Backpropagation Through Time (BPTT)\nTraining objective:\n\\[\n\\frac{\\partial \\mathscr L}{\\partial \\mathbf W_h} =\\sum_{t=1}^{T}\\frac{\\partial \\mathscr L}{\\partial \\mathbf h_t}\\frac{\\partial \\mathbf h_t}{\\partial \\mathbf W_h}\n\\]\nBut:\n\\[\n\\frac{\\partial \\mathbf h_t}{\\partial \\mathbf h_{t-k}}=\\prod_{i=t-k+1}^{t}\\frac{\\partial \\mathbf h_i}{\\partial \\mathbf h_{i-1}}\n\\]\nwith:\n\\[\n\\frac{\\partial \\mathbf h_i}{\\partial \\mathbf h_{i-1}}\n=\\mathbf W_h \\cdot \\text{diag}(\\sigma'(\\mathbf z_t))\n\\]\nRepeated matrix multiplication → instability."
   },
   {
-    "objectID": "slides/rnn.html#key-idea",
-    "href": "slides/rnn.html#key-idea",
+    "objectID": "slides/rnn.html#the-vanishing-gradient-problem",
+    "href": "slides/rnn.html#the-vanishing-gradient-problem",
     "title": "Recurrent Neural Networks",
-    "section": "Key Idea",
-    "text": "Key Idea\n\nLSTM Cell\n\n\n\n\n\nNote\n\n\nAllow constant error flow through a memory cell."
+    "section": "The Vanishing Gradient Problem",
+    "text": "The Vanishing Gradient Problem\nSimplified Recurrence\n\\[\nh_t = \\sigma(W_h h_{t-1})\n\\]\nDerivative:\n\\[\n\\frac{\\partial h_t}{\\partial h_{t-1}}\n=\nW_h \\cdot \\text{diag}(1 - \\sigma^2(z))\n\\]\nSince:\n\\[\n|1 - \\sigma^2(z)| \\le 1\n\\]\nRepeated products:\n\\[\n\\prod_{i=1}^{k} W_h \\lambda_i\n\\]\n\n\nIf:\n\\[\n\\rho(W_h) &lt; 1\n\\]\n\nGradient vanishes.\n\n\nIf:\n\\[\n\\rho(W_h) &gt; 1\n\\]\n\nExploding gradient."
   },
   {
-    "objectID": "slides/rnn.html#lstm-equations",
-    "href": "slides/rnn.html#lstm-equations",
+    "objectID": "slides/rnn.html#lstm-gate-equations",
+    "href": "slides/rnn.html#lstm-gate-equations",
     "title": "Recurrent Neural Networks",
-    "section": "LSTM Equations",
-    "text": "LSTM Equations\nForget gate:\n\\[\nf_t = \\sigma(W_f [h_{t-1}, x_t])\n\\]\nInput gate:\n\\[\ni_t = \\sigma(W_i [h_{t-1}, x_t])\n\\]\nCell update:\n\\[\nc_t = f_t \\odot c_{t-1} + i_t \\odot \\tilde{c}_t\n\\]\nOutput:\n\\[\nh_t = o_t \\odot \\tanh(c_t)\n\\]"
+    "section": "LSTM Gate Equations",
+    "text": "LSTM Gate Equations\n\n\n\n\n\n\nNote\n\n\nAllow constant error flow through a memory cell.\n\n\n\nForget gate:\n\\[\n\\mathbf f_t = \\sigma\\left(\\mathbf W_f [\\mathbf h_{t-1} \\, \\mathbf x_t] + \\mathbf b_f\\right)\n\\]\nInput gate:\n\\[\n\\mathbf i_t = \\sigma\\left(\\mathbf W_i [\\mathbf h_{t-1} \\, \\mathbf x_t] + \\mathbf b_i\\right)\n\\]\nOutput:\n\\[\n\\mathbf o_t = \\sigma\\left(\\mathbf W_o [\\mathbf h_{t-1} \\, \\mathbf x_t] + \\mathbf b_o\\right)\n\\]\nInput Node\n\\[\n\\widetilde{\\mathbf c} = \\tanh\\left(\\mathbf W_c [\\mathbf h_{t-1} \\, \\mathbf x_t] + \\mathbf b_c\\right)\n\\]"
+  },
+  {
+    "objectID": "slides/rnn.html#cell-update",
+    "href": "slides/rnn.html#cell-update",
+    "title": "Recurrent Neural Networks",
+    "section": "Cell update",
+    "text": "Cell update\n\\[\n\\mathbf c_t = \\mathbf f_t \\odot \\mathbf c_{t-1} + \\mathbf i_t \\odot \\tilde{\\mathbf c}_t\n\\]\n\\[\n\\mathbf h_t = \\mathbf o_t \\odot \\tanh(\\mathbf c_t)\n\\]"
   },
   {
     "objectID": "slides/rnn.html#why-lstm-works",
     "href": "slides/rnn.html#why-lstm-works",
     "title": "Recurrent Neural Networks",
     "section": "Why LSTM Works",
-    "text": "Why LSTM Works\nIf:\n\\[\nf_t \\approx 1\n\\]\nThen:\n\\[\n\\frac{\\partial c_t}{\\partial c_{t-1}} \\approx 1\n\\]\n\nGradient preserved."
+    "text": "Why LSTM Works\nIf:\n\\[\n\\mathbf f_t \\approx 1\n\\]\nThen:\n\\[\n\\frac{\\partial \\mathbf c_t}{\\partial \\mathbf c_{t-1}} \\approx 1\n\\]\n\nGradient preserved."
   },
   {
     "objectID": "slides/rnn.html#tensorflow-lstm",
@@ -77,18 +77,18 @@
     "text": "Tensorflow: LSTM\n\nmodel = keras.Sequential([\n    layers.LSTM(64, return_sequences=True),\n    layers.LSTM(32),\n    layers.Dense(1)\n])\n\nmodel.compile(optimizer=\"adam\", loss=\"mse\")"
   },
   {
-    "objectID": "slides/rnn.html#gru-architecture",
-    "href": "slides/rnn.html#gru-architecture",
-    "title": "Recurrent Neural Networks",
-    "section": "GRU Architecture",
-    "text": "GRU Architecture\n\nSimpler alternative to LSTM.\n\n\nGRU Cell"
-  },
-  {
     "objectID": "slides/rnn.html#gru-equations",
     "href": "slides/rnn.html#gru-equations",
     "title": "Recurrent Neural Networks",
     "section": "GRU Equations",
-    "text": "GRU Equations\nUpdate gate:\n\\[\nz_t = \\sigma(W_z [h_{t-1}, x_t])\n\\]\nReset gate:\n\\[\nr_t = \\sigma(W_r [h_{t-1}, x_t])\n\\]\nFinal Update:\n\\[\nh_t = (1 - z_t) \\odot h_{t-1} + z_t \\odot \\widetilde{h}_t\n\\]"
+    "text": "GRU Equations\n\nSimpler alternative to LSTM.\n\nUpdate gate:\n\\[\n\\mathbf z_t = \\sigma\\left(\\mathbf W_z [\\mathbf h_{t-1} \\, \\mathbf x_t] + \\mathbf b_z\\right)\n\\]\nReset gate:\n\\[\n\\mathbf r_t = \\sigma\\left(\\mathbf W_r [\\mathbf h_{t-1} \\, \\mathbf x_t] + \\mathbf b_r\\right)\n\\]\nCandidate cell state:\n\\[\n\\widetilde{\\mathbf h}_t = \\tanh\\left(\\mathbf W_h [\\mathbf r_t \\! \\odot \\! \\mathbf h_{t-1} \\, \\mathbf x_t] + \\mathbf b_h\\right)\n\\]"
+  },
+  {
+    "objectID": "slides/rnn.html#gru-update",
+    "href": "slides/rnn.html#gru-update",
+    "title": "Recurrent Neural Networks",
+    "section": "GRU Update",
+    "text": "GRU Update\n\\[\n\\mathbf h_t = (1 - \\mathbf z_t) \\odot \\mathbf h_{t-1} + \\mathbf z_t \\odot \\widetilde{\\mathbf h}_t\n\\]"
   },
   {
     "objectID": "slides/rnn.html#tensorflow-gru",
@@ -116,7 +116,7 @@
     "href": "slides/rnn.html#gradient-clipping",
     "title": "Recurrent Neural Networks",
     "section": "Gradient Clipping",
-    "text": "Gradient Clipping\n\\[\n\\nabla_\\theta L \\leftarrow \\frac{\\nabla_\\theta L}{\\max(1, \\frac{||\\nabla_\\theta L||}{\\text{clipnorm}})}\n\\]\nPrevent exploding gradients:\n\noptimizer = tf.keras.optimizers.Adam(\n    learning_rate=0.001,\n    clipnorm=1.0\n)"
+    "text": "Gradient Clipping\n\\[\n\\nabla_{\\boldsymbol \\theta} \\mathscr L \\leftarrow \\frac{\\nabla_{\\boldsymbol \\theta} \\mathscr L}{\\max(1, \\frac{||\\nabla_{\\boldsymbol \\theta} \\mathscr L||}{\\lambda})}\n\\]\nPrevent exploding gradients:\n\noptimizer = tf.keras.optimizers.Adam(\n    learning_rate=0.001,\n    clipnorm=1.0\n)"
   },
   {
     "objectID": "slides/rnn.html#deep-rnns",
