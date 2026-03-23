@@ -816,7 +816,7 @@
     "href": "index.html#recurrent-neural-networks",
     "title": "Modeling, Programming and Machine Learning for Financial Analysis",
     "section": "Recurrent Neural Networks",
-    "text": "Recurrent Neural Networks\n\nSlides\n\n\nReading\n\nChollet, F. (2021). Deep learning with Python (2nd ed.). Manning Publications.\n\nChapter 10: Deep learning for time series Zhang, A., Lipton, Z. C., Li, M., & Smola, A. J. (2023). Dive into deep learning. Cambridge University Press. https://d2l.ai\nChapter 9: Recurrent Neural Networks\nChapter 10: Modern Recurrent Neural Networks\n\n\n\n\nExercises\n\nExercise 1"
+    "text": "Recurrent Neural Networks\n\nSlides\n\n\nReading\n\nChollet, F. (2021). Deep learning with Python (2nd ed.). Manning Publications.\n\nChapter 10: Deep learning for time series\n\nZhang, A., Lipton, Z. C., Li, M., & Smola, A. J. (2023). Dive into deep learning. Cambridge University Press. https://d2l.ai\n\nChapter 9: Recurrent Neural Networks\nChapter 10: Modern Recurrent Neural Networks\n\n\n\n\nExercises\n\nExercise 1"
   },
   {
     "objectID": "index.html#references",
