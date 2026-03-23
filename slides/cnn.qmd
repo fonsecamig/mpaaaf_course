@@ -35,6 +35,7 @@ Problems:
 3. **Translation equivariance**
     
     The network should respond similarly to the same patch, regardless of where it appears in the image (*translation invariance*).
+    
 4. **Hierarchical feature learning**
     Deeper layers should be able to capture longer-range features of the image
 :::
@@ -147,10 +148,6 @@ model = tf.keras.Sequential([
 ])
 ```
 
----
-
-![](/images/1d_convolution.png)
-
 # 2D Convolutions
 
 ## 2D Convolutions
@@ -166,10 +163,11 @@ Used for:
 ## 2D Convolution Formula
 
 $$
-Z(i,j) = \sum_m \sum_n X(i+m, j+n) W(m,n)
+\mathbf Z_r(i,j) = \sum_m \sum_n\mathbf X_l(i+m, j+n)\mathbf W_r(m,n)
 $$
 
-Kernel is now a matrix.
+- Kernel is now a tensor of shape $k \times k \times C$.
+- Output is a 2D feature map for each filter.
 
 ---
 
@@ -284,13 +282,13 @@ Where:
 
 ### Max Pooling
 
-$$Z = \max(x_{window})$$
+$$\mathbf Z = \max(\mathbf X_{window})$$
 
 Keeps strongest activation.
 
 ### Average Pooling
 
-$$Z = \text{mean}(x_{window})$$
+$$\mathbf Z = \text{mean}(\mathbf X_{window})$$
 
 Smoother representation.
 
@@ -307,13 +305,20 @@ tf.keras.layers.MaxPooling2D(pool_size=(2,2))
 
 Typical CNN:
 
-Conv → ReLU → Conv → ReLU → Pool
+| Layer |
+|:---:|
+| Input |
+| Conv → ReLU → Conv → ReLU (Block 1) |
+| Pooling |
+| Conv → ReLU → Conv → ReLU (Block 2) |
+| Pooling |
+| Flatten |
+| Dense |
+| Output |
 
-Conv → ReLU → Conv → ReLU → Pool
+---
 
-Flatten → Dense → Output
-
-### Example CNN (MNIST)
+## Example CNN (MNIST)
 
 ```{python}
 model = tf.keras.Sequential([
@@ -338,6 +343,10 @@ The receptive field grows with depth.
 - "see" larger parts of image
 - learn abstract features
 
+---
+
+![](/images/receptive_field_cnn.png)
+
 # Residual Networks
 
 ## Vanishing Gradient Problem
@@ -354,7 +363,7 @@ Deep CNNs suffer from:
 
 Introduced in:
 
->ResNet (2015) [REF AQUI]
+> He, K., Zhang, X., Ren, S., & Sun, J. (2015). *Deep Residual Learning for Image Recognition*. arXiv:1512.03385.
 
 Instead of learning:
 

@@ -1,0 +1,339 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "title: \"TensorFlow 2 — The Basics\"\n",
+        "subtitle: \"From Tensors to Training Neural Networks\"\n",
+        "author: \"Miguel Fonseca\"\n",
+        "format:\n",
+        "  revealjs:\n",
+        "    toc: true\n",
+        "---\n",
+        "\n",
+        "\n",
+        "# Why TensorFlow 2?\n",
+        "\n",
+        "## What is TensorFlow? {.scrollable}\n",
+        "\n",
+        "- Open-source machine learning framework\n",
+        "- Developed by Google\n",
+        "- Designed for:\n",
+        "  - Research\n",
+        "  - Production\n",
+        "  - Scalability (CPU / GPU / TPU)\n",
+        "\n",
+        "---\n",
+        "\n",
+        "## TensorFlow vs Others {.scrollable}\n",
+        "\n",
+        "| Framework | Focus | Strength |\n",
+        "|--------|------|---------|\n",
+        "| scikit-learn | Classical ML | Simplicity |\n",
+        "| PyTorch | Research | Flexibility |\n",
+        "| **TensorFlow 2** | Research + Prod | End-to-end pipelines |\n",
+        "\n",
+        "# Tensors\n",
+        "\n",
+        "## What is a tensor? {.scrollable}\n",
+        "\n",
+        "- Generalization of:\n",
+        "  - Scalar (rank 0)\n",
+        "  - Vector (rank 1)\n",
+        "  - Matrix (rank 2)\n",
+        "  - Higher dimensions (rank ≥ 3)\n",
+        "\n",
+        "---\n",
+        "\n",
+        "## Creating Tensors {.scrollable}"
+      ],
+      "id": "c26fba0b"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "import numpy as np\n",
+        "import tensorflow as tf\n",
+        "\n",
+        "a = tf.constant(3)\n",
+        "b = tf.constant([1, 2, 3])\n",
+        "c = tf.constant([[1., 2.], [3., 4.]])"
+      ],
+      "id": "d9b50d02",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Tensor Properties {.scrollable}"
+      ],
+      "id": "be23d938"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "c.shape\n",
+        "c.dtype\n",
+        "tf.rank(c)"
+      ],
+      "id": "de7c53dc",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        ":::{.callout-note title=\"Key Idea\"}\n",
+        "Tensors have shape, dtype, and rank\n",
+        ":::\n",
+        "\n",
+        "## Tensor Operations {.scrollable}\n",
+        "\n",
+        "TensorFlow feels like NumPy:"
+      ],
+      "id": "fc170ddb"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "x = tf.random.normal((3, 2))\n",
+        "y = tf.ones((3, 2))\n",
+        "\n",
+        "x + y\n",
+        "x * y"
+      ],
+      "id": "6685aec3",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Matrix multiplication:"
+      ],
+      "id": "28589e02"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "tf.matmul(x, tf.transpose(y))"
+      ],
+      "id": "aac45744",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "\n",
+        "## Important Tensor Rules {.scrollable}\n",
+        "\n",
+        "- Tensors are immutable\n",
+        "- Operations are GPU-aware\n",
+        "- Broadcasting rules apply (like NumPy)\n",
+        "\n",
+        "# Keras: The High-Level API\n",
+        "\n",
+        "## Why Keras?\n",
+        "\n",
+        "- Reduces boilerplate\n",
+        "- Enforces best practices\n",
+        "- Integrated into TensorFlow 2\n",
+        "\n",
+        "---\n",
+        "\n",
+        "## Building a Model (Sequential) {.scrollable}"
+      ],
+      "id": "40f7214b"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "model = tf.keras.Sequential([\n",
+        "    tf.keras.layers.Dense(32, activation=\"relu\"),\n",
+        "    tf.keras.layers.Dense(1)\n",
+        "])"
+      ],
+      "id": "b020706a",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Model Summary"
+      ],
+      "id": "9e90796a"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "model.summary()"
+      ],
+      "id": "36817f84",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "**Concepts:**\n",
+        "\n",
+        "- Layers\n",
+        "- Parameters\n",
+        "- Trainable weights\n",
+        "\n",
+        "## Functional API {.scrollable}"
+      ],
+      "id": "0390583c"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "inputs = tf.keras.Input(shape=(10,))\n",
+        "x = tf.keras.layers.Dense(32, activation=\"relu\")(inputs)\n",
+        "outputs = tf.keras.layers.Dense(1)(x)\n",
+        "\n",
+        "model = tf.keras.Model(inputs, outputs)"
+      ],
+      "id": "e753929e",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "**Use when:**\n",
+        "\n",
+        "- Multiple inputs / outputs\n",
+        "- Complex architectures\n",
+        "\n",
+        "# Training Workflow\n",
+        "\n",
+        "## The 3-Step Pattern {.scrollable}\n",
+        "\n",
+        "- compile\n",
+        "- fit\n",
+        "- evaluate / predict\n",
+        "\n",
+        "> This pattern appears everywhere in TF2.\n",
+        "\n",
+        "---\n",
+        "\n",
+        "## Compile Step {.scrollable}"
+      ],
+      "id": "ae2d12d0"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "model.compile(\n",
+        "    optimizer=\"adam\",\n",
+        "    loss=\"mse\",\n",
+        "    metrics=[\"mae\"]\n",
+        ")"
+      ],
+      "id": "fb008602",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "- Optimizer → how parameters change\n",
+        "- Loss → what we minimize\n",
+        "- Metrics → what we monitor\n",
+        "\n",
+        "---\n",
+        "\n",
+        "## Fit the Model {.scrollable}\n",
+        "\n",
+        "**Training concepts:**\n",
+        "\n",
+        "- Epoch\n",
+        "- Batch\n",
+        "- Validation set"
+      ],
+      "id": "9e3bec88"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "X_train, y_train = np.random.rand(100, 10), np.random.rand(100, 1)  # Training data\n",
+        "history = model.fit(\n",
+        "    X_train,\n",
+        "    y_train,\n",
+        "    epochs=5,\n",
+        "    batch_size=32,\n",
+        "    validation_split=0.2\n",
+        ")"
+      ],
+      "id": "9972c568",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "\n",
+        "## Evaluate and Predict {.scrollable}"
+      ],
+      "id": "d50a0df6"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "X_test, y_test = np.random.rand(20, 10), np.random.rand(20, 1)  # Test data\n",
+        "model.evaluate(X_test, y_test)"
+      ],
+      "id": "634e7507",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "X_new = np.random.rand(5, 10)  # New data for prediction\n",
+        "model.predict(X_new)"
+      ],
+      "id": "0e2d1dbe",
+      "execution_count": null,
+      "outputs": []
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "name": "python3",
+      "language": "python",
+      "display_name": "Python 3 (ipykernel)",
+      "path": "/Users/miguelfonseca/venvs/mpaaaf/share/jupyter/kernels/python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}
