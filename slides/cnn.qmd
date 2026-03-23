@@ -343,8 +343,6 @@ The receptive field grows with depth.
 - "see" larger parts of image
 - learn abstract features
 
----
-
 ![](/images/receptive_field_cnn.png)
 
 # Residual Networks

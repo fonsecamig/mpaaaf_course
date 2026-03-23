@@ -141,7 +141,7 @@
         "\n",
         "## 1D Convolution in TensorFlow"
       ],
-      "id": "6942eaa9"
+      "id": "3a926520"
     },
     {
       "cell_type": "code",
@@ -158,7 +158,7 @@
         "    )\n",
         "])"
       ],
-      "id": "fb72f36b",
+      "id": "593a846b",
       "execution_count": null,
       "outputs": []
     },
@@ -231,7 +231,7 @@
         "\n",
         "## 2D Convolution in TensorFlow"
       ],
-      "id": "b58e625b"
+      "id": "2b9633c9"
     },
     {
       "cell_type": "code",
@@ -246,7 +246,7 @@
         "    )\n",
         "])"
       ],
-      "id": "40674013",
+      "id": "d8f7eca4",
       "execution_count": null,
       "outputs": []
     },
@@ -327,7 +327,7 @@
         "\n",
         "## Pooling in TensorFlow"
       ],
-      "id": "53e8ad30"
+      "id": "669d9d1e"
     },
     {
       "cell_type": "code",
@@ -335,7 +335,7 @@
       "source": [
         "tf.keras.layers.MaxPooling2D(pool_size=(2,2))"
       ],
-      "id": "abe98e43",
+      "id": "6b69162e",
       "execution_count": null,
       "outputs": []
     },
@@ -364,7 +364,7 @@
         "\n",
         "## Example CNN (MNIST)"
       ],
-      "id": "d6ec6014"
+      "id": "e233fb7c"
     },
     {
       "cell_type": "code",
@@ -380,7 +380,7 @@
         "    tf.keras.layers.Dense(10, activation='softmax')\n",
         "])"
       ],
-      "id": "6fdbb079",
+      "id": "9460286c",
       "execution_count": null,
       "outputs": []
     },
@@ -398,8 +398,6 @@
         "\n",
         "- \"see\" larger parts of image\n",
         "- learn abstract features\n",
-        "\n",
-        "---\n",
         "\n",
         "![](/images/receptive_field_cnn.png)\n",
         "\n",
@@ -458,7 +456,7 @@
         "\n",
         "## Residual Block in TensorFlow"
       ],
-      "id": "2b0ad185"
+      "id": "192d7f6f"
     },
     {
       "cell_type": "code",
@@ -477,7 +475,7 @@
         "    \n",
         "    return x"
       ],
-      "id": "479d69e0",
+      "id": "da048d72",
       "execution_count": null,
       "outputs": []
     },
@@ -489,7 +487,7 @@
         "\n",
         "## Full CNN with Residuals"
       ],
-      "id": "5ffb9a2f"
+      "id": "c7422e8f"
     },
     {
       "cell_type": "code",
@@ -508,7 +506,7 @@
         "\n",
         "model = tf.keras.Model(inputs, outputs)"
       ],
-      "id": "96eb40cd",
+      "id": "da81aa5b",
       "execution_count": null,
       "outputs": []
     }

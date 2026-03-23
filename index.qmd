@@ -122,8 +122,8 @@ sidebar:
 
 ### Exercises
 
-- [Exercise 1](https://colab.research.google.com/github/fonsecamig/agrn_course/blob/main/notebooks/exerc_cnn_mnist.ipynb)
-- [Exercise 2](https://colab.research.google.com/github/fonsecamig/agrn_course/blob/main/notebooks/exerc_1d_cnn_financial.ipynb)
+- [Exercise 1](https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_cnn_mnist.ipynb)
+- [Exercise 2](https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_1d_cnn_financial.ipynb)
 
 ## References
 
