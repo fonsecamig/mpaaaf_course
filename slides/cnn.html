@@ -340,7 +340,7 @@ z[0] = 1*1 + 2*0 + 3*(-1)
 </section>
 <section id="d-convolution-in-tensorflow" class="slide level2">
 <h2>1D Convolution in TensorFlow</h2>
-<div id="29a53d61" class="cell" data-execution_count="1">
+<div id="1ee6d237" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> tensorflow <span class="im">as</span> tf</span>
 <span id="cb1-2"><a></a></span>
 <span id="cb1-3"><a></a>model <span class="op">=</span> tf.keras.Sequential([</span>
@@ -352,11 +352,7 @@ z[0] = 1*1 + 2*0 + 3*(-1)
 <span id="cb1-9"><a></a>    )</span>
 <span id="cb1-10"><a></a>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section class="slide level2">
-
-
-<img data-src="../images/1d_convolution.png" class="r-stretch"></section></section>
+</section></section>
 <section>
 <section id="d-convolutions-1" class="title-slide slide level1 center">
 <h1>2D Convolutions</h1>
@@ -374,9 +370,12 @@ z[0] = 1*1 + 2*0 + 3*(-1)
 <section id="d-convolution-formula" class="slide level2">
 <h2>2D Convolution Formula</h2>
 <p><span class="math display">\[
-Z(i,j) = \sum_m \sum_n X(i+m, j+n) W(m,n)
+\mathbf Z_r(i,j) = \sum_m \sum_n\mathbf X_l(i+m, j+n)\mathbf W_r(m,n)
 \]</span></p>
-<p>Kernel is now a matrix.</p>
+<ul>
+<li>Kernel is now a tensor of shape <span class="math inline">\(k \times k \times C\)</span>.</li>
+<li>Output is a 2D feature map for each filter.</li>
+</ul>
 </section>
 <section id="convolution-over-rgb-images" class="slide level2">
 <h2>Convolution Over RGB Images</h2>
@@ -410,7 +409,7 @@ H' \times W' \times 64
 </section>
 <section id="d-convolution-in-tensorflow-1" class="slide level2">
 <h2>2D Convolution in TensorFlow</h2>
-<div id="8d369967" class="cell" data-execution_count="2">
+<div id="2f687463" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>model <span class="op">=</span> tf.keras.Sequential([</span>
 <span id="cb2-2"><a></a>    tf.keras.layers.Conv2D(</span>
 <span id="cb2-3"><a></a>        filters<span class="op">=</span><span class="dv">32</span>,</span>
@@ -477,18 +476,18 @@ H_{out} = \frac{H + 2P - K}{S} + 1
 <section id="types-of-pooling" class="slide level2">
 <h2>Types of Pooling</h2>
 <h3 id="max-pooling">Max Pooling</h3>
-<p><span class="math display">\[Z = \max(x_{window})\]</span></p>
+<p><span class="math display">\[\mathbf Z = \max(\mathbf X_{window})\]</span></p>
 <p>Keeps strongest activation.</p>
 <h3 id="average-pooling">Average Pooling</h3>
-<p><span class="math display">\[Z = \text{mean}(x_{window})\]</span></p>
+<p><span class="math display">\[\mathbf Z = \text{mean}(\mathbf X_{window})\]</span></p>
 <p>Smoother representation.</p>
 </section>
 <section id="pooling-in-tensorflow" class="slide level2">
 <h2>Pooling in TensorFlow</h2>
-<div id="deec4320" class="cell" data-execution_count="3">
+<div id="30d40855" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>tf.keras.layers.MaxPooling2D(pool_size<span class="op">=</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="9">
-<pre><code>&lt;MaxPooling2D name=max_pooling2d_4, built=True&gt;</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<pre><code>&lt;MaxPooling2D name=max_pooling2d, built=True&gt;</code></pre>
 </div>
 </div>
 </section></section>
@@ -500,11 +499,43 @@ H_{out} = \frac{H + 2P - K}{S} + 1
 <section id="cnn-architecture-pattern" class="slide level2">
 <h2>CNN Architecture Pattern</h2>
 <p>Typical CNN:</p>
-<p>Conv → ReLU → Conv → ReLU → Pool</p>
-<p>Conv → ReLU → Conv → ReLU → Pool</p>
-<p>Flatten → Dense → Output</p>
-<h3 id="example-cnn-mnist">Example CNN (MNIST)</h3>
-<div id="e4944623" class="cell" data-execution_count="4">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Layer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Input</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Conv → ReLU → Conv → ReLU (Block 1)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Pooling</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Conv → ReLU → Conv → ReLU (Block 2)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Pooling</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Flatten</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Dense</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Output</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="example-cnn-mnist" class="slide level2">
+<h2>Example CNN (MNIST)</h2>
+<div id="e8b92042" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>model <span class="op">=</span> tf.keras.Sequential([</span>
 <span id="cb5-2"><a></a>    tf.keras.layers.Conv2D(<span class="dv">32</span>, <span class="dv">3</span>, activation<span class="op">=</span><span class="st">'relu'</span>, padding<span class="op">=</span><span class="st">'same'</span>),</span>
 <span id="cb5-3"><a></a>    tf.keras.layers.MaxPooling2D(<span class="dv">2</span>),</span>
@@ -524,7 +555,11 @@ H_{out} = \frac{H + 2P - K}{S} + 1
 <li>“see” larger parts of image</li>
 <li>learn abstract features</li>
 </ul>
-</section></section>
+</section>
+<section class="slide level2">
+
+
+<img data-src="../images/receptive_field_cnn.png" class="r-stretch"></section></section>
 <section>
 <section id="residual-networks" class="title-slide slide level1 center">
 <h1>Residual Networks</h1>
@@ -543,7 +578,7 @@ H_{out} = \frac{H + 2P - K}{S} + 1
 <h2>Residual Connections</h2>
 <p>Introduced in:</p>
 <blockquote>
-<p>ResNet (2015) [REF AQUI]</p>
+<p>He, K., Zhang, X., Ren, S., &amp; Sun, J. (2015). <em>Deep Residual Learning for Image Recognition</em>. arXiv:1512.03385.</p>
 </blockquote>
 <p>Instead of learning:</p>
 <p><span class="math display">\[HD(x)\]</span></p>
@@ -573,7 +608,7 @@ H(x) = F(x) + x
 </section>
 <section id="residual-block-in-tensorflow" class="slide level2">
 <h2>Residual Block in TensorFlow</h2>
-<div id="b3d11830" class="cell" data-execution_count="5">
+<div id="5cce49f7" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a><span class="im">from</span> tensorflow.keras <span class="im">import</span> layers</span>
 <span id="cb6-2"><a></a></span>
 <span id="cb6-3"><a></a><span class="kw">def</span> residual_block(x, filters):</span>
@@ -590,7 +625,7 @@ H(x) = F(x) + x
 </section>
 <section id="full-cnn-with-residuals" class="slide level2">
 <h2>Full CNN with Residuals</h2>
-<div id="bc865bae" class="cell" data-execution_count="6">
+<div id="14929c97" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a>inputs <span class="op">=</span> tf.keras.Input(shape<span class="op">=</span>(<span class="dv">32</span>,<span class="dv">32</span>,<span class="dv">3</span>))</span>
 <span id="cb7-2"><a></a>x <span class="op">=</span> tf.keras.layers.Conv2D(<span class="dv">32</span>, <span class="dv">3</span>, padding<span class="op">=</span><span class="st">'same'</span>)(inputs)</span>
 <span id="cb7-3"><a></a></span>

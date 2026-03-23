@@ -284,7 +284,7 @@ y_t = W_y h_t
 <img data-src="../images/rnn_unrolled.png" class="r-stretch quarto-figure-center"><p class="caption">Unrolled RNN</p></section>
 <section id="tensorflow-simple-rnn" class="slide level2">
 <h2>TensorFlow: Simple RNN</h2>
-<div id="f2bc5556" class="cell" data-execution_count="1">
+<div id="38471d06" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> tensorflow <span class="im">as</span> tf</span>
 <span id="cb1-2"><a></a><span class="im">from</span> tensorflow <span class="im">import</span> keras</span>
 <span id="cb1-3"><a></a><span class="im">from</span> tensorflow.keras <span class="im">import</span> layers</span>
@@ -298,18 +298,18 @@ y_t = W_y h_t
 <span id="cb1-11"><a></a>model.<span class="bu">compile</span>(optimizer<span class="op">=</span><span class="st">"adam"</span>, loss<span class="op">=</span><span class="st">"mse"</span>)</span>
 <span id="cb1-12"><a></a>model.summary()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="font-weight: bold">Model: "sequential_12"</span>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="font-weight: bold">Model: "sequential"</span>
 </pre>
 </div>
 <div class="cell-output cell-output-display">
 <pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
 ┃<span style="font-weight: bold"> Layer (type)                    </span>┃<span style="font-weight: bold"> Output Shape           </span>┃<span style="font-weight: bold">       Param # </span>┃
 ┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
-│ simple_rnn_6 (<span style="color: #0087ff; text-decoration-color: #0087ff">SimpleRNN</span>)        │ ?                      │   <span style="color: #00af00; text-decoration-color: #00af00">0</span> (unbuilt) │
+│ simple_rnn (<span style="color: #0087ff; text-decoration-color: #0087ff">SimpleRNN</span>)          │ ?                      │   <span style="color: #00af00; text-decoration-color: #00af00">0</span> (unbuilt) │
 ├─────────────────────────────────┼────────────────────────┼───────────────┤
-│ simple_rnn_7 (<span style="color: #0087ff; text-decoration-color: #0087ff">SimpleRNN</span>)        │ ?                      │   <span style="color: #00af00; text-decoration-color: #00af00">0</span> (unbuilt) │
+│ simple_rnn_1 (<span style="color: #0087ff; text-decoration-color: #0087ff">SimpleRNN</span>)        │ ?                      │   <span style="color: #00af00; text-decoration-color: #00af00">0</span> (unbuilt) │
 ├─────────────────────────────────┼────────────────────────┼───────────────┤
-│ dense_12 (<span style="color: #0087ff; text-decoration-color: #0087ff">Dense</span>)                │ ?                      │   <span style="color: #00af00; text-decoration-color: #00af00">0</span> (unbuilt) │
+│ dense (<span style="color: #0087ff; text-decoration-color: #0087ff">Dense</span>)                   │ ?                      │   <span style="color: #00af00; text-decoration-color: #00af00">0</span> (unbuilt) │
 └─────────────────────────────────┴────────────────────────┴───────────────┘
 </pre>
 </div>
@@ -451,7 +451,7 @@ f_t \approx 1
 </section>
 <section id="tensorflow-lstm" class="slide level2">
 <h2>Tensorflow: LSTM</h2>
-<div id="f7b3eb6e" class="cell" data-execution_count="2">
+<div id="19d42ecf" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>model <span class="op">=</span> keras.Sequential([</span>
 <span id="cb2-2"><a></a>    layers.LSTM(<span class="dv">64</span>, return_sequences<span class="op">=</span><span class="va">True</span>),</span>
 <span id="cb2-3"><a></a>    layers.LSTM(<span class="dv">32</span>),</span>
@@ -490,7 +490,7 @@ h_t = (1 - z_t) \odot h_{t-1} + z_t \odot \widetilde{h}_t
 </section>
 <section id="tensorflow-gru" class="slide level2">
 <h2>Tensorflow: GRU</h2>
-<div id="2c66f4d0" class="cell" data-execution_count="3">
+<div id="548ec3ed" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>model <span class="op">=</span> keras.Sequential([</span>
 <span id="cb3-2"><a></a>    layers.GRU(<span class="dv">64</span>, return_sequences<span class="op">=</span><span class="va">True</span>),</span>
 <span id="cb3-3"><a></a>    layers.GRU(<span class="dv">32</span>),</span>
@@ -514,7 +514,7 @@ h_t = (1 - z_t) \odot h_{t-1} + z_t \odot \widetilde{h}_t
 </section>
 <section id="tensorflow-recurrent-dropout" class="slide level2">
 <h2>TensorFlow: Recurrent Dropout</h2>
-<div id="f27dd481" class="cell" data-execution_count="4">
+<div id="3bc50a0f" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a>model <span class="op">=</span> keras.Sequential([</span>
 <span id="cb4-2"><a></a>    layers.LSTM(</span>
 <span id="cb4-3"><a></a>        <span class="dv">64</span>,</span>
@@ -533,7 +533,7 @@ h_t = (1 - z_t) \odot h_{t-1} + z_t \odot \widetilde{h}_t
 \nabla_\theta L \leftarrow \frac{\nabla_\theta L}{\max(1, \frac{||\nabla_\theta L||}{\text{clipnorm}})}
 \]</span></p>
 <p>Prevent exploding gradients:</p>
-<div id="a3fa3721" class="cell" data-execution_count="5">
+<div id="c66c1832" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>optimizer <span class="op">=</span> tf.keras.optimizers.Adam(</span>
 <span id="cb5-2"><a></a>    learning_rate<span class="op">=</span><span class="fl">0.001</span>,</span>
 <span id="cb5-3"><a></a>    clipnorm<span class="op">=</span><span class="fl">1.0</span></span>

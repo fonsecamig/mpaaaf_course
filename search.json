@@ -39,7 +39,7 @@
     "href": "slides/rnn.html#tensorflow-simple-rnn",
     "title": "Recurrent Neural Networks",
     "section": "TensorFlow: Simple RNN",
-    "text": "TensorFlow: Simple RNN\n\nimport tensorflow as tf\nfrom tensorflow import keras\nfrom tensorflow.keras import layers\n\nmodel = keras.Sequential([\n    layers.SimpleRNN(64, return_sequences=True),\n    layers.SimpleRNN(32),\n    layers.Dense(1)\n])\n\nmodel.compile(optimizer=\"adam\", loss=\"mse\")\nmodel.summary()\n\nModel: \"sequential_12\"\n\n\n\n┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓\n┃ Layer (type)                    ┃ Output Shape           ┃       Param # ┃\n┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩\n│ simple_rnn_6 (SimpleRNN)        │ ?                      │   0 (unbuilt) │\n├─────────────────────────────────┼────────────────────────┼───────────────┤\n│ simple_rnn_7 (SimpleRNN)        │ ?                      │   0 (unbuilt) │\n├─────────────────────────────────┼────────────────────────┼───────────────┤\n│ dense_12 (Dense)                │ ?                      │   0 (unbuilt) │\n└─────────────────────────────────┴────────────────────────┴───────────────┘\n\n\n\n Total params: 0 (0.00 B)\n\n\n\n Trainable params: 0 (0.00 B)\n\n\n\n Non-trainable params: 0 (0.00 B)"
+    "text": "TensorFlow: Simple RNN\n\nimport tensorflow as tf\nfrom tensorflow import keras\nfrom tensorflow.keras import layers\n\nmodel = keras.Sequential([\n    layers.SimpleRNN(64, return_sequences=True),\n    layers.SimpleRNN(32),\n    layers.Dense(1)\n])\n\nmodel.compile(optimizer=\"adam\", loss=\"mse\")\nmodel.summary()\n\nModel: \"sequential\"\n\n\n\n┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓\n┃ Layer (type)                    ┃ Output Shape           ┃       Param # ┃\n┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩\n│ simple_rnn (SimpleRNN)          │ ?                      │   0 (unbuilt) │\n├─────────────────────────────────┼────────────────────────┼───────────────┤\n│ simple_rnn_1 (SimpleRNN)        │ ?                      │   0 (unbuilt) │\n├─────────────────────────────────┼────────────────────────┼───────────────┤\n│ dense (Dense)                   │ ?                      │   0 (unbuilt) │\n└─────────────────────────────────┴────────────────────────┴───────────────┘\n\n\n\n Total params: 0 (0.00 B)\n\n\n\n Trainable params: 0 (0.00 B)\n\n\n\n Non-trainable params: 0 (0.00 B)"
   },
   {
     "objectID": "slides/rnn.html#backpropagation-through-time-bptt",
@@ -805,6 +805,13 @@
     "text": "Hyperparameter Tuning & Regularisation\n\nSlides - Hyperparameter Tuning\nSlides - Regularisation\n\n\nReading\n\nBishop, C. M., & Bishop, H. (2024). Deep learning: Foundations and concepts. Springer. https://www.bishopbook.com\n\nChapter 9: Regularisation\n\nChollet, F. (2021). Deep learning with Python (2nd ed.). Manning Publications.\n\nChapter 5: Fundamentals of machine learning\nChapter 13: Best practices for the real world, Section 1.1\n\nZhang, A., Lipton, Z. C., Li, M., & Smola, A. J. (2023). Dive into deep learning. Cambridge University Press. https://d2l.ai\n\nChapter 19: Hyperparameter Optimization\n\nDeep Learning Tuning Playbook\n\n\n\nExercises\n\nExercise 1\nExercise 2"
   },
   {
+    "objectID": "index.html#convolutional-neural-networks",
+    "href": "index.html#convolutional-neural-networks",
+    "title": "Modeling, Programming and Machine Learning for Financial Analysis",
+    "section": "Convolutional Neural Networks",
+    "text": "Convolutional Neural Networks\n\nSlides\n\n\nReading\n\nBishop, C. M., & Bishop, H. (2024). Deep learning: Foundations and concepts. Springer. https://www.bishopbook.com\n\nChapter 10: Convolutional Neural Networks\n\nChollet, F. (2021). Deep learning with Python (2nd ed.). Manning Publications.\n\nChapter 8: Introduction to deep learning for computer vision\nChapter 9: Advanced deep learning for computer vision\n\nHe, K., Zhang, X., Ren, S. & Sun, J. Deep Residual Learning for Image Recognition. 2016 IEEE Conf. Comput. Vis. Pattern Recognit. (CVPR) 770–778 (2016) doi:10.1109/cvpr.2016.90.\nJames, G., Witten, D., Hastie, T., Tibshirani, R., & Taylor, J. (2023). An introduction to statistical learning: With applications in Python. Springer. https://www.statlearning.com\n\nChapter 10: Deep Learning\n\nZhang, A., Lipton, Z. C., Li, M., & Smola, A. J. (2023). Dive into deep learning. Cambridge University Press. https://d2l.ai\n\nChapter 8: Convolutional Neural Networks\nChapter 9: Modern Convolutional Neural Networks\n\n\n\n\nExercises\n\nExercise 1\nExercise 2"
+  },
+  {
     "objectID": "index.html#references",
     "href": "index.html#references",
     "title": "Modeling, Programming and Machine Learning for Financial Analysis",
@@ -886,7 +893,7 @@
     "href": "slides/cnn.html#d-convolution-formula",
     "title": "Convolutional Neural Networks (CNN)",
     "section": "2D Convolution Formula",
-    "text": "2D Convolution Formula\n\\[\nZ(i,j) = \\sum_m \\sum_n X(i+m, j+n) W(m,n)\n\\]\nKernel is now a matrix."
+    "text": "2D Convolution Formula\n\\[\n\\mathbf Z_r(i,j) = \\sum_m \\sum_n\\mathbf X_l(i+m, j+n)\\mathbf W_r(m,n)\n\\]\n\nKernel is now a tensor of shape \\(k \\times k \\times C\\).\nOutput is a 2D feature map for each filter."
   },
   {
     "objectID": "slides/cnn.html#convolution-over-rgb-images",
@@ -942,21 +949,28 @@
     "href": "slides/cnn.html#types-of-pooling",
     "title": "Convolutional Neural Networks (CNN)",
     "section": "Types of Pooling",
-    "text": "Types of Pooling\nMax Pooling\n\\[Z = \\max(x_{window})\\]\nKeeps strongest activation.\nAverage Pooling\n\\[Z = \\text{mean}(x_{window})\\]\nSmoother representation."
+    "text": "Types of Pooling\nMax Pooling\n\\[\\mathbf Z = \\max(\\mathbf X_{window})\\]\nKeeps strongest activation.\nAverage Pooling\n\\[\\mathbf Z = \\text{mean}(\\mathbf X_{window})\\]\nSmoother representation."
   },
   {
     "objectID": "slides/cnn.html#pooling-in-tensorflow",
     "href": "slides/cnn.html#pooling-in-tensorflow",
     "title": "Convolutional Neural Networks (CNN)",
     "section": "Pooling in TensorFlow",
-    "text": "Pooling in TensorFlow\n\ntf.keras.layers.MaxPooling2D(pool_size=(2,2))\n\n&lt;MaxPooling2D name=max_pooling2d_4, built=True&gt;"
+    "text": "Pooling in TensorFlow\n\ntf.keras.layers.MaxPooling2D(pool_size=(2,2))\n\n&lt;MaxPooling2D name=max_pooling2d, built=True&gt;"
   },
   {
     "objectID": "slides/cnn.html#cnn-architecture-pattern",
     "href": "slides/cnn.html#cnn-architecture-pattern",
     "title": "Convolutional Neural Networks (CNN)",
     "section": "CNN Architecture Pattern",
-    "text": "CNN Architecture Pattern\nTypical CNN:\nConv → ReLU → Conv → ReLU → Pool\nConv → ReLU → Conv → ReLU → Pool\nFlatten → Dense → Output\nExample CNN (MNIST)\n\nmodel = tf.keras.Sequential([\n    tf.keras.layers.Conv2D(32, 3, activation='relu', padding='same'),\n    tf.keras.layers.MaxPooling2D(2),\n    tf.keras.layers.Conv2D(64, 3, activation='relu', padding='same'),\n    tf.keras.layers.MaxPooling2D(2),\n    tf.keras.layers.Flatten(),\n    tf.keras.layers.Dense(128, activation='relu'),\n    tf.keras.layers.Dense(10, activation='softmax')\n])"
+    "text": "CNN Architecture Pattern\nTypical CNN:\n\n\n\nLayer\n\n\n\n\nInput\n\n\nConv → ReLU → Conv → ReLU (Block 1)\n\n\nPooling\n\n\nConv → ReLU → Conv → ReLU (Block 2)\n\n\nPooling\n\n\nFlatten\n\n\nDense\n\n\nOutput"
+  },
+  {
+    "objectID": "slides/cnn.html#example-cnn-mnist",
+    "href": "slides/cnn.html#example-cnn-mnist",
+    "title": "Convolutional Neural Networks (CNN)",
+    "section": "Example CNN (MNIST)",
+    "text": "Example CNN (MNIST)\n\nmodel = tf.keras.Sequential([\n    tf.keras.layers.Conv2D(32, 3, activation='relu', padding='same'),\n    tf.keras.layers.MaxPooling2D(2),\n    tf.keras.layers.Conv2D(64, 3, activation='relu', padding='same'),\n    tf.keras.layers.MaxPooling2D(2),\n    tf.keras.layers.Flatten(),\n    tf.keras.layers.Dense(128, activation='relu'),\n    tf.keras.layers.Dense(10, activation='softmax')\n])"
   },
   {
     "objectID": "slides/cnn.html#receptive-field",
@@ -977,7 +991,7 @@
     "href": "slides/cnn.html#residual-connections",
     "title": "Convolutional Neural Networks (CNN)",
     "section": "Residual Connections",
-    "text": "Residual Connections\nIntroduced in:\n\nResNet (2015) [REF AQUI]\n\nInstead of learning:\n\\[HD(x)\\]\nLearn:\n\\[\nF(x) = H(x) - x\n\\]\nSo:\n\\[\nH(x) = F(x) + x\n\\]"
+    "text": "Residual Connections\nIntroduced in:\n\nHe, K., Zhang, X., Ren, S., & Sun, J. (2015). Deep Residual Learning for Image Recognition. arXiv:1512.03385.\n\nInstead of learning:\n\\[HD(x)\\]\nLearn:\n\\[\nF(x) = H(x) - x\n\\]\nSo:\n\\[\nH(x) = F(x) + x\n\\]"
   },
   {
     "objectID": "slides/cnn.html#residual-block",
