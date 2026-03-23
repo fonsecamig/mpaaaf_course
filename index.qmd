@@ -133,7 +133,7 @@ sidebar:
 
 - Chollet, F. (2021). *Deep learning with Python (2nd ed.).* Manning Publications.
   - Chapter 10: Deep learning for time series
-Zhang, A., Lipton, Z. C., Li, M., & Smola, A. J. (2023). *Dive into deep learning.* Cambridge University Press. [https://d2l.ai](https://d2l.ai)
+- Zhang, A., Lipton, Z. C., Li, M., & Smola, A. J. (2023). *Dive into deep learning.* Cambridge University Press. [https://d2l.ai](https://d2l.ai)
   - Chapter 9: Recurrent Neural Networks
   - Chapter 10: Modern Recurrent Neural Networks
 
