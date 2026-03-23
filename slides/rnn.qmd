@@ -7,35 +7,42 @@ format:
     toc: true
 ---
 
-# Why Do We Need RNNs?
 
-## Feedforward Networks Assume Independence
+# Feedforward Networks vs. Recurrent Networks
+
+## Why Do We Need RNNs?
+
+:::{.columns}
+::::{.column width="50%"}
+### Feedforward Networks Assume Independence
 
 For MLPs:
 
 $$
-x_i \perp x_j
+\mathbf x_i \perp \mathbf x_j
 $$
 
-But many datasets are sequential:
+But many datasets are sequential!
+
+::::
+
+::::{.column width="50%"}
+### Recurrent Networks Capture Dependencies
+
+
+$$
+P(\mathbf x_t | \mathbf x_{t-1}, \mathbf x_{t-2}, ..., \mathbf x_1)
+$$
+
+Cases where RNNs are useful:
 
 - Text
 - Speech
 - Financial time-series
 - Biological sequences
 - Sensor signals
-
----
-
-## Sequential Dependency
-
-Language modeling:
-
-$$
-P(w_t | w_{t-1}, w_{t-2}, ..., w_1)
-$$
-
-The past matters.
+::::
+:::
 
 ---
 
@@ -53,11 +60,15 @@ The past matters.
 ## Core Recurrence
 
 $$
-h_t = \sigma(W_h h_{t-1} + W_x x_t + b)
+\mathbf z_t =\mathbf W_h \mathbf h_{t-1} + \mathbf W_x \mathbf x_t + \mathbf b
 $$
 
 $$
-y_t = W_y h_t
+\mathbf h_t = \sigma(\mathbf z_t)
+$$
+
+$$
+\mathbf y_t = \mathbf W_y \mathbf h_t
 $$
 
 Same weights reused across time.
@@ -66,7 +77,7 @@ Same weights reused across time.
 
 ## Unrolled Through Time
 
-![Unrolled RNN](/images/rnn_unrolled.png)
+![Unrolled RNN](/images/rnn_unrolled.svg)
 
 ---
 
@@ -94,18 +105,25 @@ model.summary()
 Training objective:
 
 $$
-\frac{\partial L}{\partial W} =\sum_{t=1}^{T}\frac{\partial L}{\partial h_t}\frac{\partial h_t}{\partial W}
+\frac{\partial \mathscr L}{\partial \mathbf W_h} =\sum_{t=1}^{T}\frac{\partial \mathscr L}{\partial \mathbf h_t}\frac{\partial \mathbf h_t}{\partial \mathbf W_h}
 $$
 
 But:
 
 $$
-\frac{\partial h_t}{\partial h_{t-k}}=\prod_{i=t-k+1}^{t}\frac{\partial h_i}{\partial h_{i-1}}
+\frac{\partial \mathbf h_t}{\partial \mathbf h_{t-k}}=\prod_{i=t-k+1}^{t}\frac{\partial \mathbf h_i}{\partial \mathbf h_{i-1}}
+$$
+
+with:
+
+$$
+\frac{\partial \mathbf h_i}{\partial \mathbf h_{i-1}}
+=\mathbf W_h \cdot \text{diag}(\sigma'(\mathbf z_t))
 $$
 
 Repeated matrix multiplication → instability.
 
-<!-- ## The Vanishing Gradient Problem
+## The Vanishing Gradient Problem
 
 Simplified Recurrence
 
@@ -159,46 +177,60 @@ $$
 
 ::::
 
-::: -->
+:::
 
 # Long Short-Term Memory (LSTM)
 
-## Key Idea
-
-![LSTM Cell](/images/lstm_architecture.png)
+## LSTM Gate Equations
 
 :::{.callout-note}
 Allow constant error flow through a memory cell.
 :::
 
----
-
-
-## LSTM Equations
-
 **Forget gate:**
 
 $$
-f_t = \sigma(W_f [h_{t-1}, x_t])
+\mathbf f_t = \sigma\left(\mathbf W_f [\mathbf h_{t-1} \, \mathbf x_t] + \mathbf b_f\right)
 $$
 
 **Input gate:**
 
 $$
-i_t = \sigma(W_i [h_{t-1}, x_t])
+\mathbf i_t = \sigma\left(\mathbf W_i [\mathbf h_{t-1} \, \mathbf x_t] + \mathbf b_i\right)
 $$
 
-**Cell update:**
-
-$$
-c_t = f_t \odot c_{t-1} + i_t \odot \tilde{c}_t
-$$
 
 **Output:**
 
 $$
-h_t = o_t \odot \tanh(c_t)
+\mathbf o_t = \sigma\left(\mathbf W_o [\mathbf h_{t-1} \, \mathbf x_t] + \mathbf b_o\right)
 $$
+
+**Input Node**
+
+$$
+\widetilde{\mathbf c} = \tanh\left(\mathbf W_c [\mathbf h_{t-1} \, \mathbf x_t] + \mathbf b_c\right)
+$$
+
+---
+
+![LSTM Cell Update with Input](/images/lstm-1.svg){width=70%}
+
+---
+
+## Cell update
+
+$$
+\mathbf c_t = \mathbf f_t \odot \mathbf c_{t-1} + \mathbf i_t \odot \tilde{\mathbf c}_t
+$$
+
+$$
+\mathbf h_t = \mathbf o_t \odot \tanh(\mathbf c_t)
+$$
+
+---
+
+![LSTM cell](/images/lstm-3.svg){width=70%}
 
 ---
 
@@ -207,13 +239,13 @@ $$
 If:
 
 $$
-f_t \approx 1
+\mathbf f_t \approx 1
 $$
 
 Then:
 
 $$
-\frac{\partial c_t}{\partial c_{t-1}} \approx 1
+\frac{\partial \mathbf c_t}{\partial \mathbf c_{t-1}} \approx 1
 $$
 
 >Gradient preserved.
@@ -234,32 +266,43 @@ model.compile(optimizer="adam", loss="mse")
 
 # Gated Recurrent Unit (GRU)
 
-## GRU Architecture
+## GRU Equations
 
 >Simpler alternative to LSTM.
-
-![GRU Cell](/images/gru_architecture.png)
-
-## GRU Equations
 
 **Update gate:**
 
 $$
-z_t = \sigma(W_z [h_{t-1}, x_t])
+\mathbf z_t = \sigma\left(\mathbf W_z [\mathbf h_{t-1} \, \mathbf x_t] + \mathbf b_z\right)
 $$
 
 **Reset gate:**
 
 $$
-r_t = \sigma(W_r [h_{t-1}, x_t])
+\mathbf r_t = \sigma\left(\mathbf W_r [\mathbf h_{t-1} \, \mathbf x_t] + \mathbf b_r\right)
 $$
 
-**Final Update:**
+**Candidate cell state:**
 
 $$
-h_t = (1 - z_t) \odot h_{t-1} + z_t \odot \widetilde{h}_t
+\widetilde{\mathbf h}_t = \tanh\left(\mathbf W_h [\mathbf r_t \! \odot \! \mathbf h_{t-1} \, \mathbf x_t] + \mathbf b_h\right)
 $$
 
+---
+
+![GRU Cell Update](/images/gru-2.svg)
+
+---
+
+## GRU Update
+
+$$
+\mathbf h_t = (1 - \mathbf z_t) \odot \mathbf h_{t-1} + \mathbf z_t \odot \widetilde{\mathbf h}_t
+$$
+
+---
+
+![GRU Cell](/images/gru-3.svg)
 ---
 
 ## Tensorflow: GRU
@@ -305,7 +348,7 @@ model = keras.Sequential([
 ## Gradient Clipping
 
 $$
-\nabla_\theta L \leftarrow \frac{\nabla_\theta L}{\max(1, \frac{||\nabla_\theta L||}{\text{clipnorm}})}
+\nabla_{\boldsymbol \theta} \mathscr L \leftarrow \frac{\nabla_{\boldsymbol \theta} \mathscr L}{\max(1, \frac{||\nabla_{\boldsymbol \theta} \mathscr L||}{\lambda})}
 $$
 
 Prevent exploding gradients:
@@ -323,7 +366,7 @@ optimizer = tf.keras.optimizers.Adam(
 
 Stack multiple RNN layers for hierarchical representations:
 
-![Deep RNN](/images/deep_rnn.png)
+![Deep RNN](/images/rnn_deep.svg)
 
 ---
 
@@ -331,7 +374,7 @@ Stack multiple RNN layers for hierarchical representations:
 
 Process sequences in both directions:
 
-![Bidirectional RNN](/images/bidirectional_rnn.png)
+![Bidirectional RNN](/images/rnn_bidirectional.svg)
 
 # Final Notes
 
