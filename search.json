@@ -46,7 +46,7 @@
     "href": "slides/rnn.html#the-vanishing-gradient-problem",
     "title": "Recurrent Neural Networks",
     "section": "The Vanishing Gradient Problem",
-    "text": "The Vanishing Gradient Problem\nSimplified Recurrence\n\\[\nh_t = \\sigma(W_h h_{t-1})\n\\]\nDerivative:\n\\[\n\\frac{\\partial h_t}{\\partial h_{t-1}}\n=\nW_h \\cdot \\text{diag}(1 - \\sigma^2(z))\n\\]\nSince:\n\\[\n|1 - \\sigma^2(z)| \\le 1\n\\]\nRepeated products:\n\\[\n\\prod_{i=1}^{k} W_h \\lambda_i\n\\]\n\n\nIf:\n\\[\n\\rho(W_h) &lt; 1\n\\]\n\nGradient vanishes.\n\n\nIf:\n\\[\n\\rho(W_h) &gt; 1\n\\]\n\nExploding gradient."
+    "text": "The Vanishing Gradient Problem\nSimplified Recurrence\n\\[\n\\mathbf h_t = \\sigma(\\mathbf W_h \\mathbf h_{t-1})\n\\]\nDerivative:\n\\[\n\\frac{\\partial \\mathbf h_t}{\\partial \\mathbf h_{t-1}}\n=\n\\mathbf W_h \\cdot \\text{diag}(\\sigma'(\\mathbf z))\n\\]\nRepeated products:\n\\[\n\\prod_{i=1}^{k} \\mathbf W_h \\boldsymbol{\\lambda}_i\n\\]\n\n\nIf:\n\\[\n\\rho(\\mathbf W_h) &lt; 1\n\\]\n\nGradient vanishes.\n\n\nIf:\n\\[\n\\rho(\\mathbf W_h) &gt; 1\n\\]\n\nExploding gradient."
   },
   {
     "objectID": "slides/rnn.html#lstm-gate-equations",
@@ -60,7 +60,7 @@
     "href": "slides/rnn.html#cell-update",
     "title": "Recurrent Neural Networks",
     "section": "Cell update",
-    "text": "Cell update\n\\[\n\\mathbf c_t = \\mathbf f_t \\odot \\mathbf c_{t-1} + \\mathbf i_t \\odot \\tilde{\\mathbf c}_t\n\\]\n\\[\n\\mathbf h_t = \\mathbf o_t \\odot \\tanh(\\mathbf c_t)\n\\]"
+    "text": "Cell update\n\\[\n\\mathbf c_t = \\mathbf f_t \\odot \\mathbf c_{t-1} + \\mathbf i_t \\odot \\widetilde{\\mathbf c}_t\n\\]\n\\[\n\\mathbf h_t = \\mathbf o_t \\odot \\tanh(\\mathbf c_t)\n\\]"
   },
   {
     "objectID": "slides/rnn.html#why-lstm-works",

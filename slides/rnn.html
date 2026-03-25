@@ -289,7 +289,7 @@ P(\mathbf x_t | \mathbf x_{t-1}, \mathbf x_{t-2}, ..., \mathbf x_1)
 <img data-src="../images/rnn_unrolled.svg" class="r-stretch quarto-figure-center"><p class="caption">Unrolled RNN</p></section>
 <section id="tensorflow-simple-rnn" class="slide level2">
 <h2>TensorFlow: Simple RNN</h2>
-<div id="111068db" class="cell" data-execution_count="1">
+<div id="0f464d48" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> tensorflow <span class="im">as</span> tf</span>
 <span id="cb1-2"><a></a><span class="im">from</span> tensorflow <span class="im">import</span> keras</span>
 <span id="cb1-3"><a></a><span class="im">from</span> tensorflow.keras <span class="im">import</span> layers</span>
@@ -353,27 +353,23 @@ P(\mathbf x_t | \mathbf x_{t-1}, \mathbf x_{t-2}, ..., \mathbf x_1)
 <h2>The Vanishing Gradient Problem</h2>
 <p>Simplified Recurrence</p>
 <p><span class="math display">\[
-h_t = \sigma(W_h h_{t-1})
+\mathbf h_t = \sigma(\mathbf W_h \mathbf h_{t-1})
 \]</span></p>
 <p>Derivative:</p>
 <p><span class="math display">\[
-\frac{\partial h_t}{\partial h_{t-1}}
+\frac{\partial \mathbf h_t}{\partial \mathbf h_{t-1}}
 =
-W_h \cdot \text{diag}(1 - \sigma^2(z))
-\]</span></p>
-<p>Since:</p>
-<p><span class="math display">\[
-|1 - \sigma^2(z)| \le 1
+\mathbf W_h \cdot \text{diag}(\sigma'(\mathbf z))
 \]</span></p>
 <p>Repeated products:</p>
 <p><span class="math display">\[
-\prod_{i=1}^{k} W_h \lambda_i
+\prod_{i=1}^{k} \mathbf W_h \boldsymbol{\lambda}_i
 \]</span></p>
 <div class="columns">
 <div class="column" style="width:50%;">
 <p>If:</p>
 <p><span class="math display">\[
-\rho(W_h) &lt; 1
+\rho(\mathbf W_h) &lt; 1
 \]</span></p>
 <blockquote>
 <p>Gradient vanishes.</p>
@@ -381,7 +377,7 @@ W_h \cdot \text{diag}(1 - \sigma^2(z))
 </div><div class="column" style="width:50%;">
 <p>If:</p>
 <p><span class="math display">\[
-\rho(W_h) &gt; 1
+\rho(\mathbf W_h) &gt; 1
 \]</span></p>
 <blockquote>
 <p>Exploding gradient.</p>
@@ -432,7 +428,7 @@ W_h \cdot \text{diag}(1 - \sigma^2(z))
 <section id="cell-update" class="slide level2">
 <h2>Cell update</h2>
 <p><span class="math display">\[
-\mathbf c_t = \mathbf f_t \odot \mathbf c_{t-1} + \mathbf i_t \odot \tilde{\mathbf c}_t
+\mathbf c_t = \mathbf f_t \odot \mathbf c_{t-1} + \mathbf i_t \odot \widetilde{\mathbf c}_t
 \]</span></p>
 <p><span class="math display">\[
 \mathbf h_t = \mathbf o_t \odot \tanh(\mathbf c_t)
@@ -441,7 +437,7 @@ W_h \cdot \text{diag}(1 - \sigma^2(z))
 <section class="slide level2">
 
 
-<img data-src="../images/lstm-3.svg" style="width:70.0%" class="r-stretch quarto-figure-center"><p class="caption">LSTM cell</p></section>
+<img data-src="../images/lstm-3.svg" class="r-stretch quarto-figure-center"><p class="caption">LSTM cell</p></section>
 <section id="why-lstm-works" class="slide level2">
 <h2>Why LSTM Works</h2>
 <p>If:</p>
@@ -458,7 +454,7 @@ W_h \cdot \text{diag}(1 - \sigma^2(z))
 </section>
 <section id="tensorflow-lstm" class="slide level2">
 <h2>Tensorflow: LSTM</h2>
-<div id="703ce57b" class="cell" data-execution_count="2">
+<div id="8c4f5e0d" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>model <span class="op">=</span> keras.Sequential([</span>
 <span id="cb2-2"><a></a>    layers.LSTM(<span class="dv">64</span>, return_sequences<span class="op">=</span><span class="va">True</span>),</span>
 <span id="cb2-3"><a></a>    layers.LSTM(<span class="dv">32</span>),</span>
@@ -506,7 +502,7 @@ W_h \cdot \text{diag}(1 - \sigma^2(z))
 </section>
 <section id="tensorflow-gru" class="slide level2">
 <h2>Tensorflow: GRU</h2>
-<div id="cf6f93e1" class="cell" data-execution_count="3">
+<div id="13e83e4c" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>model <span class="op">=</span> keras.Sequential([</span>
 <span id="cb3-2"><a></a>    layers.GRU(<span class="dv">64</span>, return_sequences<span class="op">=</span><span class="va">True</span>),</span>
 <span id="cb3-3"><a></a>    layers.GRU(<span class="dv">32</span>),</span>
@@ -530,7 +526,7 @@ W_h \cdot \text{diag}(1 - \sigma^2(z))
 </section>
 <section id="tensorflow-recurrent-dropout" class="slide level2">
 <h2>TensorFlow: Recurrent Dropout</h2>
-<div id="f4498b28" class="cell" data-execution_count="4">
+<div id="e568bec7" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a>model <span class="op">=</span> keras.Sequential([</span>
 <span id="cb4-2"><a></a>    layers.LSTM(</span>
 <span id="cb4-3"><a></a>        <span class="dv">64</span>,</span>
@@ -549,7 +545,7 @@ W_h \cdot \text{diag}(1 - \sigma^2(z))
 \nabla_{\boldsymbol \theta} \mathscr L \leftarrow \frac{\nabla_{\boldsymbol \theta} \mathscr L}{\max(1, \frac{||\nabla_{\boldsymbol \theta} \mathscr L||}{\lambda})}
 \]</span></p>
 <p>Prevent exploding gradients:</p>
-<div id="08b6fff7" class="cell" data-execution_count="5">
+<div id="aab37ea0" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>optimizer <span class="op">=</span> tf.keras.optimizers.Adam(</span>
 <span id="cb5-2"><a></a>    learning_rate<span class="op">=</span><span class="fl">0.001</span>,</span>
 <span id="cb5-3"><a></a>    clipnorm<span class="op">=</span><span class="fl">1.0</span></span>
