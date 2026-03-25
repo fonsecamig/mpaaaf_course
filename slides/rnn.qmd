@@ -128,27 +128,21 @@ Repeated matrix multiplication → instability.
 Simplified Recurrence
 
 $$
-h_t = \sigma(W_h h_{t-1})
+\mathbf h_t = \sigma(\mathbf W_h \mathbf h_{t-1})
 $$
 
 Derivative:
 
 $$
-\frac{\partial h_t}{\partial h_{t-1}}
+\frac{\partial \mathbf h_t}{\partial \mathbf h_{t-1}}
 =
-W_h \cdot \text{diag}(1 - \sigma^2(z))
-$$
-
-Since:
-
-$$
-|1 - \sigma^2(z)| \le 1
+\mathbf W_h \cdot \text{diag}(\sigma'(\mathbf z))
 $$
 
 Repeated products:
 
 $$
-\prod_{i=1}^{k} W_h \lambda_i
+\prod_{i=1}^{k} \mathbf W_h \boldsymbol{\lambda}_i
 $$
 
 
@@ -158,7 +152,7 @@ $$
 If:
 
 $$
-\rho(W_h) < 1
+\rho(\mathbf W_h) < 1
 $$
 
 >Gradient vanishes.
@@ -170,7 +164,7 @@ $$
 If:
 
 $$
-\rho(W_h) > 1
+\rho(\mathbf W_h) > 1
 $$
 
 >Exploding gradient.
@@ -221,7 +215,7 @@ $$
 ## Cell update
 
 $$
-\mathbf c_t = \mathbf f_t \odot \mathbf c_{t-1} + \mathbf i_t \odot \tilde{\mathbf c}_t
+\mathbf c_t = \mathbf f_t \odot \mathbf c_{t-1} + \mathbf i_t \odot \widetilde{\mathbf c}_t
 $$
 
 $$
@@ -230,7 +224,7 @@ $$
 
 ---
 
-![LSTM cell](/images/lstm-3.svg){width=70%}
+![LSTM cell](/images/lstm-3.svg)
 
 ---
 
