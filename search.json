@@ -109,7 +109,7 @@
     "href": "slides/rnn.html#tensorflow-recurrent-dropout",
     "title": "Recurrent Neural Networks",
     "section": "TensorFlow: Recurrent Dropout",
-    "text": "TensorFlow: Recurrent Dropout\n\nmodel = keras.Sequential([\n    layers.LSTM(\n        64,\n        return_sequences=True,\n        dropout=0.2,\n        recurrent_dropout=0.2\n    ),\n    layers.LSTM(32),\n    layers.Dense(1)\n])"
+    "text": "TensorFlow: Recurrent Dropout\n\nmodel = keras.Sequential([\n    layers.LSTM(\n        64,\n        return_sequences=True,\n        recurrent_dropout=0.2\n    ),\n    layers.LSTM(32),\n    layers.Dense(1)\n])"
   },
   {
     "objectID": "slides/rnn.html#gradient-clipping",
