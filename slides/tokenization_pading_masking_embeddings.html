@@ -10,7 +10,7 @@
   <meta name="generator" content="quarto-1.7.32">
 
   <meta name="author" content="Miguel Fonseca">
-  <title>MPAAAF – Recurrent Neural Networks</title>
+  <title>MPAAAF – Tokenization, Embeddings, Padding, and Masking</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -199,8 +199,8 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">Recurrent Neural Networks</h1>
-  <p class="subtitle">Modeling Sequential Data with Memory</p>
+  <h1 class="title">Tokenization, Embeddings, Padding, and Masking</h1>
+  <p class="subtitle">Sequence Processing in Deep Learning</p>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -214,107 +214,327 @@ Miguel Fonseca
 <nav role="doc-toc"> 
 <h2 id="toc-title">Table of contents</h2>
 <ul>
-<li><a href="#/feedforward-networks-vs.-recurrent-networks" id="/toc-feedforward-networks-vs.-recurrent-networks">Feedforward Networks vs.&nbsp;Recurrent Networks</a></li>
-<li><a href="#/the-recurrent-neural-network-rnn" id="/toc-the-recurrent-neural-network-rnn">The Recurrent Neural Network (RNN)</a></li>
-<li><a href="#/long-short-term-memory-lstm" id="/toc-long-short-term-memory-lstm">Long Short-Term Memory (LSTM)</a></li>
-<li><a href="#/gated-recurrent-unit-gru" id="/toc-gated-recurrent-unit-gru">Gated Recurrent Unit (GRU)</a></li>
-<li><a href="#/regularization-in-rnns" id="/toc-regularization-in-rnns">Regularization in RNNs</a></li>
-<li><a href="#/extensions" id="/toc-extensions">Extensions</a></li>
-<li><a href="#/final-notes" id="/toc-final-notes">Final Notes</a></li>
+<li><a href="#/motivation" id="/toc-motivation">Motivation</a></li>
+<li><a href="#/tokenization" id="/toc-tokenization">Tokenization</a></li>
+<li><a href="#/padding" id="/toc-padding">Padding</a></li>
+<li><a href="#/embeddings" id="/toc-embeddings">Embeddings</a></li>
+<li><a href="#/pipeline-1" id="/toc-pipeline-1">Pipeline</a></li>
+<li><a href="#/masking" id="/toc-masking">Masking</a></li>
+<li><a href="#/finance" id="/toc-finance">Finance</a></li>
 </ul>
 </nav>
 </section>
 <section>
-<section id="feedforward-networks-vs.-recurrent-networks" class="title-slide slide level1 center">
-<h1>Feedforward Networks vs.&nbsp;Recurrent Networks</h1>
+<section id="motivation" class="title-slide slide level1 center">
+<h1>Motivation</h1>
 
 </section>
-<section id="why-do-we-need-rnns" class="slide level2">
-<h2>Why Do We Need RNNs?</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
-<h3 id="feedforward-networks-assume-independence">Feedforward Networks Assume Independence</h3>
-<p>For MLPs:</p>
-<p><span class="math display">\[
-\mathbf x_i \perp \mathbf x_j
-\]</span></p>
-<p>But many datasets are sequential!</p>
-</div><div class="column" style="width:50%;">
-<h3 id="recurrent-networks-capture-dependencies">Recurrent Networks Capture Dependencies</h3>
-<p><span class="math display">\[
-P(\mathbf x_t | \mathbf x_{t-1}, \mathbf x_{t-2}, ..., \mathbf x_1)
-\]</span></p>
-<p>Cases where RNNs are useful:</p>
+<section id="why-text-needs-processing" class="slide level2">
+<h2>Why Text Needs Processing</h2>
 <ul>
-<li>Text</li>
-<li>Speech</li>
-<li>Financial time-series</li>
-<li>Biological sequences</li>
-<li>Sensor signals</li>
+<li>Models operate on <strong>numbers, not text</strong></li>
+<li>Raw text is:
+<ul>
+<li>Variable length</li>
+<li>Discrete</li>
+<li>Unstructured</li>
+</ul></li>
 </ul>
-</div></div>
+<blockquote>
+<p>Goal: transform text → structured numerical tensors</p>
+</blockquote>
+<h3 id="pipeline">Pipeline</h3>
+<p>Raw Text → Tokenization → Integer Sequences → Padding → Embedding → Model</p>
+</section></section>
+<section>
+<section id="tokenization" class="title-slide slide level1 center">
+<h1>Tokenization</h1>
+
 </section>
-<section id="applications" class="slide level2">
-<h2>Applications</h2>
+<section id="what-is-tokenization" class="slide level2">
+<h2>What is Tokenization?</h2>
 <ul>
-<li>Language modeling</li>
-<li>Machine translation</li>
-<li>Speech recognition</li>
-<li>Time-series forecasting</li>
-<li>Genomics</li>
-<li>Video processing</li>
+<li>Splitting text into units:
+<ul>
+<li>Words</li>
+<li>Subwords</li>
+<li>Characters</li>
+</ul></li>
+</ul>
+<blockquote>
+<p>Example: “Deep learning is powerful” → [“deep”, “learning”, “is”, “powerful”]</p>
+</blockquote>
+</section>
+<section id="types-of-tokenization" class="slide level2">
+<h2>Types of Tokenization</h2>
+<ul>
+<li><strong>Word-level</strong>
+<ul>
+<li><code>"deep learning is fun" → ["deep", "learning", "is", "fun"]</code></li>
+</ul></li>
+<li><strong>Subword (BPE / WordPiece)</strong>
+<ul>
+<li><code>"unbelievable" → ["un", "believ", "able"]</code></li>
+<li><code>"playing" → ["play", "##ing"]</code> (WordPiece style)</li>
+</ul></li>
+<li><strong>Character-level</strong>
+<ul>
+<li><code>"cat" → ["c", "a", "t"]</code></li>
+</ul></li>
+</ul>
+</section>
+<section id="tokenization-in-tensorflow" class="slide level2">
+<h2>Tokenization in TensorFlow</h2>
+<div id="1ea9db5b" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">from</span> tensorflow.keras.preprocessing.text <span class="im">import</span> Tokenizer</span>
+<span id="cb1-2"><a></a></span>
+<span id="cb1-3"><a></a>texts <span class="op">=</span> [</span>
+<span id="cb1-4"><a></a>    <span class="st">"deep learning is powerful"</span>,</span>
+<span id="cb1-5"><a></a>    <span class="st">"machine learning is fun"</span></span>
+<span id="cb1-6"><a></a>]</span>
+<span id="cb1-7"><a></a></span>
+<span id="cb1-8"><a></a>tokenizer <span class="op">=</span> Tokenizer(num_words<span class="op">=</span><span class="dv">1000</span>, oov_token<span class="op">=</span><span class="st">"&lt;OOV&gt;"</span>)</span>
+<span id="cb1-9"><a></a>tokenizer.fit_on_texts(texts)</span>
+<span id="cb1-10"><a></a></span>
+<span id="cb1-11"><a></a>sequences <span class="op">=</span> tokenizer.texts_to_sequences(texts)</span>
+<span id="cb1-12"><a></a></span>
+<span id="cb1-13"><a></a><span class="bu">print</span>(sequences)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[4, 2, 3, 5], [6, 2, 3, 7]]</code></pre>
+</div>
+</div>
+<p><strong>Vocabulary Mapping</strong></p>
+<div id="14fe1b30" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="bu">print</span>(tokenizer.word_index)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>{'&lt;OOV&gt;': 1, 'learning': 2, 'is': 3, 'deep': 4, 'powerful': 5, 'machine': 6, 'fun': 7}</code></pre>
+</div>
+</div>
+<p><strong>Problem: Variable-Length Sequences</strong></p>
+<pre><code>[3, 1, 2, 5]
+[4, 1, 2, 6]
+[3, 1]</code></pre>
+</section></section>
+<section>
+<section id="padding" class="title-slide slide level1 center">
+<h1>Padding</h1>
+
+</section>
+<section id="padding-why-do-we-need-it" class="slide level2">
+<h2>Padding: Why Do We Need It?</h2>
+<h3 id="problem-variable-length-sequences">Problem: Variable-Length Sequences</h3>
+<p>Text sequences have different lengths:</p>
+<p><code>[3, 1, 2, 5]</code></p>
+<p><code>[4, 1]</code></p>
+<p>Neural networks require:</p>
+<p><span class="math display">\[
+(\text{batch}, \text{fixed length})
+\]</span></p>
+<blockquote>
+<p>Cannot stack sequences directly into tensors</p>
+</blockquote>
+<h3 id="solution-padding">Solution: Padding</h3>
+<p>Add special token (0) to standardize length:</p>
+<p>[4, 1] → [4, 1, 0, 0]</p>
+<div title="Key Idea">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Key Idea</strong></p>
+</div>
+<div class="callout-content">
+<p>Padding = making data rectangular</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="padding-sequences" class="slide level2">
+<h2>Padding Sequences</h2>
+<div id="919fd996" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a><span class="im">from</span> tensorflow.keras.preprocessing.sequence <span class="im">import</span> pad_sequences</span>
+<span id="cb6-2"><a></a></span>
+<span id="cb6-3"><a></a>padded <span class="op">=</span> pad_sequences(sequences, padding<span class="op">=</span><span class="st">'post'</span>)</span>
+<span id="cb6-4"><a></a><span class="bu">print</span>(padded)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[4 2 3 5]
+ [6 2 3 7]]</code></pre>
+</div>
+</div>
+</section>
+<section id="padding-subtleties-consequences" class="slide level2">
+<h2>Padding: Subtleties &amp; Consequences</h2>
+<p><strong>Types of Padding</strong></p>
+<ul>
+<li>Post-padding (preferred in NLP)
+<ul>
+<li><code>[real data | padding]</code></li>
+</ul></li>
+<li>Pre-padding
+<ul>
+<li><code>[padding | real data]</code></li>
+</ul></li>
+</ul>
+<p><strong>Hidden Problem</strong></p>
+<p>Padding introduces fake data (zeros)</p>
+<div class="callout callout-warning callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Warning</strong></p>
+</div>
+<div class="callout-content">
+<p>Model may learn: <em>“zero is important”</em>.</p>
+</div>
+</div>
+</div>
+<p><strong>Implication</strong></p>
+<p>Padding must be handled carefully</p>
+<ul>
+<li>Leads to masking</li>
 </ul>
 </section></section>
 <section>
-<section id="the-recurrent-neural-network-rnn" class="title-slide slide level1 center">
-<h1>The Recurrent Neural Network (RNN)</h1>
+<section id="embeddings" class="title-slide slide level1 center">
+<h1>Embeddings</h1>
 
 </section>
-<section id="core-recurrence" class="slide level2">
-<h2>Core Recurrence</h2>
-<p><span class="math display">\[
-\mathbf z_t =\mathbf W_h \mathbf h_{t-1} + \mathbf W_x \mathbf x_t + \mathbf b
-\]</span></p>
-<p><span class="math display">\[
-\mathbf h_t = \sigma(\mathbf z_t)
-\]</span></p>
-<p><span class="math display">\[
-\mathbf y_t = \mathbf W_y \mathbf h_t
-\]</span></p>
-<p>Same weights reused across time.</p>
+<section id="embeddings-1" class="slide level2">
+<h2>Embeddings</h2>
+<ul>
+<li>Dense vector representation of tokens</li>
+<li>Captures semantic meaning</li>
+</ul>
 </section>
-<section id="unrolled-through-time" class="slide level2">
-<h2>Unrolled Through Time</h2>
+<section id="embeddings-from-tokens-to-vectors" class="slide level2">
+<h2>Embeddings: From Tokens to Vectors</h2>
+<h3 id="core-idea">Core Idea</h3>
+<p><span class="math display">\[
+w \rightarrow \mathbf{e}_w \in \mathbb{R}^d
+\]</span>​</p>
+<h3 id="embedding-matrix">Embedding Matrix</h3>
+<p><span class="math display">\[
+\mathbf{E} \in \mathbb{R}^{V \times d}
+\]</span></p>
+<ul>
+<li><span class="math inline">\(V\)</span>: vocabulary size</li>
+<li><span class="math inline">\(d\)</span>: embedding dimension</li>
+</ul>
+<p><strong>Lookup</strong></p>
+<ul>
+<li>Input: <code>[3, 1, 2]</code></li>
+<li>Output: <code>[E[3], E[1], E[2]]</code></li>
+</ul>
+<blockquote>
+<p>Trainable lookup table</p>
+</blockquote>
+</section>
+<section id="why-embeddings-work" class="slide level2">
+<h2>Why Embeddings Work</h2>
+<h3 id="semantic-geometry">Semantic Geometry</h3>
+<p>Similar words → close vectors</p>
+<div title="Example">
+<div class="callout callout-none no-icon callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Example</strong></p>
+</div>
+<div class="callout-content">
+<p>king - man + woman ≈ queen</p>
+</div>
+</div>
+</div>
+</div>
+<h3 id="vs-one-hot-encoding">vs One-Hot Encoding</h3>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>One-hot</th>
+<th>Embedding</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Sparse</td>
+<td>Dense</td>
+</tr>
+<tr class="even">
+<td>No meaning</td>
+<td>Semantic meaning</td>
+</tr>
+</tbody>
+</table>
+<h3 id="training">Training</h3>
+<ul>
+<li>Learned via backpropagation</li>
+<li>Only used rows are updated</li>
+</ul>
+</section>
+<section id="embedding-layer" class="slide level2">
+<h2>Embedding Layer</h2>
+<div id="d8ec7049" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a><span class="im">from</span> tensorflow.keras.layers <span class="im">import</span> Embedding</span>
+<span id="cb8-2"><a></a></span>
+<span id="cb8-3"><a></a>embedding_layer <span class="op">=</span> Embedding(input_dim<span class="op">=</span><span class="dv">1000</span>, output_dim<span class="op">=</span><span class="dv">16</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section></section>
+<section>
+<section id="pipeline-1" class="title-slide slide level1 center">
+<h1>Pipeline</h1>
 
-<img data-src="../images/rnn_unrolled.svg" class="r-stretch quarto-figure-center"><p class="caption">Unrolled RNN</p></section>
-<section id="tensorflow-simple-rnn" class="slide level2">
-<h2>TensorFlow: Simple RNN</h2>
-<div id="521d88a2" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> tensorflow <span class="im">as</span> tf</span>
-<span id="cb1-2"><a></a><span class="im">from</span> tensorflow <span class="im">import</span> keras</span>
-<span id="cb1-3"><a></a><span class="im">from</span> tensorflow.keras <span class="im">import</span> layers</span>
-<span id="cb1-4"><a></a></span>
-<span id="cb1-5"><a></a>model <span class="op">=</span> keras.Sequential([</span>
-<span id="cb1-6"><a></a>    layers.SimpleRNN(<span class="dv">64</span>, return_sequences<span class="op">=</span><span class="va">True</span>),</span>
-<span id="cb1-7"><a></a>    layers.SimpleRNN(<span class="dv">32</span>),</span>
-<span id="cb1-8"><a></a>    layers.Dense(<span class="dv">1</span>)</span>
-<span id="cb1-9"><a></a>])</span>
-<span id="cb1-10"><a></a></span>
-<span id="cb1-11"><a></a>model.<span class="bu">compile</span>(optimizer<span class="op">=</span><span class="st">"adam"</span>, loss<span class="op">=</span><span class="st">"mse"</span>)</span>
-<span id="cb1-12"><a></a>model.summary()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="putting-it-together" class="slide level2 scrollable">
+<h2>Putting It Together</h2>
+<p><strong>Text</strong></p>
+<ol type="1">
+<li>Tokenization</li>
+<li>Integer sequences</li>
+<li>Padding</li>
+<li>Embedding</li>
+<li>Model</li>
+</ol>
+<p><strong>Tensor Shapes</strong></p>
+<p><code>(batch, seq_len) → (batch, seq_len, embedding_dim)</code></p>
+<h3 id="intuition">Intuition</h3>
+<ul>
+<li>Padding → structure</li>
+<li>Embedding → meaning</li>
+</ul>
+</section>
+<section id="full-pipeline-example" class="slide level2">
+<h2>Full Pipeline Example</h2>
+<div id="2ff7b444" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a><span class="im">import</span> tensorflow <span class="im">as</span> tf</span>
+<span id="cb9-2"><a></a></span>
+<span id="cb9-3"><a></a>model <span class="op">=</span> tf.keras.Sequential([</span>
+<span id="cb9-4"><a></a>    tf.keras.layers.Embedding(<span class="dv">1000</span>, <span class="dv">16</span>, input_length<span class="op">=</span><span class="dv">10</span>),</span>
+<span id="cb9-5"><a></a>    tf.keras.layers.GlobalAveragePooling1D(),</span>
+<span id="cb9-6"><a></a>    tf.keras.layers.Dense(<span class="dv">16</span>, activation<span class="op">=</span><span class="st">'relu'</span>),</span>
+<span id="cb9-7"><a></a>    tf.keras.layers.Dense(<span class="dv">1</span>, activation<span class="op">=</span><span class="st">'sigmoid'</span>)</span>
+<span id="cb9-8"><a></a>])</span>
+<span id="cb9-9"><a></a></span>
+<span id="cb9-10"><a></a>model.summary()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="font-weight: bold">Model: "sequential_4"</span>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="font-weight: bold">Model: "sequential"</span>
 </pre>
 </div>
 <div class="cell-output cell-output-display">
 <pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
 ┃<span style="font-weight: bold"> Layer (type)                    </span>┃<span style="font-weight: bold"> Output Shape           </span>┃<span style="font-weight: bold">       Param # </span>┃
 ┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
-│ simple_rnn_2 (<span style="color: #0087ff; text-decoration-color: #0087ff">SimpleRNN</span>)        │ ?                      │   <span style="color: #00af00; text-decoration-color: #00af00">0</span> (unbuilt) │
+│ embedding_1 (<span style="color: #0087ff; text-decoration-color: #0087ff">Embedding</span>)         │ ?                      │   <span style="color: #00af00; text-decoration-color: #00af00">0</span> (unbuilt) │
 ├─────────────────────────────────┼────────────────────────┼───────────────┤
-│ simple_rnn_3 (<span style="color: #0087ff; text-decoration-color: #0087ff">SimpleRNN</span>)        │ ?                      │   <span style="color: #00af00; text-decoration-color: #00af00">0</span> (unbuilt) │
+│ global_average_pooling1d        │ ?                      │             <span style="color: #00af00; text-decoration-color: #00af00">0</span> │
+│ (<span style="color: #0087ff; text-decoration-color: #0087ff">GlobalAveragePooling1D</span>)        │                        │               │
 ├─────────────────────────────────┼────────────────────────┼───────────────┤
-│ dense_4 (<span style="color: #0087ff; text-decoration-color: #0087ff">Dense</span>)                 │ ?                      │   <span style="color: #00af00; text-decoration-color: #00af00">0</span> (unbuilt) │
+│ dense (<span style="color: #0087ff; text-decoration-color: #0087ff">Dense</span>)                   │ ?                      │   <span style="color: #00af00; text-decoration-color: #00af00">0</span> (unbuilt) │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense_1 (<span style="color: #0087ff; text-decoration-color: #0087ff">Dense</span>)                 │ ?                      │   <span style="color: #00af00; text-decoration-color: #00af00">0</span> (unbuilt) │
 └─────────────────────────────────┴────────────────────────┴───────────────┘
 </pre>
 </div>
@@ -331,287 +551,179 @@ P(\mathbf x_t | \mathbf x_{t-1}, \mathbf x_{t-2}, ..., \mathbf x_1)
 </pre>
 </div>
 </div>
-</section>
-<section id="backpropagation-through-time-bptt" class="slide level2">
-<h2>Backpropagation Through Time (BPTT)</h2>
-<p>Training objective:</p>
-<p><span class="math display">\[
-\frac{\partial \mathscr L}{\partial \mathbf W_h} =\sum_{t=1}^{T}\frac{\partial \mathscr L}{\partial \mathbf h_t}\frac{\partial \mathbf h_t}{\partial \mathbf W_h}
-\]</span></p>
-<p>But:</p>
-<p><span class="math display">\[
-\frac{\partial \mathbf h_t}{\partial \mathbf h_{t-k}}=\prod_{i=t-k+1}^{t}\frac{\partial \mathbf h_i}{\partial \mathbf h_{i-1}}
-\]</span></p>
-<p>with:</p>
-<p><span class="math display">\[
-\frac{\partial \mathbf h_i}{\partial \mathbf h_{i-1}}
-=\mathbf W_h \cdot \text{diag}(\sigma'(\mathbf z_t))
-\]</span></p>
-<p>Repeated matrix multiplication → instability.</p>
-</section>
-<section id="the-vanishing-gradient-problem" class="slide level2">
-<h2>The Vanishing Gradient Problem</h2>
-<p>Simplified Recurrence</p>
-<p><span class="math display">\[
-\mathbf h_t = \sigma(\mathbf W_h \mathbf h_{t-1})
-\]</span></p>
-<p>Derivative:</p>
-<p><span class="math display">\[
-\frac{\partial \mathbf h_t}{\partial \mathbf h_{t-1}}
-=
-\mathbf W_h \cdot \text{diag}(\sigma'(\mathbf z))
-\]</span></p>
-<p>Repeated products:</p>
-<p><span class="math display">\[
-\prod_{i=1}^{k} \mathbf W_h \boldsymbol{\lambda}_i
-\]</span></p>
-<div class="columns">
-<div class="column" style="width:50%;">
-<p>If:</p>
-<p><span class="math display">\[
-\rho(\mathbf W_h) &lt; 1
-\]</span></p>
-<blockquote>
-<p>Gradient vanishes.</p>
-</blockquote>
-</div><div class="column" style="width:50%;">
-<p>If:</p>
-<p><span class="math display">\[
-\rho(\mathbf W_h) &gt; 1
-\]</span></p>
-<blockquote>
-<p>Exploding gradient.</p>
-</blockquote>
-</div></div>
 </section></section>
 <section>
-<section id="long-short-term-memory-lstm" class="title-slide slide level1 center">
-<h1>Long Short-Term Memory (LSTM)</h1>
+<section id="masking" class="title-slide slide level1 center">
+<h1>Masking</h1>
 
 </section>
-<section id="lstm-gate-equations" class="slide level2">
-<h2>LSTM Gate Equations</h2>
-<div class="callout callout-note callout-titled callout-style-default">
+<section id="masking-ignoring-fake-data" class="slide level2">
+<h2>Masking: Ignoring Fake Data</h2>
+<h3 id="problem">Problem</h3>
+<p>Padding introduces noise:</p>
+<p><code>[3, 1, 0, 0]</code></p>
+<blockquote>
+<p>Model should ignore zeros</p>
+</blockquote>
+<h3 id="solution-masking">Solution: Masking</h3>
+<p>Mask tensor:</p>
+<p><code>[1, 1, 0, 0]</code></p>
+<ul>
+<li>1 → real data</li>
+<li>0 → ignore</li>
+</ul>
+<p><strong>TensorFlow Example</strong></p>
+<div id="52770995" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a>embedding <span class="op">=</span> tf.keras.layers.Embedding(</span>
+<span id="cb10-2"><a></a>    input_dim<span class="op">=</span><span class="dv">10000</span>,</span>
+<span id="cb10-3"><a></a>    output_dim<span class="op">=</span><span class="dv">64</span>,</span>
+<span id="cb10-4"><a></a>    mask_zero<span class="op">=</span><span class="va">True</span></span>
+<span id="cb10-5"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="masking-special-cases" class="slide level2">
+<h2>Masking: Special Cases</h2>
+<p>Where It Works:</p>
+<ul>
+<li>LSTM / GRU</li>
+<li>RNNs</li>
+<li>Attention layers</li>
+</ul>
+<div title="Time Series">
+<div class="callout callout-important callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<p><strong>Note</strong></p>
+<p><strong>Time Series</strong></p>
 </div>
 <div class="callout-content">
-<p>Allow constant error flow through a memory cell.</p>
-</div>
-</div>
-</div>
-<p><strong>Forget gate:</strong></p>
-<p><span class="math display">\[
-\mathbf f_t = \sigma\left(\mathbf W_f [\mathbf h_{t-1} \, \mathbf x_t] + \mathbf b_f\right)
-\]</span></p>
-<p><strong>Input gate:</strong></p>
-<p><span class="math display">\[
-\mathbf i_t = \sigma\left(\mathbf W_i [\mathbf h_{t-1} \, \mathbf x_t] + \mathbf b_i\right)
-\]</span></p>
-<p><strong>Output:</strong></p>
-<p><span class="math display">\[
-\mathbf o_t = \sigma\left(\mathbf W_o [\mathbf h_{t-1} \, \mathbf x_t] + \mathbf b_o\right)
-\]</span></p>
-<p><strong>Input Node</strong></p>
-<p><span class="math display">\[
-\widetilde{\mathbf c} = \tanh\left(\mathbf W_c [\mathbf h_{t-1} \, \mathbf x_t] + \mathbf b_c\right)
-\]</span></p>
-</section>
-<section class="slide level2">
-
-
-<img data-src="../images/lstm-1.svg" style="width:70.0%" class="r-stretch quarto-figure-center"><p class="caption">LSTM Cell Update with Input</p></section>
-<section id="cell-update" class="slide level2">
-<h2>Cell update</h2>
-<p><span class="math display">\[
-\mathbf c_t = \mathbf f_t \odot \mathbf c_{t-1} + \mathbf i_t \odot \widetilde{\mathbf c}_t
-\]</span></p>
-<p><span class="math display">\[
-\mathbf h_t = \mathbf o_t \odot \tanh(\mathbf c_t)
-\]</span></p>
-</section>
-<section class="slide level2">
-
-
-<img data-src="../images/lstm-3.svg" class="r-stretch quarto-figure-center"><p class="caption">LSTM cell</p></section>
-<section id="why-lstm-works" class="slide level2">
-<h2>Why LSTM Works</h2>
-<p>If:</p>
-<p><span class="math display">\[
-\mathbf f_t \approx 1
-\]</span></p>
-<p>Then:</p>
-<p><span class="math display">\[
-\frac{\partial \mathbf c_t}{\partial \mathbf c_{t-1}} \approx 1
-\]</span></p>
-<blockquote>
-<p>Gradient preserved.</p>
-</blockquote>
-</section>
-<section id="tensorflow-lstm" class="slide level2">
-<h2>Tensorflow: LSTM</h2>
-<div id="a5265f6a" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>model <span class="op">=</span> keras.Sequential([</span>
-<span id="cb2-2"><a></a>    layers.LSTM(<span class="dv">64</span>, return_sequences<span class="op">=</span><span class="va">True</span>),</span>
-<span id="cb2-3"><a></a>    layers.LSTM(<span class="dv">32</span>),</span>
-<span id="cb2-4"><a></a>    layers.Dense(<span class="dv">1</span>)</span>
-<span id="cb2-5"><a></a>])</span>
-<span id="cb2-6"><a></a></span>
-<span id="cb2-7"><a></a>model.<span class="bu">compile</span>(optimizer<span class="op">=</span><span class="st">"adam"</span>, loss<span class="op">=</span><span class="st">"mse"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section></section>
-<section>
-<section id="gated-recurrent-unit-gru" class="title-slide slide level1 center">
-<h1>Gated Recurrent Unit (GRU)</h1>
-
-</section>
-<section id="gru-equations" class="slide level2">
-<h2>GRU Equations</h2>
-<blockquote>
-<p>Simpler alternative to LSTM.</p>
-</blockquote>
-<p><strong>Update gate:</strong></p>
-<p><span class="math display">\[
-\mathbf z_t = \sigma\left(\mathbf W_z [\mathbf h_{t-1} \, \mathbf x_t] + \mathbf b_z\right)
-\]</span></p>
-<p><strong>Reset gate:</strong></p>
-<p><span class="math display">\[
-\mathbf r_t = \sigma\left(\mathbf W_r [\mathbf h_{t-1} \, \mathbf x_t] + \mathbf b_r\right)
-\]</span></p>
-<p><strong>Candidate cell state:</strong></p>
-<p><span class="math display">\[
-\widetilde{\mathbf h}_t = \tanh\left(\mathbf W_h [\mathbf r_t \! \odot \! \mathbf h_{t-1} \, \mathbf x_t] + \mathbf b_h\right)
-\]</span></p>
-</section>
-<section class="slide level2">
-
-
-<img data-src="../images/gru-2.svg" class="r-stretch quarto-figure-center"><p class="caption">GRU Cell Update</p></section>
-<section id="gru-update" class="slide level2">
-<h2>GRU Update</h2>
-<p><span class="math display">\[
-\mathbf h_t = (1 - \mathbf z_t) \odot \mathbf h_{t-1} + \mathbf z_t \odot \widetilde{\mathbf h}_t
-\]</span></p>
-</section>
-<section id="gru-cell" class="slide level2">
-<h2><img data-src="../images/gru-3.svg" alt="GRU Cell"></h2>
-</section>
-<section id="tensorflow-gru" class="slide level2">
-<h2>Tensorflow: GRU</h2>
-<div id="03d7d110" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>model <span class="op">=</span> keras.Sequential([</span>
-<span id="cb3-2"><a></a>    layers.GRU(<span class="dv">64</span>, return_sequences<span class="op">=</span><span class="va">True</span>),</span>
-<span id="cb3-3"><a></a>    layers.GRU(<span class="dv">32</span>),</span>
-<span id="cb3-4"><a></a>    layers.Dense(<span class="dv">1</span>)</span>
-<span id="cb3-5"><a></a>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section></section>
-<section>
-<section id="regularization-in-rnns" class="title-slide slide level1 center">
-<h1>Regularization in RNNs</h1>
-
-</section>
-<section id="recurrent-dropout" class="slide level2">
-<h2>Recurrent Dropout</h2>
-<p>Standard dropout disrupts temporal memory.</p>
-<p><strong>Recurrent dropout:</strong></p>
+<p>In time series, masking is not limited to zero values.</p>
+<p>Missing data may be encoded as:</p>
 <ul>
-<li>Applied on recurrent connections</li>
-<li>Same mask across timesteps</li>
+<li><code>NaN</code></li>
+<li><code>-1</code></li>
+<li>sentinel values (e.g., <code>-999</code>)</li>
+<li>domain-specific flags</li>
 </ul>
-</section>
-<section id="tensorflow-recurrent-dropout" class="slide level2">
-<h2>TensorFlow: Recurrent Dropout</h2>
-<div id="0013880c" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a>model <span class="op">=</span> keras.Sequential([</span>
-<span id="cb4-2"><a></a>    layers.LSTM(</span>
-<span id="cb4-3"><a></a>        <span class="dv">64</span>,</span>
-<span id="cb4-4"><a></a>        return_sequences<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb4-5"><a></a>        recurrent_dropout<span class="op">=</span><span class="fl">0.2</span></span>
-<span id="cb4-6"><a></a>    ),</span>
-<span id="cb4-7"><a></a>    layers.LSTM(<span class="dv">32</span>),</span>
-<span id="cb4-8"><a></a>    layers.Dense(<span class="dv">1</span>)</span>
-<span id="cb4-9"><a></a>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+<p>Mask must be explicitly defined, e.g.:</p>
+<div id="fbd743b4" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a>x <span class="op">=</span> tf.constant([[<span class="dv">1</span>, <span class="dv">2</span>, <span class="op">-</span><span class="dv">999</span>], [<span class="dv">3</span>, <span class="op">-</span><span class="dv">999</span>, <span class="op">-</span><span class="dv">999</span>]])</span>
+<span id="cb11-2"><a></a>mask <span class="op">=</span> tf.math.not_equal(x, <span class="op">-</span><span class="dv">999</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="gradient-clipping" class="slide level2">
-<h2>Gradient Clipping</h2>
-<p><span class="math display">\[
-\nabla_{\boldsymbol \theta} \mathscr L \leftarrow \frac{\nabla_{\boldsymbol \theta} \mathscr L}{\max(1, \frac{||\nabla_{\boldsymbol \theta} \mathscr L||}{\lambda})}
-\]</span></p>
-<p>Prevent exploding gradients:</p>
-<div id="c7d3c91b" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>optimizer <span class="op">=</span> tf.keras.optimizers.Adam(</span>
-<span id="cb5-2"><a></a>    learning_rate<span class="op">=</span><span class="fl">0.001</span>,</span>
-<span id="cb5-3"><a></a>    clipnorm<span class="op">=</span><span class="fl">1.0</span></span>
-<span id="cb5-4"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="masking-in-tensorflow" class="slide level2">
+<h2>Masking in TensorFlow</h2>
+<h3 id="masking-with-rnn---text">Masking with RNN - Text</h3>
+<div id="a353ee62" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a>model <span class="op">=</span> tf.keras.Sequential([</span>
+<span id="cb12-2"><a></a>    tf.keras.layers.Embedding(<span class="dv">1000</span>, <span class="dv">16</span>, mask_zero<span class="op">=</span><span class="va">True</span>),</span>
+<span id="cb12-3"><a></a>    tf.keras.layers.LSTM(<span class="dv">32</span>),</span>
+<span id="cb12-4"><a></a>    tf.keras.layers.Dense(<span class="dv">1</span>)</span>
+<span id="cb12-5"><a></a>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<h3 id="masking-with-rnn---time-series">Masking with RNN - Time Series</h3>
+<div id="03e3f386" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a></a><span class="im">import</span> tensorflow <span class="im">as</span> tf</span>
+<span id="cb13-2"><a></a></span>
+<span id="cb13-3"><a></a>model <span class="op">=</span> tf.keras.Sequential([</span>
+<span id="cb13-4"><a></a>    tf.keras.layers.Masking(mask_value<span class="op">=-</span><span class="fl">999.0</span>),</span>
+<span id="cb13-5"><a></a>    tf.keras.layers.LSTM(<span class="dv">32</span>),</span>
+<span id="cb13-6"><a></a>    tf.keras.layers.Dense(<span class="dv">1</span>)</span>
+<span id="cb13-7"><a></a>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<!-- ## Exercise
+
+from tensorflow.keras.datasets import imdb
+import tensorflow as tf
+
+vocab_size = 10000
+max_len = 200
+
+(x_train, y_train), _ = imdb.load_data(num_words=vocab_size)
+
+x_train = tf.keras.preprocessing.sequence.pad_sequences(
+    x_train, maxlen=max_len
+)
+
+model = tf.keras.Sequential([
+    tf.keras.layers.Embedding(vocab_size, 32, mask_zero=True),
+    tf.keras.layers.LSTM(32),
+    tf.keras.layers.Dense(1, activation='sigmoid')
+])
+
+model.compile(
+    loss='binary_crossentropy',
+    optimizer='adam',
+    metrics=['accuracy']
+)
+
+model.fit(x_train, y_train, epochs=3, batch_size=64)
+``` -->
 </section></section>
 <section>
-<section id="extensions" class="title-slide slide level1 center">
-<h1>Extensions</h1>
+<section id="finance" class="title-slide slide level1 center">
+<h1>Finance</h1>
 
 </section>
-<section id="deep-rnns" class="slide level2">
-<h2>Deep RNNs</h2>
-<p>Stack multiple RNN layers for hierarchical representations:</p>
-
-<img data-src="../images/rnn_deep.svg" class="r-stretch quarto-figure-center"><p class="caption">Deep RNN</p></section>
-<section id="bidirectional-rnns" class="slide level2">
-<h2>Bidirectional RNNs</h2>
-<p>Process sequences in both directions:</p>
-
-<img data-src="../images/rnn_bidirectional.svg" class="r-stretch quarto-figure-center"><p class="caption">Bidirectional RNN</p></section></section>
-<section>
-<section id="final-notes" class="title-slide slide level1 center">
-<h1>Final Notes</h1>
-
-</section>
-<section id="model-comparison" class="slide level2">
-<h2>Model Comparison</h2>
+<section id="finance-analogy-time-series-as-text" class="slide level2">
+<h2>Finance Analogy: Time Series as “Text”</h2>
 <table class="caption-top">
 <thead>
 <tr class="header">
-<th>Model</th>
-<th>Long Dependencies</th>
-<th>Complexity</th>
-<th>Speed</th>
+<th>NLP Concept</th>
+<th>Finance Time Series Equivalent</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>RNN</td>
-<td>Poor</td>
-<td>Low</td>
-<td>Fast</td>
+<td>Tokens</td>
+<td>Time steps (prices, returns)</td>
 </tr>
 <tr class="even">
-<td>LSTM</td>
-<td>Excellent</td>
-<td>High</td>
-<td>Slower</td>
+<td>Sentence</td>
+<td>Price history window</td>
 </tr>
 <tr class="odd">
-<td>GRU</td>
-<td>Very Good</td>
-<td>Medium</td>
-<td>Faster</td>
+<td>Vocabulary</td>
+<td>Feature space (indicators)</td>
+</tr>
+<tr class="even">
+<td>Sequence</td>
+<td>Time series</td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="limitations-of-rnns" class="slide level2">
-<h2>Limitations of RNNs</h2>
+<h3 id="padding-in-finance">Padding in Finance</h3>
+<p>Different assets / samples have:</p>
 <ul>
-<li>Sequential computation</li>
-<li>Hard to parallelize</li>
-<li>Long sequences still challenging</li>
-<li>Transformers dominate NLP</li>
+<li>Different history lengths</li>
+<li>Missing observations</li>
 </ul>
+<p>Example:</p>
+<ul>
+<li>Stock A: <code>[r₁, r₂, r₃, r₄]</code></li>
+<li>Stock B: <code>[r₁, r₂]</code></li>
+</ul>
+<p>Pad: <code>[r₁, r₂, 0, 0]</code></p>
+<h3 id="masking-in-finance">Masking in Finance</h3>
+<p>Ignore:</p>
+<ul>
+<li>Missing data</li>
+<li>Non-trading days</li>
+<li>Incomplete windows</li>
+</ul>
+<p>Mask: <code>[1, 1, 0, 0]</code></p>
+<h3 id="embeddings-in-finance">Embeddings in Finance</h3>
+<p>Instead of words → vectors:</p>
+<blockquote>
+<p>Time step → feature vector</p>
+</blockquote>
 
 
 </section></section>
