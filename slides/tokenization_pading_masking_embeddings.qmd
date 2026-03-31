@@ -1,0 +1,406 @@
+---
+title: "Tokenization, Embeddings, Padding, and Masking"
+subtitle: "Sequence Processing in Deep Learning"
+author: "Miguel Fonseca"
+format:
+  revealjs:
+    toc: true
+---
+
+# Motivation
+
+## Why Text Needs Processing
+
+- Models operate on **numbers, not text**
+- Raw text is:
+  - Variable length
+  - Discrete
+  - Unstructured
+
+>Goal: transform text → structured numerical tensors
+
+### Pipeline
+
+Raw Text → Tokenization → Integer Sequences → Padding → Embedding → Model
+
+# Tokenization
+
+## What is Tokenization?
+
+- Splitting text into units:
+  - Words
+  - Subwords
+  - Characters
+
+>Example: "Deep learning is powerful" → ["deep", "learning", "is", "powerful"]
+
+---
+
+## Types of Tokenization
+
+- **Word-level**
+    - ```"deep learning is fun" → ["deep", "learning", "is", "fun"]```
+
+- **Subword (BPE / WordPiece)**
+    - ```"unbelievable" → ["un", "believ", "able"]```
+    - ```"playing" → ["play", "##ing"]```   (WordPiece style)
+- **Character-level**
+    - ```"cat" → ["c", "a", "t"]```
+
+---
+
+## Tokenization in TensorFlow
+
+```{python}
+from tensorflow.keras.preprocessing.text import Tokenizer
+
+texts = [
+    "deep learning is powerful",
+    "machine learning is fun"
+]
+
+tokenizer = Tokenizer(num_words=1000, oov_token="<OOV>")
+tokenizer.fit_on_texts(texts)
+
+sequences = tokenizer.texts_to_sequences(texts)
+
+print(sequences)
+```
+
+**Vocabulary Mapping**
+
+```{python}
+print(tokenizer.word_index)
+```
+
+**Problem: Variable-Length Sequences**
+
+```
+[3, 1, 2, 5]
+[4, 1, 2, 6]
+[3, 1]
+```
+
+# Padding
+
+## Padding: Why Do We Need It?
+
+### Problem: Variable-Length Sequences
+
+Text sequences have different lengths:
+
+`[3, 1, 2, 5]`
+
+`[4, 1]`
+
+Neural networks require:
+
+$$
+(\text{batch}, \text{fixed length})
+$$
+
+> Cannot stack sequences directly into tensors
+
+### Solution: Padding
+
+Add special token (0) to standardize length:
+
+[4, 1] → [4, 1, 0, 0]
+
+:::{.callout-tip title="Key Idea"}
+Padding = making data rectangular
+:::
+
+---
+
+## Padding Sequences
+
+```{python}
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+
+padded = pad_sequences(sequences, padding='post')
+print(padded)
+```
+
+---
+
+## Padding: Subtleties & Consequences
+
+**Types of Padding**
+
+- Post-padding (preferred in NLP)
+    - `[real data | padding]`
+- Pre-padding
+    - `[padding | real data]`
+
+**Hidden Problem**
+
+Padding introduces fake data (zeros)
+
+:::{.callout-warning}
+Model may learn: *“zero is important”*.
+:::
+
+**Implication**
+
+Padding must be handled carefully
+
+- Leads to masking
+
+# Embeddings
+
+## Embeddings
+
+- Dense vector representation of tokens
+- Captures semantic meaning
+
+---
+
+## Embeddings: From Tokens to Vectors
+
+### Core Idea
+
+$$
+w \rightarrow \mathbf{e}_w \in \mathbb{R}^d
+$$​
+
+### Embedding Matrix
+
+$$
+\mathbf{E} \in \mathbb{R}^{V \times d}
+$$
+
+- $V$: vocabulary size
+- $d$: embedding dimension
+
+**Lookup**
+
+- Input:  `[3, 1, 2]`
+- Output: `[E[3], E[1], E[2]]`
+
+> Trainable lookup table
+
+---
+
+## Why Embeddings Work
+
+### Semantic Geometry
+
+Similar words → close vectors
+
+:::{.callout title="Example"}
+king - man + woman ≈ queen
+:::
+
+### vs One-Hot Encoding
+
+| One-hot    | Embedding        |
+| ---------- | ---------------- |
+| Sparse     | Dense            |
+| No meaning | Semantic meaning |
+
+### Training
+
+- Learned via backpropagation
+- Only used rows are updated
+
+---
+
+## Embedding Layer
+
+```{python}
+from tensorflow.keras.layers import Embedding
+
+embedding_layer = Embedding(input_dim=1000, output_dim=16)
+```
+
+# Pipeline
+
+## Putting It Together
+
+**Text**
+
+1. Tokenization
+1. Integer sequences
+1. Padding
+1. Embedding
+1. Model
+
+**Tensor Shapes**
+
+`(batch, seq_len) → (batch, seq_len, embedding_dim)`
+
+### Intuition
+
+- Padding → structure
+- Embedding → meaning
+
+---
+
+## Full Pipeline Example
+
+```{python}
+import tensorflow as tf
+
+model = tf.keras.Sequential([
+    tf.keras.layers.Embedding(1000, 16, input_length=10),
+    tf.keras.layers.GlobalAveragePooling1D(),
+    tf.keras.layers.Dense(16, activation='relu'),
+    tf.keras.layers.Dense(1, activation='sigmoid')
+])
+
+model.summary()
+```
+# Masking
+
+## Masking: Ignoring Fake Data
+
+### Problem
+
+Padding introduces noise:
+
+`[3, 1, 0, 0]`
+
+>Model should ignore zeros
+
+### Solution: Masking
+
+Mask tensor:
+
+`[1, 1, 0, 0]`
+
+- 1 → real data
+- 0 → ignore
+
+**TensorFlow Example**
+
+```{python}
+embedding = tf.keras.layers.Embedding(
+    input_dim=10000,
+    output_dim=64,
+    mask_zero=True
+)
+```
+
+---
+
+## Masking: Special Cases
+
+Where It Works:
+
+- LSTM / GRU
+- RNNs
+- Attention layers
+
+:::{.callout-important title="Time Series"}
+In time series, masking is not limited to zero values.
+
+Missing data may be encoded as:
+
+- `NaN`
+- `-1`
+- sentinel values (e.g., `-999`)
+- domain-specific flags
+:::
+
+Mask must be explicitly defined, e.g.:
+
+```{python}
+x = tf.constant([[1, 2, -999], [3, -999, -999]])
+mask = tf.math.not_equal(x, -999)
+```
+
+---
+
+## Masking in TensorFlow
+
+### Masking with RNN - Text
+
+```{python}
+model = tf.keras.Sequential([
+    tf.keras.layers.Embedding(1000, 16, mask_zero=True),
+    tf.keras.layers.LSTM(32),
+    tf.keras.layers.Dense(1)
+])
+```
+
+### Masking with RNN - Time Series
+```{python}
+import tensorflow as tf
+
+model = tf.keras.Sequential([
+    tf.keras.layers.Masking(mask_value=-999.0),
+    tf.keras.layers.LSTM(32),
+    tf.keras.layers.Dense(1)
+])
+```
+
+<!-- ## Exercise
+
+```{python}
+from tensorflow.keras.datasets import imdb
+import tensorflow as tf
+
+vocab_size = 10000
+max_len = 200
+
+(x_train, y_train), _ = imdb.load_data(num_words=vocab_size)
+
+x_train = tf.keras.preprocessing.sequence.pad_sequences(
+    x_train, maxlen=max_len
+)
+
+model = tf.keras.Sequential([
+    tf.keras.layers.Embedding(vocab_size, 32, mask_zero=True),
+    tf.keras.layers.LSTM(32),
+    tf.keras.layers.Dense(1, activation='sigmoid')
+])
+
+model.compile(
+    loss='binary_crossentropy',
+    optimizer='adam',
+    metrics=['accuracy']
+)
+
+model.fit(x_train, y_train, epochs=3, batch_size=64)
+``` -->
+
+# Finance
+
+## Finance Analogy: Time Series as “Text”
+
+| NLP Concept | Finance Time Series Equivalent |
+| ----------- | ------------------------------ |
+| Tokens      | Time steps (prices, returns)   |
+| Sentence    | Price history window           |
+| Vocabulary  | Feature space (indicators)     |
+| Sequence    | Time series                    |
+
+### Padding in Finance
+Different assets / samples have:
+
+- Different history lengths
+- Missing observations
+
+Example:
+
+- Stock A: `[r₁, r₂, r₃, r₄]`
+- Stock B: `[r₁, r₂]`
+
+Pad: `[r₁, r₂, 0, 0]`
+
+### Masking in Finance
+
+Ignore:
+
+- Missing data
+- Non-trading days
+- Incomplete windows
+
+Mask: `[1, 1, 0, 0]`
+
+### Embeddings in Finance
+
+Instead of words → vectors:
+
+>Time step → feature vector
