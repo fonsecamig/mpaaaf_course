@@ -935,7 +935,7 @@
     "href": "index.html#decision-trees",
     "title": "Modeling, Programming and Machine Learning for Financial Analysis",
     "section": "Decision Trees",
-    "text": "Decision Trees\n\nReading\n\nJames, G., Witten, D., Hastie, T., Tibshirani, R., & Taylor, J. (2023). An introduction to statistical learning: With applications in Python. Springer. https://www.statlearning.com\n\nChapter 8: Tree-Based Methods\n\n\n\n\nDecision trees\n\nSlides\n\n\n\nEnsemble Methods\n\nSlides\n\n\n\nExercises\n\nExercise 1\nExercise 2"
+    "text": "Decision Trees\n\nDecision trees\n\nSlides\n\n\n\nEnsemble Methods\n\nSlides\n\n\n\nReading\n\nJames, G., Witten, D., Hastie, T., Tibshirani, R., & Taylor, J. (2023). An introduction to statistical learning: With applications in Python. Springer. https://www.statlearning.com\n\nChapter 8: Tree-Based Methods\n\n\n\n\nExercises\n\nExercise 1\nExercise 2"
   },
   {
     "objectID": "index.html#feed-forward-neural-networks",
@@ -956,7 +956,7 @@
     "href": "index.html#hyperparameter-tuning-regularisation",
     "title": "Modeling, Programming and Machine Learning for Financial Analysis",
     "section": "Hyperparameter Tuning & Regularisation",
-    "text": "Hyperparameter Tuning & Regularisation\n\nSlides - Hyperparameter Tuning\nSlides - Regularisation\n\n\nReading\n\nBishop, C. M., & Bishop, H. (2024). Deep learning: Foundations and concepts. Springer. https://www.bishopbook.com\n\nChapter 9: Regularisation\n\nChollet, F. (2021). Deep learning with Python (2nd ed.). Manning Publications.\n\nChapter 5: Fundamentals of machine learning\nChapter 13: Best practices for the real world, Section 1.1\n\nZhang, A., Lipton, Z. C., Li, M., & Smola, A. J. (2023). Dive into deep learning. Cambridge University Press. https://d2l.ai\n\nChapter 19: Hyperparameter Optimization\n\nDeep Learning Tuning Playbook\n\n\n\nExercises\n\nExercise 1\nExercise 2"
+    "text": "Hyperparameter Tuning & Regularisation\n\nHyperparameter Tuning\n\nSlides\n\n\n\nRegularisation\n\nSlides\n\n\n\nReading\n\nBishop, C. M., & Bishop, H. (2024). Deep learning: Foundations and concepts. Springer. https://www.bishopbook.com\n\nChapter 9: Regularisation\n\nChollet, F. (2021). Deep learning with Python (2nd ed.). Manning Publications.\n\nChapter 5: Fundamentals of machine learning\nChapter 13: Best practices for the real world, Section 1.1\n\nZhang, A., Lipton, Z. C., Li, M., & Smola, A. J. (2023). Dive into deep learning. Cambridge University Press. https://d2l.ai\n\nChapter 19: Hyperparameter Optimization\n\nDeep Learning Tuning Playbook\n\n\n\nExercises\n\nExercise 1\nExercise 2"
   },
   {
     "objectID": "index.html#convolutional-neural-networks",
@@ -970,11 +970,25 @@
     "href": "index.html#recurrent-neural-networks",
     "title": "Modeling, Programming and Machine Learning for Financial Analysis",
     "section": "Recurrent Neural Networks",
-    "text": "Recurrent Neural Networks\n\nSlides\n\n\nReading\n\nChollet, F. (2021). Deep learning with Python (2nd ed.). Manning Publications.\n\nChapter 10: Deep learning for time series\n\nZhang, A., Lipton, Z. C., Li, M., & Smola, A. J. (2023). Dive into deep learning. Cambridge University Press. https://d2l.ai\n\nChapter 9: Recurrent Neural Networks\nChapter 10: Modern Recurrent Neural Networks\n\n\n\n\nExercises\n\nExercise 1"
+    "text": "Recurrent Neural Networks\n\nSlides\n\n\nReading\n\nChollet, F. (2021). Deep learning with Python (2nd ed.). Manning Publications.\n\nChapter 10: Deep learning for time series\n\nZhang, A., Lipton, Z. C., Li, M., & Smola, A. J. (2023). Dive into deep learning. Cambridge University Press. https://d2l.ai\n\nChapter 9: Recurrent Neural Networks\nChapter 10: Modern Recurrent Neural Networks\n\n\n\n\nExercises\n\nExercise 1\nExercise 2"
+  },
+  {
+    "objectID": "index.html#tokenization-padding-masking-and-embeddings",
+    "href": "index.html#tokenization-padding-masking-and-embeddings",
+    "title": "Modeling, Programming and Machine Learning for Financial Analysis",
+    "section": "Tokenization, Padding, Masking and Embeddings",
+    "text": "Tokenization, Padding, Masking and Embeddings\n\nSlides\n\n\nReading\n\nBishop, C. M., & Bishop, H. (2024). Deep learning: Foundations and concepts. Springer. https://www.bishopbook.com\n\nChapter 12: Transformers, Section 11.2\n\nChollet, F. (2021). Deep learning with Python (2nd ed.). Manning Publications.\n\nChapter 11: Deep learning for text, Sections 11.1, 11.2 and 11.3\n\nZhang, A., Lipton, Z. C., Li, M., & Smola, A. J. (2023). Dive into deep learning. Cambridge University Press. https://d2l.ai\n\nChapter 9: Recurrent Neural Networks, Sections 9.1, 9.2 and 9.3\nChapter 15: Natural Language Processing: Pretraining\n\n\n\n\nExercises\n\nExercise 1"
   },
   {
     "objectID": "index.html#references",
     "href": "index.html#references",
+    "title": "Modeling, Programming and Machine Learning for Financial Analysis",
+    "section": "References",
+    "text": "References\n\nBishop, C. M., & Bishop, H. (2024). Deep learning: Foundations and concepts. Springer. https://www.bishopbook.com\nChollet, F. (2021). Deep learning with Python (2nd ed.). Manning Publications.\nJames, G., Witten, D., Hastie, T., Tibshirani, R., & Taylor, J. (2023). An introduction to statistical learning: With applications in Python. Springer. https://www.statlearning.com\nZhang, A., Lipton, Z. C., Li, M., & Smola, A. J. (2023). Dive into deep learning. Cambridge University Press. https://d2l.ai"
+  },
+  {
+    "objectID": "index.html#references-1",
+    "href": "index.html#references-1",
     "title": "Modeling, Programming and Machine Learning for Financial Analysis",
     "section": "References",
     "text": "References\n\nBishop, C. M., & Bishop, H. (2024). Deep learning: Foundations and concepts. Springer. https://www.bishopbook.com\nChollet, F. (2021). Deep learning with Python (2nd ed.). Manning Publications.\nJames, G., Witten, D., Hastie, T., Tibshirani, R., & Taylor, J. (2023). An introduction to statistical learning: With applications in Python. Springer. https://www.statlearning.com\nJansen, S. (2020). Machine Learning for Algorithmic Trading. Packt.\nZhang, A., Lipton, Z. C., Li, M., & Smola, A. J. (2023). Dive into deep learning. Cambridge University Press. https://d2l.ai"

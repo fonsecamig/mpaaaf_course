@@ -6,8 +6,8 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.7.32">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.36">
 
   <meta name="author" content="Miguel Fonseca">
   <title>MPAAAF – Hyperparameter Tuning</title>
@@ -17,6 +17,9 @@
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
   <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
     div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -95,7 +98,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-7f656d197a6d4d458420565151872bca.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-581a879c062cdc19e1230440c5bb8372.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -799,7 +802,7 @@ EI(\theta) = \mathbb{E}[\max(f_{best} - f(\theta),0)]
 <section id="optuna" class="slide level2">
 <h2>Optuna</h2>
 <div id="4c94a9ea" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> make_regression</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> make_regression</span>
 <span id="cb1-2"><a></a><span class="im">import</span> optuna</span>
 <span id="cb1-3"><a></a><span class="im">import</span> tensorflow <span class="im">as</span> tf</span>
 <span id="cb1-4"><a></a><span class="im">from</span> tensorflow <span class="im">import</span> keras</span>
@@ -840,20 +843,20 @@ EI(\theta) = \mathbb{E}[\max(f_{best} - f(\theta),0)]
 <span id="cb1-39"><a></a></span>
 <span id="cb1-40"><a></a>    loss <span class="op">=</span> model.evaluate(X_val, y_val)</span>
 <span id="cb1-41"><a></a></span>
-<span id="cb1-42"><a></a>    <span class="cf">return</span> loss</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-42"><a></a>    <span class="cf">return</span> loss</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <hr>
 </section>
 <section id="running-optuna" class="slide level2">
 <h2>Running Optuna</h2>
 <div id="cc668ba6" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>study <span class="op">=</span> optuna.create_study(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>study <span class="op">=</span> optuna.create_study(</span>
 <span id="cb2-2"><a></a>    direction<span class="op">=</span><span class="st">"minimize"</span></span>
 <span id="cb2-3"><a></a>)</span>
 <span id="cb2-4"><a></a></span>
 <span id="cb2-5"><a></a>study.optimize(objective, n_trials<span class="op">=</span><span class="dv">50</span>)</span>
 <span id="cb2-6"><a></a></span>
-<span id="cb2-7"><a></a><span class="bu">print</span>(study.best_params)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-7"><a></a><span class="bu">print</span>(study.best_params)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <div class="ansi-escaped-output">
 <pre><span class="ansi-bold">1/1</span> <span class="ansi-green-fg">━━━━━━━━━━━━━━━━━━━━</span> <span class="ansi-bold">0s</span> 5ms/step - loss: 14962.9561
@@ -1263,7 +1266,7 @@ EI(\theta) = \mathbb{E}[\max(f_{best} - f(\theta),0)]
 <section id="keras-tuner-example" class="slide level2">
 <h2>Keras Tuner Example</h2>
 <div id="867093d7" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> make_regression</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> make_regression</span>
 <span id="cb4-2"><a></a><span class="im">import</span> keras_tuner <span class="im">as</span> kt</span>
 <span id="cb4-3"><a></a><span class="im">from</span> tensorflow <span class="im">import</span> keras</span>
 <span id="cb4-4"><a></a></span>
@@ -1295,13 +1298,13 @@ EI(\theta) = \mathbb{E}[\max(f_{best} - f(\theta),0)]
 <span id="cb4-30"><a></a>        loss<span class="op">=</span><span class="st">"mse"</span></span>
 <span id="cb4-31"><a></a>    )</span>
 <span id="cb4-32"><a></a></span>
-<span id="cb4-33"><a></a>    <span class="cf">return</span> model</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-33"><a></a>    <span class="cf">return</span> model</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="running-keras-tuner" class="slide level2">
 <h2>Running Keras Tuner</h2>
 <div id="9d100f19" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>tuner <span class="op">=</span> kt.Hyperband(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>tuner <span class="op">=</span> kt.Hyperband(</span>
 <span id="cb5-2"><a></a>    build_model,</span>
 <span id="cb5-3"><a></a>    objective<span class="op">=</span><span class="st">"val_loss"</span>,</span>
 <span id="cb5-4"><a></a>    max_epochs<span class="op">=</span><span class="dv">20</span></span>
@@ -1312,7 +1315,7 @@ EI(\theta) = \mathbb{E}[\max(f_{best} - f(\theta),0)]
 <span id="cb5-9"><a></a>    validation_data<span class="op">=</span>(X_val,y_val)</span>
 <span id="cb5-10"><a></a>)</span>
 <span id="cb5-11"><a></a></span>
-<span id="cb5-12"><a></a>best_model <span class="op">=</span> tuner.get_best_models(<span class="dv">1</span>)[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-12"><a></a>best_model <span class="op">=</span> tuner.get_best_models(<span class="dv">1</span>)[<span class="dv">0</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Trial 26 Complete [00h 00m 01s]
 val_loss: 34662.3359375
@@ -1519,7 +1522,7 @@ Total elapsed time: 00h 01m 34s</code></pre>
         margin: 0.1,
 
         math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
@@ -1593,13 +1596,14 @@ Total elapsed time: 00h 01m 34s</code></pre>
           e.clearSelection();
         }
         const getTextToCopy = function(trigger) {
-            const codeEl = trigger.previousElementSibling.cloneNode(true);
-            for (const childEl of codeEl.children) {
-              if (isCodeAnnotation(childEl)) {
-                childEl.remove();
-              }
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
             }
-            return codeEl.innerText;
+          }
+          return codeEl.innerText;
         }
         const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
           text: getTextToCopy

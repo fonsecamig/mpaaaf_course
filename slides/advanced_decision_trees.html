@@ -6,8 +6,8 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.7.32">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.36">
 
   <meta name="author" content="Miguel Fonseca">
   <title>MPAAAF – Advanced Decision Trees</title>
@@ -17,6 +17,9 @@
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
   <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
     div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -95,7 +98,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-7f656d197a6d4d458420565151872bca.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-581a879c062cdc19e1230440c5bb8372.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -469,7 +472,7 @@ L(y_i, \widehat{y}_i^{OOB})
 <section id="oob-error-in-python" class="slide level2 scrollable">
 <h2>OOB Error in Python</h2>
 <div id="625aca61" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> RandomForestClassifier</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> RandomForestClassifier</span>
 <span id="cb1-2"><a></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> make_classification</span>
 <span id="cb1-3"><a></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
 <span id="cb1-4"><a></a></span>
@@ -485,7 +488,7 @@ L(y_i, \widehat{y}_i^{OOB})
 <span id="cb1-14"><a></a>rf.fit(X, y)</span>
 <span id="cb1-15"><a></a></span>
 <span id="cb1-16"><a></a><span class="bu">print</span>(<span class="st">"OOB Score:"</span>, rf.oob_score_)</span>
-<span id="cb1-17"><a></a><span class="bu">print</span>(<span class="st">"OOB Error:"</span>, <span class="dv">1</span> <span class="op">-</span> rf.oob_score_)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-17"><a></a><span class="bu">print</span>(<span class="st">"OOB Error:"</span>, <span class="dv">1</span> <span class="op">-</span> rf.oob_score_)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>OOB Score: 0.896
 OOB Error: 0.10399999999999998</code></pre>
@@ -733,7 +736,7 @@ F_m(x) = F_{m-1}(x) + \nu h_m(x)
 <section id="python-example-financial-regression" class="slide level2 scrollable">
 <h2>Python Example: Financial Regression</h2>
 <div id="3239b00b" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> (</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> (</span>
 <span id="cb3-2"><a></a>    BaggingRegressor,</span>
 <span id="cb3-3"><a></a>    RandomForestRegressor,</span>
 <span id="cb3-4"><a></a>    GradientBoostingRegressor</span>
@@ -757,7 +760,7 @@ F_m(x) = F_{m-1}(x) + \nu h_m(x)
 <span id="cb3-22"><a></a>    learning_rate<span class="op">=</span><span class="fl">0.05</span>,</span>
 <span id="cb3-23"><a></a>    max_depth<span class="op">=</span><span class="dv">3</span>,</span>
 <span id="cb3-24"><a></a>    random_state<span class="op">=</span><span class="dv">42</span></span>
-<span id="cb3-25"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-25"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <!-- 
 ## Time-Series Validation (Important!) {.scrollable}
@@ -1063,7 +1066,7 @@ F_m(x) = F_{m-1}(x) + \nu h_m(x)
         margin: 0.1,
 
         math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
@@ -1137,13 +1140,14 @@ F_m(x) = F_{m-1}(x) + \nu h_m(x)
           e.clearSelection();
         }
         const getTextToCopy = function(trigger) {
-            const codeEl = trigger.previousElementSibling.cloneNode(true);
-            for (const childEl of codeEl.children) {
-              if (isCodeAnnotation(childEl)) {
-                childEl.remove();
-              }
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
             }
-            return codeEl.innerText;
+          }
+          return codeEl.innerText;
         }
         const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
           text: getTextToCopy

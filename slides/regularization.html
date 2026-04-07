@@ -6,8 +6,8 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.7.32">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.36">
 
   <meta name="author" content="Miguel Fonseca">
   <title>MPAAAF – Regularisation for Neural Networks</title>
@@ -17,6 +17,9 @@
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
   <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
     div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -95,7 +98,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-7f656d197a6d4d458420565151872bca.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-581a879c062cdc19e1230440c5bb8372.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -332,7 +335,7 @@ Miguel Fonseca
 <section id="tensorflow-implementation" class="slide level2">
 <h2>Tensorflow Implementation</h2>
 <div id="bc701409" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">from</span> tensorflow <span class="im">import</span> keras</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">from</span> tensorflow <span class="im">import</span> keras</span>
 <span id="cb1-2"><a></a><span class="im">from</span> tensorflow.keras <span class="im">import</span> layers</span>
 <span id="cb1-3"><a></a></span>
 <span id="cb1-4"><a></a>model <span class="op">=</span> keras.Sequential([</span>
@@ -357,7 +360,7 @@ Miguel Fonseca
 <span id="cb1-23"><a></a>model.<span class="bu">compile</span>(</span>
 <span id="cb1-24"><a></a>    optimizer<span class="op">=</span><span class="st">"adam"</span>,</span>
 <span id="cb1-25"><a></a>    loss<span class="op">=</span><span class="st">"mse"</span></span>
-<span id="cb1-26"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-26"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section></section>
 <section>
@@ -416,7 +419,7 @@ Miguel Fonseca
 </ul>
 <h3 id="tensorflow-implementation-1">Tensorflow Implementation</h3>
 <div id="78180669" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>model <span class="op">=</span> keras.Sequential([</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>model <span class="op">=</span> keras.Sequential([</span>
 <span id="cb2-2"><a></a>    layers.Dense(<span class="dv">128</span>, activation<span class="op">=</span><span class="st">"relu"</span>),</span>
 <span id="cb2-3"><a></a>    layers.Dropout(<span class="fl">0.3</span>),</span>
 <span id="cb2-4"><a></a></span>
@@ -429,7 +432,7 @@ Miguel Fonseca
 <span id="cb2-11"><a></a>model.<span class="bu">compile</span>(</span>
 <span id="cb2-12"><a></a>    optimizer<span class="op">=</span><span class="st">"adam"</span>,</span>
 <span id="cb2-13"><a></a>    loss<span class="op">=</span><span class="st">"mse"</span></span>
-<span id="cb2-14"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-14"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section></section>
 <section>
@@ -510,7 +513,7 @@ y = \gamma \widehat{x} + \beta
 <section id="batchnorm---tensorflow-implementation" class="slide level2">
 <h2>BatchNorm - TensorFlow Implementation</h2>
 <div id="e96dc270" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>model <span class="op">=</span> keras.Sequential([</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>model <span class="op">=</span> keras.Sequential([</span>
 <span id="cb3-2"><a></a>    layers.Dense(<span class="dv">128</span>, use_bias<span class="op">=</span><span class="va">False</span>),</span>
 <span id="cb3-3"><a></a>    layers.BatchNormalization(),</span>
 <span id="cb3-4"><a></a>    layers.Activation(<span class="st">"relu"</span>),</span>
@@ -520,7 +523,7 @@ y = \gamma \widehat{x} + \beta
 <span id="cb3-8"><a></a>    layers.Activation(<span class="st">"relu"</span>),</span>
 <span id="cb3-9"><a></a></span>
 <span id="cb3-10"><a></a>    layers.Dense(<span class="dv">1</span>)</span>
-<span id="cb3-11"><a></a>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-11"><a></a>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="layer-normalization" class="slide level2">
@@ -546,7 +549,7 @@ y = \gamma \widehat{x} + \beta
 <section id="layernorm---tensorflow-implementation" class="slide level2">
 <h2>LayerNorm - TensorFlow Implementation</h2>
 <div id="5376243b" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a>model <span class="op">=</span> keras.Sequential([</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a>model <span class="op">=</span> keras.Sequential([</span>
 <span id="cb4-2"><a></a>    layers.Dense(<span class="dv">128</span>, use_bias<span class="op">=</span><span class="va">False</span>),</span>
 <span id="cb4-3"><a></a>    layers.LayerNormalization(),</span>
 <span id="cb4-4"><a></a>    layers.Activation(<span class="st">"relu"</span>),</span>
@@ -556,7 +559,7 @@ y = \gamma \widehat{x} + \beta
 <span id="cb4-8"><a></a>    layers.Activation(<span class="st">"relu"</span>),</span>
 <span id="cb4-9"><a></a></span>
 <span id="cb4-10"><a></a>    layers.Dense(<span class="dv">1</span>)</span>
-<span id="cb4-11"><a></a>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-11"><a></a>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="batchnorm-vs-layernorm" class="slide level2">
@@ -622,7 +625,7 @@ y = \gamma \widehat{x} + \beta
 <section class="slide level2">
 
 <div id="21b6a80f" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb5-2"><a></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
 <span id="cb5-3"><a></a></span>
 <span id="cb5-4"><a></a>X <span class="op">=</span> np.random.uniform(<span class="op">-</span><span class="dv">3</span>,<span class="dv">3</span>,(<span class="dv">1000</span>,<span class="dv">1</span>))</span>
@@ -652,7 +655,7 @@ y = \gamma \widehat{x} + \beta
 <span id="cb5-28"><a></a>    monitor<span class="op">=</span><span class="st">"val_loss"</span>,</span>
 <span id="cb5-29"><a></a>    patience<span class="op">=</span><span class="dv">10</span>,</span>
 <span id="cb5-30"><a></a>    restore_best_weights<span class="op">=</span><span class="va">True</span></span>
-<span id="cb5-31"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-31"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section></section>
 <section>
@@ -890,7 +893,7 @@ y = \gamma \widehat{x} + \beta
         margin: 0.1,
 
         math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
@@ -964,13 +967,14 @@ y = \gamma \widehat{x} + \beta
           e.clearSelection();
         }
         const getTextToCopy = function(trigger) {
-            const codeEl = trigger.previousElementSibling.cloneNode(true);
-            for (const childEl of codeEl.children) {
-              if (isCodeAnnotation(childEl)) {
-                childEl.remove();
-              }
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
             }
-            return codeEl.innerText;
+          }
+          return codeEl.innerText;
         }
         const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
           text: getTextToCopy
