@@ -41,7 +41,44 @@ website:
             href: slides/decision_trees.qmd
           - text: "Advanced Decision Trees"
             href: slides/advanced_decision_trees.qmd
-          # - text: "Feed Forward Neural Networks"
-          #   href: slides/feed_forward_neural_networks.qmd
-          # - text: "Introduction to TensorFlow 2"
-          #   href: slides/intro_tensorflow2.qmd
+          - text: "Feed Forward Neural Networks"
+            href: slides/feed_forward_neural_networks.qmd
+          - text: "Introduction to TensorFlow 2"
+            href: slides/intro_tensorflow2.qmd
+          - text: "Convolutional Neural Networks"
+            href: slides/cnn.qmd
+          - text: "Recurrent Neural Networks"
+            href: slides/rnn.qmd
+          - text: "Tokenization, Padding, Masking and Embeddings"
+            href: slides/tokenization_padding_masking_embeddings.qmd
+      - text: "Exercises"
+        menu:
+          - text: "Introduction to Machine Learning: Exercise 1"
+            href: https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_intro_ml_01.ipynb
+          - text: "Decision Trees: Exercise 1"
+            href: https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_decision_trees_01.ipynb
+          - text: "Decision Trees: Exercise 2"
+            href: https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_decision_trees_02.ipynb
+          - text: "Advanced Decision Trees: Exercise 1"
+            href: https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_advanced_decision_trees_01.ipynb
+          - text: "Feed Forward Neural Networks: Exercise 1"
+            href: https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_feed_forward_neural_networks_01.ipynb
+          - text: "TensorFlow 2: Exercise 1"
+            href: https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_tf2-intro.ipynb
+          - text: "TensorFlow 2: Exercise 2"
+            href: https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc-mlp-mnist.ipynb
+          - text: "Hyperparameter Tuning: Exercise 1"
+            href: https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_mnist_hptuning.ipynb
+          - text: "Hyperparameter Tuning: Exercise 2"
+            href: https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_california_house_price.ipynb
+          - text: "Convolutional Neural Networks: Exercise 1"
+            href: https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_cnn_mnist.ipynb
+          - text: "Convolutional Neural Networks: Exercise 2"
+            href: https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_1d_cnn_financial.ipynb
+          - text: "Recurrent Neural Networks: Exercise 1"
+            href: https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_rnn_wind.ipynb
+          - text: "Recurrent Neural Networks: Exercise 2"
+            href: https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_rnn_financial_direction.ipynb
+          - text: "Tokenization, Padding, Masking and Embeddings: Exercise 1"
+            href: https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_rnn_imdb.ipynb
+            
