@@ -970,14 +970,14 @@
     "href": "index.html#recurrent-neural-networks",
     "title": "Modeling, Programming and Machine Learning for Financial Analysis",
     "section": "Recurrent Neural Networks",
-    "text": "Recurrent Neural Networks\n\nSlides\n\n\nReading\n\nChollet, F. (2021). Deep learning with Python (2nd ed.). Manning Publications.\n\nChapter 10: Deep learning for time series\n\nZhang, A., Lipton, Z. C., Li, M., & Smola, A. J. (2023). Dive into deep learning. Cambridge University Press. https://d2l.ai\n\nChapter 9: Recurrent Neural Networks\nChapter 10: Modern Recurrent Neural Networks\n\n\n\n\nExercises\n\nExercise 1\nExercise 2"
+    "text": "Recurrent Neural Networks\n\nSlides\n\n\nReading\n\nChollet, F. (2021). Deep learning with Python (2nd ed.). Manning Publications.\n\nChapter 10: Deep learning for time series\n\nZhang, A., Lipton, Z. C., Li, M., & Smola, A. J. (2023). Dive into deep learning. Cambridge University Press. https://d2l.ai\n\nChapter 9: Recurrent Neural Networks\nChapter 10: Modern Recurrent Neural Networks\n\n\n\n\nExercises\n\nExercise 1\nExercise 2\nExercise 3"
   },
   {
     "objectID": "index.html#tokenization-padding-masking-and-embeddings",
     "href": "index.html#tokenization-padding-masking-and-embeddings",
     "title": "Modeling, Programming and Machine Learning for Financial Analysis",
     "section": "Tokenization, Padding, Masking and Embeddings",
-    "text": "Tokenization, Padding, Masking and Embeddings\n\nSlides\n\n\nReading\n\nBishop, C. M., & Bishop, H. (2024). Deep learning: Foundations and concepts. Springer. https://www.bishopbook.com\n\nChapter 12: Transformers, Section 11.2\n\nChollet, F. (2021). Deep learning with Python (2nd ed.). Manning Publications.\n\nChapter 11: Deep learning for text, Sections 11.1, 11.2 and 11.3\n\nZhang, A., Lipton, Z. C., Li, M., & Smola, A. J. (2023). Dive into deep learning. Cambridge University Press. https://d2l.ai\n\nChapter 9: Recurrent Neural Networks, Sections 9.1, 9.2 and 9.3\nChapter 15: Natural Language Processing: Pretraining\n\n\n\n\nExercises\n\nExercise 1"
+    "text": "Tokenization, Padding, Masking and Embeddings\n\nSlides\n\n\nReading\n\nBishop, C. M., & Bishop, H. (2024). Deep learning: Foundations and concepts. Springer. https://www.bishopbook.com\n\nChapter 12: Transformers, Section 11.2\n\nChollet, F. (2021). Deep learning with Python (2nd ed.). Manning Publications.\n\nChapter 11: Deep learning for text, Sections 11.1, 11.2 and 11.3\n\nZhang, A., Lipton, Z. C., Li, M., & Smola, A. J. (2023). Dive into deep learning. Cambridge University Press. https://d2l.ai\n\nChapter 9: Recurrent Neural Networks, Sections 9.1, 9.2 and 9.3\nChapter 15: Natural Language Processing: Pretraining\n\nCode Example\n\n\n\nExercises\n\nExercise 1"
   },
   {
     "objectID": "index.html#references",
