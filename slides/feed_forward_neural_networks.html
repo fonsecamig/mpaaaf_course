@@ -517,9 +517,9 @@ P(y=1 \mid \mathbf{x}) = \sigma\big(\mathbf{W}^{(2)} \phi(\mathbf{W}^{(1)}\mathb
 \mathscr{L}_{BCE}
 =
 - \left[
-y \cdot \text{logit} (\widehat{y})
+y \cdot \log (\widehat{y})
 +
-(1-y) \cdot \text{logit}(1-\widehat{y})
+(1-y) \cdot \log(1-\widehat{y})
 \right]
 \]</span></p>
 </section>

@@ -585,7 +585,7 @@
     "href": "slides/feed_forward_neural_networks.html#binary-classification-binary-cross-entropy",
     "title": "Feed-Forward Neural Networks in Finance",
     "section": "Binary Classification: Binary Cross-Entropy",
-    "text": "Binary Classification: Binary Cross-Entropy\nUsed for:\n\nSpam detection\nCredit default\nMedical diagnosis\n\nOutput: probability\n\\[\n\\widehat{y} = \\sigma(z)\n\\]\nLoss:\n\\[\n\\mathscr{L}_{BCE}\n=\n- \\left[\ny \\cdot \\text{logit} (\\widehat{y})\n+\n(1-y) \\cdot \\text{logit}(1-\\widehat{y})\n\\right]\n\\]"
+    "text": "Binary Classification: Binary Cross-Entropy\nUsed for:\n\nSpam detection\nCredit default\nMedical diagnosis\n\nOutput: probability\n\\[\n\\widehat{y} = \\sigma(z)\n\\]\nLoss:\n\\[\n\\mathscr{L}_{BCE}\n=\n- \\left[\ny \\cdot \\log (\\widehat{y})\n+\n(1-y) \\cdot \\log(1-\\widehat{y})\n\\right]\n\\]"
   },
   {
     "objectID": "slides/feed_forward_neural_networks.html#why-not-use-mse-for-classification",
