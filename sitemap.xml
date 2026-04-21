@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://fonsecamig.github.io/mpaaaf_course/slides/transformers_decoder.html</loc>
+    <lastmod>2026-04-20T11:06:14.940Z</lastmod>
+  </url>
+  <url>
     <loc>https://fonsecamig.github.io/mpaaaf_course/slides/tokenization_pading_masking_embeddings.html</loc>
     <lastmod>2026-03-31T11:09:26.083Z</lastmod>
   </url>
@@ -14,7 +18,7 @@
   </url>
   <url>
     <loc>https://fonsecamig.github.io/mpaaaf_course/slides/feed_forward_neural_networks.html</loc>
-    <lastmod>2026-04-14T13:24:44.289Z</lastmod>
+    <lastmod>2026-04-20T11:15:56.232Z</lastmod>
   </url>
   <url>
     <loc>https://fonsecamig.github.io/mpaaaf_course/slides/cnn.html</loc>
@@ -22,7 +26,7 @@
   </url>
   <url>
     <loc>https://fonsecamig.github.io/mpaaaf_course/index.html</loc>
-    <lastmod>2026-04-13T11:55:49.052Z</lastmod>
+    <lastmod>2026-04-21T13:32:31.412Z</lastmod>
   </url>
   <url>
     <loc>https://fonsecamig.github.io/mpaaaf_course/slides/advanced_decision_trees.html</loc>
@@ -43,5 +47,9 @@
   <url>
     <loc>https://fonsecamig.github.io/mpaaaf_course/slides/rnn.html</loc>
     <lastmod>2026-03-31T16:52:36.888Z</lastmod>
+  </url>
+  <url>
+    <loc>https://fonsecamig.github.io/mpaaaf_course/slides/transformers_attention_block.html</loc>
+    <lastmod>2026-04-21T13:35:36.076Z</lastmod>
   </url>
 </urlset>
