@@ -1,0 +1,207 @@
+---
+title: "Transformer Architecture"
+subtitle: "The Self-Attention Block"
+author: "Miguel Fonseca"
+format:
+  revealjs:
+    toc: true
+---
+
+# Motivation
+
+## Why Attention?
+
+- RNN limitations:
+  - Sequential bottleneck
+  - Vanishing gradients
+- Need for:
+  - Parallel computation
+  - Long-range dependencies
+
+Idea:
+**Let each word “look” at all others**
+
+# Query–Key–Value Mechanism
+
+## Attention Mechanism (Intuition)
+
+Sentence:
+
+> "The animal didn’t cross the street because **it** was too tired."
+
+What does "it" refer to?
+
+Attention learns:
+
+- relationships between tokens
+- context-dependent meaning
+
+---
+
+## Query–Key–Value Framework
+
+Each token is mapped to:
+
+- Query: $\mathbf q$
+- Key: $\mathbf k$
+- Value: $\mathbf v$
+
+$$
+\mathbf q = \mathbf W_Q^\top\mathbf x, \quad \mathbf k = \mathbf W_K^\top\mathbf x, \quad \mathbf v = \mathbf W_V^\top\mathbf x
+$$
+
+## Attention Score
+
+Similarity between tokens:
+
+$$
+\text{score}(\mathbf q, \mathbf k) = \mathbf q^\top \mathbf k
+$$
+
+Scaled:
+
+$$
+\frac{\mathbf q^\top \mathbf k}{\sqrt{d_k}}
+$$
+
+---
+
+## Attention Weights
+
+$$
+\alpha = \text{softmax}\left(\frac{\mathbf q^\top \mathbf k}{\sqrt{d_k}}\right)
+$$
+
+Interpretation:
+
+- importance of each word relative to another
+
+---
+
+## Matrix Form
+
+- $\mathbf Q = {[\mathbf q_1^\top\ \cdots \ \mathbf q_n^\top]}^\top = \begin{bmatrix}\mathbf x_1^\top\mathbf W_Q\\ \vdots\\ \mathbf x_n^\top\mathbf W_Q\end{bmatrix}$
+- $\mathbf K = {[\mathbf k_1^\top\ \cdots \ \mathbf k_n^\top]}^\top = \begin{bmatrix}\mathbf x_1^\top\mathbf W_K\\ \vdots\\ \mathbf x_n^\top\mathbf W_K\end{bmatrix}$
+- $\mathbf V = {[\mathbf v_1^\top\ \cdots \ \mathbf v_n^\top]}^\top = \begin{bmatrix}\mathbf x_1^\top\mathbf W_V\\ \vdots\\ \mathbf x_n^\top\mathbf W_V\end{bmatrix}$
+
+---
+
+## Attention Output
+
+$$
+\text{Attention}(\mathbf Q, \mathbf K, \mathbf V) = \text{softmax}\left(\frac{\mathbf Q^\top \mathbf K}{\sqrt{d_k}}\right)\mathbf V
+$$
+
+- Weighted sum of values
+- Context-aware representation
+
+---
+
+## Visual: Self-Attention
+
+![Self-attention diagram](/images/self_attention.png)
+
+:::{.callout-tip title="Key Insight"}
+Each word attends to all others
+:::
+
+---
+
+## Example (NLP)
+
+Sentence:
+
+> "The bank will not approve the loan"
+
+Word: **bank**
+
+- attends to:
+  - "loan" → financial meaning
+  - not "river"
+
+---
+
+## Full Attention Pipeline
+
+1. Compute $\mathbf Q, \mathbf K, \mathbf V$
+2. Compute scores
+3. Apply softmax
+4. Multiply by $\mathbf V$
+
+# Multi-Head Attention
+
+## Multi-Head Attention
+
+Instead of one attention:
+
+$$
+\text{Head}_i = \text{Attention}(\mathbf Q_i, \mathbf K_i, \mathbf V_i)
+$$
+
+$$
+\text{MultiHead} = [\text{head}_1,...,\text{head}_h]\mathbf W_O
+$$
+
+---
+
+## Why Multi-Head?
+
+Each head learns:
+
+- syntax
+- semantics
+- positional relations
+
+> Parallel “views” of the sentence
+
+---
+
+## Visual: Multi-Head Attention
+
+![Multi-head](/images/multihead_self_attention.png)
+
+# Self Attention Block
+
+## Feed-Forward Layer
+
+$$
+\text{FFN}(\mathbf x) = \text{ReLU}(\mathbf x^\top\mathbf W_1 + \mathbf b_1)\mathbf W_2 + \mathbf b_2
+$$
+
+- Applied independently to each token
+
+---
+
+## Attention Block
+
+Structure:
+
+1. Multi-head attention
+2. Add & LayerNorm
+3. Feed-forward network
+4. Add & LayerNorm
+
+---
+
+## Visual: Self-Attention Block
+
+![Self-attention block](/images/self_attention_block.png)
+
+# Implementation in TensorFlow 2
+
+## TensorFlow 2: Attention Layer
+
+```{python}
+import tensorflow as tf
+
+x = tf.random.uniform((1, 3, 4))  # (batch_size, seq_len, d_model)
+
+attention = tf.keras.layers.MultiHeadAttention(
+    num_heads=4,
+    key_dim=64
+)
+
+output = attention(query=x, value=x, key=x)
+
+output
+```
