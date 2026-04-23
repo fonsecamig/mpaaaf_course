@@ -1047,14 +1047,14 @@
     "href": "index.html#tokenization-padding-masking-and-embeddings",
     "title": "Modeling, Programming and Machine Learning for Financial Analysis",
     "section": "Tokenization, Padding, Masking and Embeddings",
-    "text": "Tokenization, Padding, Masking and Embeddings\n\nSlides\n\n\nReading\n\nBishop, C. M., & Bishop, H. (2024). Deep learning: Foundations and concepts. Springer. https://www.bishopbook.com\n\nChapter 12: Transformers, Section 11.2\n\nChollet, F. (2021). Deep learning with Python (2nd ed.). Manning Publications.\n\nChapter 11: Deep learning for text, Sections 11.1, 11.2 and 11.3\n\nZhang, A., Lipton, Z. C., Li, M., & Smola, A. J. (2023). Dive into deep learning. Cambridge University Press. https://d2l.ai\n\nChapter 9: Recurrent Neural Networks, Sections 9.1, 9.2 and 9.3\nChapter 15: Natural Language Processing: Pretraining\n\nCode Example"
+    "text": "Tokenization, Padding, Masking and Embeddings\n\nSlides\n\n\nReading\n\nBishop, C. M., & Bishop, H. (2024). Deep learning: Foundations and concepts. Springer. https://www.bishopbook.com\n\nChapter 12: Transformers, Section 11.2\n\nChollet, F. (2021). Deep learning with Python (2nd ed.). Manning Publications.\n\nChapter 11: Deep learning for text, Sections 11.1, 11.2 and 11.3\n\nZhang, A., Lipton, Z. C., Li, M., & Smola, A. J. (2023). Dive into deep learning. Cambridge University Press. https://d2l.ai\n\nChapter 9: Recurrent Neural Networks, Sections 9.1, 9.2 and 9.3\nChapter 15: Natural Language Processing: Pretraining\n\nCode Example\n\n\n\nExercises\n\nExercise 1"
   },
   {
     "objectID": "index.html#transformers",
     "href": "index.html#transformers",
     "title": "Modeling, Programming and Machine Learning for Financial Analysis",
     "section": "Transformers",
-    "text": "Transformers\n\nAttention\n\nSlides\n\n\n\nDecoders\n\nSlides\n\n\n\nReading\n\nBishop, C. M., & Bishop, H. (2024). Deep learning: Foundations and concepts. Springer. https://www.bishopbook.com\n\nChapter 12: Transformers\n\nChollet, F. (2021). Deep learning with Python (2nd ed.). Manning Publications.\n\nChapter 11: Deep learning for text\n\nZhang, A., Lipton, Z. C., Li, M., & Smola, A. J. (2023). Dive into deep learning. Cambridge University Press. https://d2l.ai\n\nChapter 11: Attention Mechanisms and Transformers\nChapter 15: Natural Language Processing: Pretraining\n\n\n\n\nExercises\n\nExercise 1\n\n\n\nExercises\n\nExercise 1"
+    "text": "Transformers\n\nAttention\n\nSlides\n\n\n\nDecoders\n\nSlides\n\n\n\nReading\n\nBishop, C. M., & Bishop, H. (2024). Deep learning: Foundations and concepts. Springer. https://www.bishopbook.com\n\nChapter 12: Transformers\n\nChollet, F. (2021). Deep learning with Python (2nd ed.). Manning Publications.\n\nChapter 11: Deep learning for text\n\nZhang, A., Lipton, Z. C., Li, M., & Smola, A. J. (2023). Dive into deep learning. Cambridge University Press. https://d2l.ai\n\nChapter 11: Attention Mechanisms and Transformers\nChapter 15: Natural Language Processing: Pretraining\n\n\n\n\nExercises\n\nExercise 1\nExercise 2"
   },
   {
     "objectID": "index.html#references",
@@ -1943,6 +1943,6 @@
     "href": "slides/transformers_attention_block.html#tensorflow-2-attention-layer",
     "title": "Transformer Architecture",
     "section": "TensorFlow 2: Attention Layer",
-    "text": "TensorFlow 2: Attention Layer\n\nimport tensorflow as tf\n\nx = tf.random.uniform((1, 3, 4))  # (batch_size, seq_len, d_model)\n\nattention = tf.keras.layers.MultiHeadAttention(\n    num_heads=4,\n    key_dim=64\n)\n\noutput = attention(query=x, value=x, key=x)\n\noutput\n\n&lt;tf.Tensor: shape=(1, 3, 4), dtype=float32, numpy=\narray([[[ 0.04988822, -0.01825028,  0.07612822,  0.1160919 ],\n        [ 0.04988911, -0.01831501,  0.07615796,  0.11616528],\n        [ 0.04965573, -0.01841487,  0.07631632,  0.11605856]]],\n      dtype=float32)&gt;"
+    "text": "TensorFlow 2: Attention Layer\n\nimport tensorflow as tf\n\nx = tf.random.uniform((1, 3, 4))  # (batch_size, seq_len, d_model)\n\nattention = tf.keras.layers.MultiHeadAttention(\n    num_heads=4,\n    key_dim=64\n)\n\noutput = attention(query=x, value=x, key=x)\n\noutput\n\n&lt;tf.Tensor: shape=(1, 3, 4), dtype=float32, numpy=\narray([[[ 0.03951177, -0.10049264, -0.17430738, -0.02694875],\n        [ 0.03958983, -0.10045344, -0.1743136 , -0.0269275 ],\n        [ 0.03962982, -0.10053368, -0.17419639, -0.02690087]]],\n      dtype=float32)&gt;"
   }
 ]
