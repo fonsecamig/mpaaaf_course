@@ -215,7 +215,7 @@
         "\n",
         "## OOB Error in Python {.scrollable}"
       ],
-      "id": "6c0a1988"
+      "id": "6f9ebe2d"
     },
     {
       "cell_type": "code",
@@ -239,7 +239,7 @@
         "print(\"OOB Score:\", rf.oob_score_)\n",
         "print(\"OOB Error:\", 1 - rf.oob_score_)"
       ],
-      "id": "6b7e5472",
+      "id": "f3707f7d",
       "execution_count": null,
       "outputs": []
     },
@@ -440,7 +440,7 @@
         "\n",
         "## Python Example: Financial Regression {.scrollable}"
       ],
-      "id": "6de70a20"
+      "id": "dcf10d5c"
     },
     {
       "cell_type": "code",
@@ -472,7 +472,7 @@
         "    random_state=42\n",
         ")"
       ],
-      "id": "cf6c8318",
+      "id": "ad7adf14",
       "execution_count": null,
       "outputs": []
     },
@@ -550,7 +550,7 @@
         "| Small data  | Very stable | Can overfit |\n",
         "| Large data  | Strong      | Excellent   |"
       ],
-      "id": "25a6853a"
+      "id": "9fa5d948"
     }
   ],
   "metadata": {

@@ -49,7 +49,7 @@
         "\n",
         "## Creating Tensors {.scrollable}"
       ],
-      "id": "c0a5c20b"
+      "id": "a9b3c9e5"
     },
     {
       "cell_type": "code",
@@ -62,7 +62,7 @@
         "b = tf.constant([1, 2, 3])\n",
         "c = tf.constant([[1., 2.], [3., 4.]])"
       ],
-      "id": "719d8be7",
+      "id": "d764d469",
       "execution_count": null,
       "outputs": []
     },
@@ -72,7 +72,7 @@
       "source": [
         "## Tensor Properties {.scrollable}"
       ],
-      "id": "88f38981"
+      "id": "5278baa8"
     },
     {
       "cell_type": "code",
@@ -82,7 +82,7 @@
         "c.dtype\n",
         "tf.rank(c)"
       ],
-      "id": "6279fc91",
+      "id": "b25db129",
       "execution_count": null,
       "outputs": []
     },
@@ -98,7 +98,7 @@
         "\n",
         "TensorFlow feels like NumPy:"
       ],
-      "id": "0cbc5306"
+      "id": "2cd9bb52"
     },
     {
       "cell_type": "code",
@@ -110,7 +110,7 @@
         "x + y\n",
         "x * y"
       ],
-      "id": "32eb3d3b",
+      "id": "86881258",
       "execution_count": null,
       "outputs": []
     },
@@ -120,7 +120,7 @@
       "source": [
         "Matrix multiplication:"
       ],
-      "id": "90acc8b1"
+      "id": "895a03a8"
     },
     {
       "cell_type": "code",
@@ -128,7 +128,7 @@
       "source": [
         "tf.matmul(x, tf.transpose(y))"
       ],
-      "id": "b936a9da",
+      "id": "0ca9586d",
       "execution_count": null,
       "outputs": []
     },
@@ -156,7 +156,7 @@
         "\n",
         "## Building a Model (Sequential) {.scrollable}"
       ],
-      "id": "5d89821f"
+      "id": "b5f0dc1c"
     },
     {
       "cell_type": "code",
@@ -167,7 +167,7 @@
         "    tf.keras.layers.Dense(1)\n",
         "])"
       ],
-      "id": "d3d4f341",
+      "id": "cd14cca1",
       "execution_count": null,
       "outputs": []
     },
@@ -177,7 +177,7 @@
       "source": [
         "Model Summary"
       ],
-      "id": "9ec798f6"
+      "id": "57864ba2"
     },
     {
       "cell_type": "code",
@@ -185,7 +185,7 @@
       "source": [
         "model.summary()"
       ],
-      "id": "ab3c735a",
+      "id": "b1f6fcf8",
       "execution_count": null,
       "outputs": []
     },
@@ -201,7 +201,7 @@
         "\n",
         "## Functional API {.scrollable}"
       ],
-      "id": "2776ef56"
+      "id": "410a0925"
     },
     {
       "cell_type": "code",
@@ -213,7 +213,7 @@
         "\n",
         "model = tf.keras.Model(inputs, outputs)"
       ],
-      "id": "fee28271",
+      "id": "b3f40bce",
       "execution_count": null,
       "outputs": []
     },
@@ -240,7 +240,7 @@
         "\n",
         "## Compile Step {.scrollable}"
       ],
-      "id": "0181c4c7"
+      "id": "7e72d734"
     },
     {
       "cell_type": "code",
@@ -252,7 +252,7 @@
         "    metrics=[\"mae\"]\n",
         ")"
       ],
-      "id": "09080298",
+      "id": "0c7da11e",
       "execution_count": null,
       "outputs": []
     },
@@ -274,7 +274,7 @@
         "- Batch\n",
         "- Validation set"
       ],
-      "id": "bdb04e73"
+      "id": "6e1ccce5"
     },
     {
       "cell_type": "code",
@@ -289,7 +289,7 @@
         "    validation_split=0.2\n",
         ")"
       ],
-      "id": "9b094847",
+      "id": "a683f561",
       "execution_count": null,
       "outputs": []
     },
@@ -301,7 +301,7 @@
         "\n",
         "## Evaluate and Predict {.scrollable}"
       ],
-      "id": "f55ac030"
+      "id": "640dacd5"
     },
     {
       "cell_type": "code",
@@ -310,7 +310,7 @@
         "X_test, y_test = np.random.rand(20, 10), np.random.rand(20, 1)  # Test data\n",
         "model.evaluate(X_test, y_test)"
       ],
-      "id": "b7e7070c",
+      "id": "90e6947c",
       "execution_count": null,
       "outputs": []
     },
@@ -321,7 +321,7 @@
         "X_new = np.random.rand(5, 10)  # New data for prediction\n",
         "model.predict(X_new)"
       ],
-      "id": "6251ec78",
+      "id": "71bac7dc",
       "execution_count": null,
       "outputs": []
     }

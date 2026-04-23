@@ -163,6 +163,10 @@ sidebar:
   - Chapter 15: Natural Language Processing: Pretraining
 - [Code Example](https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/tf2_nlp_tokenization_notebook.ipynb)
 
+### Exercises
+
+- [Exercise 1](https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_rnn_imdb.ipynb)
+
 ## Transformers
 
 ### Attention
@@ -183,13 +187,11 @@ sidebar:
   - Chapter 11: Attention Mechanisms and Transformers
   - Chapter 15: Natural Language Processing: Pretraining
 
-### Exercises
-
-- [Exercise 1](https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_transformer_decoder.ipynb)
 
 ### Exercises
 
-- [Exercise 1](https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_rnn_imdb.ipynb)
+- [Exercise 1](https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_sequence_reverse.ipynb)
+- [Exercise 2](https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_transformer_decoder.ipynb)
 
 ## References
 
