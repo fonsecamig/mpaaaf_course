@@ -1040,7 +1040,14 @@
     "href": "index.html#transformers",
     "title": "Modeling, Programming and Machine Learning for Financial Analysis",
     "section": "Transformers",
-    "text": "Transformers\n\nAttention\n\nSlides\n\n\n\nDecoders\n\nSlides\n\n\n\nEncoders\n\nSlides\n\n\n\nReading\n\nBishop, C. M., & Bishop, H. (2024). Deep learning: Foundations and concepts. Springer. https://www.bishopbook.com\n\nChapter 12: Transformers\n\nChollet, F. (2021). Deep learning with Python (2nd ed.). Manning Publications.\n\nChapter 11: Deep learning for text\n\nZhang, A., Lipton, Z. C., Li, M., & Smola, A. J. (2023). Dive into deep learning. Cambridge University Press. https://d2l.ai\n\nChapter 11: Attention Mechanisms and Transformers\nChapter 15: Natural Language Processing: Pretraining\n\n\n\n\nExercises\n\nExercise 1\nExercise 2\nExercise 3 ## References\nBishop, C. M., & Bishop, H. (2024). Deep learning: Foundations and concepts. Springer. https://www.bishopbook.com\nChollet, F. (2021). Deep learning with Python (2nd ed.). Manning Publications.\nJames, G., Witten, D., Hastie, T., Tibshirani, R., & Taylor, J. (2023). An introduction to statistical learning: With applications in Python. Springer. https://www.statlearning.com\nJansen, S. (2020). Machine Learning for Algorithmic Trading. Packt.\nZhang, A., Lipton, Z. C., Li, M., & Smola, A. J. (2023). Dive into deep learning. Cambridge University Press. https://d2l.ai"
+    "text": "Transformers\n\nAttention\n\nSlides\n\n\n\nDecoders\n\nSlides\n\n\n\nEncoders\n\nSlides\n\n\n\nReading\n\nBishop, C. M., & Bishop, H. (2024). Deep learning: Foundations and concepts. Springer. https://www.bishopbook.com\n\nChapter 12: Transformers\n\nChollet, F. (2021). Deep learning with Python (2nd ed.). Manning Publications.\n\nChapter 11: Deep learning for text\n\nZhang, A., Lipton, Z. C., Li, M., & Smola, A. J. (2023). Dive into deep learning. Cambridge University Press. https://d2l.ai\n\nChapter 11: Attention Mechanisms and Transformers\nChapter 15: Natural Language Processing: Pretraining\n\n\n\n\nExercises\n\nExercise 1\nExercise 2\nExercise 3\nExercise 4"
+  },
+  {
+    "objectID": "index.html#references",
+    "href": "index.html#references",
+    "title": "Modeling, Programming and Machine Learning for Financial Analysis",
+    "section": "References",
+    "text": "References\n\nBishop, C. M., & Bishop, H. (2024). Deep learning: Foundations and concepts. Springer. https://www.bishopbook.com\nChollet, F. (2021). Deep learning with Python (2nd ed.). Manning Publications.\nJames, G., Witten, D., Hastie, T., Tibshirani, R., & Taylor, J. (2023). An introduction to statistical learning: With applications in Python. Springer. https://www.statlearning.com\nJansen, S. (2020). Machine Learning for Algorithmic Trading. Packt.\nZhang, A., Lipton, Z. C., Li, M., & Smola, A. J. (2023). Dive into deep learning. Cambridge University Press. https://d2l.ai"
   },
   {
     "objectID": "slides/cnn.html#why-not-fully-connected-networks-for-images",
