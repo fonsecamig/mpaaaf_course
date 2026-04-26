@@ -1,0 +1,234 @@
+---
+title: "Transformer Architecture"
+subtitle: "Encoders"
+author: "Miguel Fonseca"
+format:
+  revealjs:
+    toc: true
+---
+
+# Motivation
+
+## Motivation
+
+We want to learn representations of sequential data that:
+
+- capture **long-range dependencies**
+- integrate **multiple signals simultaneously**
+- adapt to **context dynamically**
+
+Challenges:
+
+- Financial time series are noisy and non-stationary  
+- NLP data is highly context-dependent  
+- Classical models struggle to combine **global context + multiple features**
+
+Transformer encoders provide a unified solution:
+
+- global context via attention  
+- flexible representation learning  
+- scalable training  
+
+---
+
+## Encoder Role
+
+Input:
+$$
+(x_1, \dots, x_T)
+$$
+
+Output:
+$$
+(h_1, \dots, h_T)
+$$
+
+Each representation is **contextual**
+
+# Architecture
+
+## Encoder Block
+
+Pipeline:
+
+- Multi-head attention  
+- Add & Norm  
+- Feedforward  
+- Add & Norm  
+
+---
+
+## Feedforward Layer
+
+$$
+\text{FFN}(\mathbf x)=\text{ReLU}(\mathbf x \mathbf W_1+\mathbf b_1)\mathbf W_2+\mathbf b_2
+$$
+
+- Same network applied per token  
+- Learns nonlinear features  
+
+---
+
+## Residual + Normalization
+
+$$
+\mathbf x + \text{sublayer}(\mathbf x)
+$$
+
+**Effect:**
+
+- stabilizes training  
+- enables deep stacking
+- normalizes across features
+
+> Especially important for deep transformers
+
+---
+
+![Transformer encoder block](/images/transformer_encoder.png)
+
+## Representation Learning
+
+**What does the encoder learn?**
+
+Each token representation:
+
+- context-aware
+- task-adaptive
+
+Example:
+
+>“bank” → river vs finance (context-dependent)
+
+# Output
+
+## Pooling Strategies
+
+To get a single vector:
+
+- **CLS token** (BERT-style)
+- **Mean pooling**
+- **Max pooling**
+
+>Choice affects downstream performance
+
+---
+
+## CLS Token
+
+![CLS token](/images/bert_cls_token.png)
+
+---
+
+## Strengths & Limitations
+
+**Strengths**
+- Global context
+- Parallel computation
+- Flexible architecture
+
+**Limitations**
+- Data-hungry
+- Quadratic cost in sequence length
+- Requires positional encoding
+
+---
+
+## TensorFlow 2: Encoder Block
+
+```{python}
+import tensorflow as tf
+from tensorflow.keras import layers
+
+class TransformerEncoder(layers.Layer):
+    def __init__(self, d_model, num_heads, dff):
+        super().__init__()
+        self.att = layers.MultiHeadAttention(num_heads, d_model)
+        self.ffn = tf.keras.Sequential([
+            layers.Dense(dff, activation='relu'),
+            layers.Dense(d_model)
+        ])
+        self.norm1 = layers.LayerNormalization()
+        self.norm2 = layers.LayerNormalization()
+
+    def call(self, x):
+        attn = self.att(x, x)
+        x = self.norm1(x + attn)
+        ffn = self.ffn(x)
+        return self.norm2(x + ffn)
+```
+
+---
+
+## Stacking Encoders
+
+```{python}
+class EncoderStack(tf.keras.layers.Layer):
+    def __init__(self, num_layers, d_model, num_heads, dff):
+        super().__init__()
+        self.layers_ = [
+            TransformerEncoder(d_model, num_heads, dff)
+            for _ in range(num_layers)
+        ]
+
+    def call(self, x):
+        for layer in self.layers_:
+            x = layer(x)
+        return x
+```
+
+# Applications
+
+## NLP Example: Sentiment Analysis
+
+### Finance Time Series
+
+**Input:**
+
+$$
+X \in \mathbb{R}^{T \times d}
+$$
+
+**Financial Sentiment**
+
+Example:
+
+>"Central bank signals rate cuts"
+
+- Likely bullish
+
+**Pipeline:**
+
+Text → Encoder → Sentiment → Signal
+
+### Code
+
+```{python}
+inputs = tf.keras.Input(shape=(None,))
+x = layers.Embedding(10000, 128)(inputs)
+
+x = EncoderStack(2, 128, 4, 256)(x)
+x = layers.GlobalAveragePooling1D()(x)
+
+outputs = layers.Dense(2, activation='softmax')(x)
+model = tf.keras.Model(inputs, outputs)
+```
+
+---
+
+## Example: Financial Forecasting
+
+Predict:
+
+- **returns**
+- **risk metrics**
+
+```{python}
+inputs = tf.keras.Input(shape=(60, 64))
+
+x = EncoderStack(2, 64, 4, 256)(inputs)
+x = layers.GlobalAveragePooling1D()(x)
+
+outputs = layers.Dense(1)(x)
+model = tf.keras.Model(inputs, outputs)
+```
