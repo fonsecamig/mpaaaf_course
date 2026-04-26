@@ -196,7 +196,9 @@ sidebar:
 
 - [Exercise 1](https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_sequence_reverse.ipynb)
 - [Exercise 2](https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_transformer_decoder.ipynb)
-- [Exercise 3](https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_transformer_nlp.ipynb)
+- [Exercise 3](https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_transformer_imdb.ipynb)
+- [Exercise 4](https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_transformer_nlp.ipynb)
+
 ## References
 
 - Bishop, C. M., & Bishop, H. (2024). *Deep learning: Foundations and concepts.* Springer. [https://www.bishopbook.com](https://www.bishopbook.com)

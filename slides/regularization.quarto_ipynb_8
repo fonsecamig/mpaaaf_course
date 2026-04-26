@@ -102,7 +102,7 @@
         "\n",
         "## Tensorflow Implementation"
       ],
-      "id": "88c81204"
+      "id": "16b80c69"
     },
     {
       "cell_type": "code",
@@ -135,7 +135,7 @@
         "    loss=\"mse\"\n",
         ")"
       ],
-      "id": "0de60234",
+      "id": "6cbcc222",
       "execution_count": null,
       "outputs": []
     },
@@ -187,7 +187,7 @@
         "\n",
         "### Tensorflow Implementation"
       ],
-      "id": "78065c9b"
+      "id": "54d7857e"
     },
     {
       "cell_type": "code",
@@ -208,7 +208,7 @@
         "    loss=\"mse\"\n",
         ")"
       ],
-      "id": "ee8ab678",
+      "id": "29001112",
       "execution_count": null,
       "outputs": []
     },
@@ -282,7 +282,7 @@
         "\n",
         "## BatchNorm - TensorFlow Implementation"
       ],
-      "id": "58842a9c"
+      "id": "9929badb"
     },
     {
       "cell_type": "code",
@@ -300,7 +300,7 @@
         "    layers.Dense(1)\n",
         "])"
       ],
-      "id": "97c9ab95",
+      "id": "dbd9e999",
       "execution_count": null,
       "outputs": []
     },
@@ -333,7 +333,7 @@
         "\n",
         "## LayerNorm - TensorFlow Implementation"
       ],
-      "id": "37040e69"
+      "id": "30815d8c"
     },
     {
       "cell_type": "code",
@@ -351,7 +351,7 @@
         "    layers.Dense(1)\n",
         "])"
       ],
-      "id": "4d191ff0",
+      "id": "fa1a5af5",
       "execution_count": null,
       "outputs": []
     },
@@ -395,7 +395,7 @@
         "\n",
         "---"
       ],
-      "id": "27b6ec75"
+      "id": "6c6509d7"
     },
     {
       "cell_type": "code",
@@ -433,7 +433,7 @@
         "    restore_best_weights=True\n",
         ")"
       ],
-      "id": "8c25baba",
+      "id": "d103fbdf",
       "execution_count": null,
       "outputs": []
     },
@@ -473,7 +473,7 @@
         "\n",
         "<!-- > Generalisation is engineered, not accidental. -->"
       ],
-      "id": "684364ce"
+      "id": "b15a8d9f"
     }
   ],
   "metadata": {
