@@ -60,7 +60,7 @@
     "href": "slides/transformers_encoder.html#strengths-limitations",
     "title": "Transformer Architecture",
     "section": "Strengths & Limitations",
-    "text": "Strengths & Limitations\nStrengths - Global context - Parallel computation - Flexible architecture\nLimitations - Data-hungry - Quadratic cost in sequence length - Requires positional encoding"
+    "text": "Strengths & Limitations\nStrengths\n\nGlobal context\nParallel computation\nFlexible architecture\n\nLimitations\n\nData-hungry\nQuadratic cost in sequence length\nRequires positional encoding"
   },
   {
     "objectID": "slides/transformers_encoder.html#tensorflow-2-encoder-block",

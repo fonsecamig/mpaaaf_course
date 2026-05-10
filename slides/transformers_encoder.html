@@ -346,12 +346,22 @@ Miguel Fonseca
 <img data-src="../images/bert_cls_token.png" class="r-stretch quarto-figure-center"><p class="caption">CLS token</p></section>
 <section id="strengths-limitations" class="slide level2">
 <h2>Strengths &amp; Limitations</h2>
-<p><strong>Strengths</strong> - Global context - Parallel computation - Flexible architecture</p>
-<p><strong>Limitations</strong> - Data-hungry - Quadratic cost in sequence length - Requires positional encoding</p>
+<p><strong>Strengths</strong></p>
+<ul>
+<li>Global context</li>
+<li>Parallel computation</li>
+<li>Flexible architecture</li>
+</ul>
+<p><strong>Limitations</strong></p>
+<ul>
+<li>Data-hungry</li>
+<li>Quadratic cost in sequence length</li>
+<li>Requires positional encoding</li>
+</ul>
 </section>
 <section id="tensorflow-2-encoder-block" class="slide level2">
 <h2>TensorFlow 2: Encoder Block</h2>
-<div id="8dbaff1a" class="cell" data-execution_count="1">
+<div id="ad40e511" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> tensorflow <span class="im">as</span> tf</span>
 <span id="cb1-2"><a></a><span class="im">from</span> tensorflow.keras <span class="im">import</span> layers</span>
 <span id="cb1-3"><a></a></span>
@@ -375,7 +385,7 @@ Miguel Fonseca
 </section>
 <section id="stacking-encoders" class="slide level2">
 <h2>Stacking Encoders</h2>
-<div id="51b690a9" class="cell" data-execution_count="2">
+<div id="89a045e5" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="kw">class</span> EncoderStack(tf.keras.layers.Layer):</span>
 <span id="cb2-2"><a></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, num_layers, d_model, num_heads, dff):</span>
 <span id="cb2-3"><a></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
@@ -413,7 +423,7 @@ X \in \mathbb{R}^{T \times d}
 <p><strong>Pipeline:</strong></p>
 <p>Text → Encoder → Sentiment → Signal</p>
 <h3 id="code">Code</h3>
-<div id="644618c4" class="cell" data-execution_count="3">
+<div id="2ea50da2" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>inputs <span class="op">=</span> tf.keras.Input(shape<span class="op">=</span>(<span class="va">None</span>,))</span>
 <span id="cb3-2"><a></a>x <span class="op">=</span> layers.Embedding(<span class="dv">10000</span>, <span class="dv">128</span>)(inputs)</span>
 <span id="cb3-3"><a></a></span>
@@ -431,7 +441,7 @@ X \in \mathbb{R}^{T \times d}
 <li><strong>returns</strong></li>
 <li><strong>risk metrics</strong></li>
 </ul>
-<div id="744773c7" class="cell" data-execution_count="4">
+<div id="23889f9c" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a>inputs <span class="op">=</span> tf.keras.Input(shape<span class="op">=</span>(<span class="dv">60</span>, <span class="dv">64</span>))</span>
 <span id="cb4-2"><a></a></span>
 <span id="cb4-3"><a></a>x <span class="op">=</span> EncoderStack(<span class="dv">2</span>, <span class="dv">64</span>, <span class="dv">4</span>, <span class="dv">256</span>)(inputs)</span>
