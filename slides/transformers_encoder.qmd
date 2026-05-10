@@ -123,11 +123,13 @@ To get a single vector:
 ## Strengths & Limitations
 
 **Strengths**
+
 - Global context
 - Parallel computation
 - Flexible architecture
 
 **Limitations**
+
 - Data-hungry
 - Quadratic cost in sequence length
 - Requires positional encoding
