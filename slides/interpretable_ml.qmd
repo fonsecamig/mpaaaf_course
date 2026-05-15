@@ -1,0 +1,493 @@
+---
+title: "Interpretable Machine Learning"
+subtitle: "Local & Global Model-Agnostic Methods"
+author: "Miguel Fonseca"
+# date: today
+format:
+  revealjs:
+    toc: true
+---
+
+## Why interpretability?
+
+Modern ML models — random forests, gradient boosting, neural networks — are powerful but **opaque**. A single prediction may depend on hundreds of features through highly non-linear interactions.
+
+**We want to answer questions like:**
+
+- *Why* did the model predict this for **this** instance?
+- Which features drive predictions overall?
+- How does the prediction change as a feature varies?
+- Can we trust the model on new data?
+
+<!-- > "If a machine learning model performs well, why do we not just trust the model and ignore why it made a certain decision? The problem is that a single metric, such as classification accuracy, is an incomplete description of most real-world tasks."  
+> — Doshi-Velez & Kim (2017) -->
+
+
+## Two scopes of explanation
+
+![](/images/overview.png){width=85%}
+
+- **Local methods** explain a *single* prediction (or a small neighbourhood).
+- **Global methods** describe the *whole* model: average effects, importances.
+- **Model-agnostic** = treats the model as a black box; works for any predictor.
+
+
+## The running example
+
+Throughout this deck we use the **California housing** dataset and a `RandomForestRegressor` trained on it.
+
+- Target: median house value (units of \$100k).
+- 8 numeric features: `MedInc`, `HouseAge`, `AveRooms`, `AveBedrms`, `Population`, `AveOccup`, `Latitude`, `Longitude`.
+- Held-out $R^2 \approx 0.74$.
+
+```python
+from sklearn.datasets import fetch_california_housing
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.model_selection import train_test_split
+
+X, y = fetch_california_housing(return_X_y=True, as_frame=True)
+X_tr, X_te, y_tr, y_te = train_test_split(X, y, random_state=42)
+model = RandomForestRegressor(n_estimators=200, max_depth=12,
+                              random_state=42, n_jobs=-1).fit(X_tr, y_tr)
+```
+
+
+# Local Model-Agnostic Methods
+
+
+## 1. Individual Conditional Expectation (ICE)
+
+### Motivation
+
+A **Partial Dependence Plot (PDP)** shows the *average* relationship between a feature and the prediction. But the average can hide:
+
+- **Heterogeneous effects** — opposite effects in different sub-populations that cancel out on average.
+- **Interactions** — the effect of feature $X_j$ depends on the value of another feature.
+
+**Idea:** show one line per instance instead of averaging.
+
+
+## ICE — Theory
+
+For each instance $\mathbf{x}^{(i)} = (x_1^{(i)}, \dots, x_p^{(i)})$, we hold every feature fixed except $X_j$. We then sweep $X_j$ across a grid of values $\{v_1, \dots, v_K\}$ and record the model's predictions:
+
+$$
+\text{ICE}^{(i)}_j(v) = \widehat{f}\!\left(v,\, \mathbf{x}^{(i)}_{-j}\right)
+$$
+
+Plotting these curves gives one line per instance.
+
+**Centered ICE (c-ICE)** anchors curves at a reference point $a$ to compare shapes more easily:
+
+$$
+\text{c-ICE}^{(i)}_j(v) \;=\; \widehat{f}\!\left(v, \mathbf{x}^{(i)}_{-j}\right) \;-\; \widehat{f}\!\left(a, \mathbf{x}^{(i)}_{-j}\right)
+$$
+
+The PDP is just the **average** of the ICE curves.
+
+
+## ICE — Example
+
+![](/images/ice_plot.png){width=95%}
+
+- Left: raw ICE curves diverge by intercept (different baselines).
+- Right: centered ICE makes shape differences visible — most curves rise similarly with `MedInc`, suggesting limited interaction here.
+
+
+## ICE — Python
+
+scikit-learn ships ICE/PDP in `sklearn.inspection`:
+
+```python
+from sklearn.inspection import PartialDependenceDisplay
+import matplotlib.pyplot as plt
+
+fig, ax = plt.subplots(figsize=(6, 4))
+PartialDependenceDisplay.from_estimator(
+    model, X_tr, features=["MedInc"],
+    kind="both",            # "both" = ICE lines + average PDP
+    subsample=80,           # subsample for clarity
+    centered=True,          # produce c-ICE
+    ax=ax,
+)
+plt.show()
+```
+
+**Other packages:** `PiML`, `PDPbox` (Python) and `iml`, `pdp`, `ICEbox` (R).
+
+### Pros & Cons
+
+- ✔ Intuitive, reveals heterogeneity, model-agnostic.
+- ✗ Only one feature at a time; can become a hairball; suffers from extrapolation when features are correlated (same issue as PDP).
+
+
+## 2. LIME — Local Interpretable Model-agnostic Explanations
+
+### Motivation
+
+We want an answer to: *"Why did the black-box model predict 0.83 for **this** instance?"*
+
+**Idea (Ribeiro, Singh & Guestrin, 2016):** in a small neighbourhood, even a very complex function looks roughly linear. So fit a simple, interpretable model — a sparse linear model or a shallow tree — that is **locally faithful** to the black box.
+
+
+## LIME — Theory
+
+The explanation for instance $\mathbf{x}$ is the model $g$ from a family $G$ of interpretable models that minimises:
+
+$$
+\text{explanation}(\mathbf{x}) \;=\; \arg\min_{g \in G}\;
+\underbrace{L\!\left(\widehat{f},\, g,\, \pi_{\mathbf{x}}\right)}_{\text{local fidelity}}
+\;+\;
+\underbrace{\Omega(g)}_{\text{simplicity}}
+$$
+
+- $\widehat{f}$ — the black-box model;
+- $\pi_{\mathbf{x}}$ — a proximity kernel around $\mathbf{x}$ (typically exponential);
+- $L$ — weighted loss (e.g. weighted MSE);
+- $\Omega(g)$ — complexity penalty (e.g. number of non-zero coefficients).
+
+The LIME algorithm:
+
+1. Pick the instance $\mathbf{x}$ to explain.
+2. **Perturb** it to create a synthetic neighbourhood and predict with $\widehat{f}$.
+3. **Weight** each perturbation by its proximity to $\mathbf{x}$.
+4. Fit a sparse linear model on the weighted sample.
+5. Read off the coefficients — those are the explanation.
+
+
+## LIME — Example
+
+![](/images/lime_concept.png){width=98%}
+
+A) The black-box model has a complex decision boundary.   
+B) We sample synthetic points around the instance of interest (yellow).   
+C) Each synthetic point is weighted by its proximity to the instance.   
+D) The weighted linear model (white line) is **locally** faithful to $\widehat{f}$.
+
+
+## LIME — Python
+
+```python
+import lime
+import lime.lime_tabular
+
+explainer = lime.lime_tabular.LimeTabularExplainer(
+    training_data=X_tr.values,
+    feature_names=X_tr.columns.tolist(),
+    mode="regression",
+    discretize_continuous=True,
+)
+
+exp = explainer.explain_instance(
+    data_row=X_te.iloc[0].values,
+    predict_fn=model.predict,
+    num_features=6,
+)
+
+exp.show_in_notebook(show_table=True)   # or exp.as_pyplot_figure()
+```
+
+**Packages:** `lime` (tabular, text, image), `eli5`, `interpret` (Microsoft InterpretML).
+
+### Pros & Cons
+
+- ✔ Works on **tabular, text and images**; intuitive coefficients.
+- ✗ **Instability:** small changes in the neighbourhood (kernel width, sampling seed) can flip explanations; choice of kernel is itself an open problem.
+
+
+## 3. SHAP — SHapley Additive exPlanations
+
+### Motivation
+
+LIME gives a local linear approximation, but its coefficients have no theoretical guarantees: change the kernel width and the explanation may change.
+
+**SHAP** (Lundberg & Lee, 2017) borrows the **Shapley value** from cooperative game theory: a *unique* attribution scheme satisfying a small set of natural axioms.
+
+
+## SHAP — Theory
+
+Treat each feature as a "player" cooperating to produce the prediction $\widehat{f}(\mathbf{x})$. The contribution of feature $j$ is its **Shapley value**:
+
+$$
+\phi_j \;=\; \sum_{S \subseteq F \setminus \{j\}}
+\frac{|S|!\,(|F| - |S| - 1)!}{|F|!}
+\left[\, v(S \cup \{j\}) \;-\; v(S) \,\right]
+$$
+
+where $v(S)$ is the model's expected prediction when only the features in $S$ are known.
+
+**Axioms uniquely characterising Shapley values:**
+
+- **Efficiency:** $\sum_j \phi_j \;=\; \widehat{f}(\mathbf{x}) - \mathbb{E}[\widehat{f}(X)]$
+- **Symmetry:** features with identical contributions get equal $\phi$.
+- **Dummy:** a feature that never changes the output gets $\phi = 0$.
+- **Additivity:** $\phi$ of a sum of models = sum of the $\phi$'s.
+
+Exact Shapley values cost $\mathscr{O}(2^p)$ → SHAP provides efficient estimators:
+
+- **KernelSHAP** (model-agnostic, weighted linear regression).
+- **TreeSHAP** (exact, polynomial-time for tree ensembles).
+- **DeepSHAP** (approximations for neural networks).
+
+
+## SHAP — Example (single prediction)
+
+![](/images/shap_waterfall.png){width=80%}
+
+A waterfall plot decomposes a single prediction $\widehat{f}(\mathbf{x})$ from $\mathbb{E}[\widehat{f}(X)]$ (bottom) to the actual value (top), one feature at a time. Red pushes up, blue pushes down.
+
+
+## SHAP — Example (global view)
+
+![](/images/shap_beeswarm.png){width=85%}
+
+The **beeswarm** plot stacks SHAP values across many instances. Each row is a feature, each dot an instance; colour encodes the original feature value.
+
+→ `MedInc` dominates: high incomes (red) push predictions up; low incomes pull them down.
+
+
+## SHAP — Python
+
+![](/images/shap_bar.png){width=72%}
+
+```python
+import shap
+
+# TreeSHAP — exact and fast for tree models
+explainer = shap.TreeExplainer(model)
+shap_values = explainer(X_te)             # an Explanation object
+
+# Single prediction
+shap.plots.waterfall(shap_values[0])
+
+# Global summary
+shap.plots.beeswarm(shap_values)
+shap.plots.bar(shap_values)               # mean |SHAP| per feature (above)
+
+# Model-agnostic alternative
+kexp = shap.KernelExplainer(model.predict, shap.sample(X_tr, 100))
+```
+
+**Packages:** `shap`, also wrapped by `interpret` and `alibi`.
+
+### Pros & Cons
+
+- ✔ Strong theoretical foundation; consistent local *and* global views.
+- ✗ Exact computation expensive; for correlated features the "marginal" vs "conditional" expectations debate matters; TreeSHAP background-set choice affects results.
+
+
+# Global Model-Agnostic Methods
+
+
+## 4. Partial Dependence Plot (PDP)
+
+### Motivation
+
+The simplest answer to "How does feature $X_j$ affect predictions *on average*?": fix every other feature at its observed values and average over them.
+
+Friedman (2001) introduced PDPs as a tool to interpret gradient-boosted models.
+
+![](/images/pdp_concept.png){width=90%}
+
+
+## PDP — Theory
+
+The partial dependence of the prediction on a subset of features $X_S$ is:
+
+$$
+\widehat{f}_S(\mathbf{x}_S) \;=\; \mathbb{E}_{X_C}\!\left[\, \widehat{f}(\mathbf{x}_S,\, X_C) \,\right]
+\;\approx\; \frac{1}{n} \sum_{i=1}^{n} \widehat{f}\!\left(\mathbf{x}_S,\, \mathbf{x}_C^{(i)}\right)
+$$
+
+where $C = \{1,\dots,p\}\setminus S$ are the "other" features.
+
+**The PDP is the mean of the ICE curves.** It can be plotted in 1-D (one feature) or 2-D (an interaction). It assumes feature $X_S$ is **independent** of $X_C$ — when that fails, the average is taken over impossible combinations and the curve becomes misleading.
+
+
+## PDP — Example
+
+![](/images/pdp_plot.png){width=95%}
+
+- Left: 1-D PDP — predicted price rises steeply with `MedInc`, then flattens.
+- Right: 2-D PDP — for low occupancy, increasing `MedInc` increases price strongly; the joint effect is visible as the diagonal gradient.
+
+
+## PDP — Python
+
+```python
+from sklearn.inspection import PartialDependenceDisplay
+import matplotlib.pyplot as plt
+
+# 1-D and 2-D PDPs in a single call
+PartialDependenceDisplay.from_estimator(
+    model, X_tr,
+    features=["MedInc", "AveOccup", ("MedInc", "AveOccup")],
+    grid_resolution=40,
+)
+plt.tight_layout()
+plt.show()
+```
+
+**Packages:** `sklearn.inspection`, `PDPbox`, `PiML`, `interpret`.
+
+### Pros & Cons
+
+- ✔ Easy to compute, easy to read, supports 2-D interactions.
+- ✗ Assumes feature **independence** — bias under correlation; hides heterogeneity (use ICE for that).
+
+
+## 5. Accumulated Local Effects (ALE)
+
+### Motivation
+
+PDPs break when features are correlated, because they evaluate the model at **impossible feature combinations** (e.g. a high `Latitude` with a low `Longitude` — outside California!).
+
+ALE plots (Apley & Zhu, 2020) sidestep the problem: instead of averaging predictions, they average **local differences** of the prediction within small bins of the feature.
+
+
+## ALE — Theory
+
+Partition the range of $X_j$ into $K$ quantile bins $\{(z_{k-1}, z_k]\}$. For each bin compute the **average local effect**:
+
+$$
+\widehat{\text{LE}}_k \;=\; \frac{1}{n_k} \sum_{i\,:\,x_j^{(i)} \in (z_{k-1}, z_k]}
+\left[\, \widehat{f}(z_k,\, \mathbf{x}^{(i)}_{-j}) \,-\, \widehat{f}(z_{k-1},\, \mathbf{x}^{(i)}_{-j}) \,\right]
+$$
+
+The ALE is the **cumulative sum** of these local effects, centered to have mean 0:
+
+$$
+\widehat{\text{ALE}}_j(x_j) \;=\; \sum_{k\,:\,z_k\,\le\,x_j} \widehat{\text{LE}}_k \;-\; c
+$$
+
+The key insight: each $\widehat{\text{LE}}_k$ only uses data **inside** the bin, so we never extrapolate outside the data manifold.
+
+
+## ALE — Example
+
+![](/images/ale_vs_pdp.png){width=98%}
+
+Left: `Latitude` and `Longitude` are strongly correlated (California's shape). Right: PDP and ALE for `Latitude` disagree — ALE shows stronger location effects because it does not waste mass on impossible (Lat, Lon) combinations.
+
+
+## ALE — Python
+
+The most popular package is **`PyALE`** or **`alibi`**:
+
+```python
+# Option A — alibi
+from alibi.explainers import ALE, plot_ale
+ale = ALE(model.predict, feature_names=X_tr.columns.tolist())
+exp = ale.explain(X_tr.values)
+plot_ale(exp, features=["Latitude"])
+
+# Option B — PyALE
+from PyALE import ale
+ale_eff = ale(X=X_tr, model=model, feature=["Latitude"],
+              grid_size=30, include_CI=True)
+```
+
+**Packages:** `alibi`, `PyALE`, `interpret` (partially); R has `ALEPlot` and `iml`.
+
+### Pros & Cons
+
+- ✔ Unbiased under correlation; faster than PDP (no full-grid evaluation).
+- ✗ Less intuitive (we plot *cumulative local differences*, not predictions); choice of bin count matters; only model-agnostic to first/second order.
+
+
+## 6. Permutation Feature Importance
+
+### Motivation
+
+A direct, model-agnostic measure of *how much the model depends on a feature*:
+
+> If we destroy the information in feature $X_j$ by randomly shuffling its values, **how much worse does the model get?**
+
+Introduced by Breiman (2001) for random forests and generalised by Fisher, Rudin & Dominici (2019) for any model.
+
+
+## Permutation Importance — Theory
+
+![](/images/pfi_concept.png){width=92%}
+
+Algorithm:
+
+1. Compute the baseline error on a held-out set: $e_{\text{orig}} = L(y, \widehat{f}(X))$.
+2. For each feature $j = 1, \dots, p$:
+   a. **Permute** column $j$ of $X$ (breaking the link with $y$).
+   b. Recompute the error $e_{\text{perm}}^{(j)} = L(y, \widehat{f}(X^{\text{perm}_j}))$.
+3. Importance: $\text{PFI}_j \;=\; e_{\text{perm}}^{(j)} - e_{\text{orig}}$  (or the ratio).
+
+Repeat the shuffle several times and average to reduce variance.
+
+**Watch out:** when features are correlated, permuting one creates unrealistic instances; importance can be inflated or split across correlated features.
+
+
+## Permutation Importance — Example
+
+![](/images/permutation_importance.png){width=78%}
+
+`MedInc` is by far the most important feature: shuffling it costs ~ 0.9 in $R^2$. `AveOccup`, `Latitude` and `Longitude` follow.
+
+
+## Permutation Importance — Python
+
+```python
+from sklearn.inspection import permutation_importance
+import pandas as pd
+
+result = permutation_importance(
+    model, X_te, y_te,
+    n_repeats=20,
+    scoring="r2",
+    random_state=42,
+    n_jobs=-1,
+)
+
+importances = pd.Series(result.importances_mean,
+                        index=X_te.columns).sort_values(ascending=False)
+print(importances)
+```
+
+**Packages:** `sklearn.inspection`, `eli5.show_weights`, `rfpimp` (handles correlated features via "drop-column" importance).
+
+### Pros & Cons
+
+- ✔ Compresses everything into one number per feature; model-agnostic.
+- ✗ Depends on the loss and dataset (train vs test); biased by feature correlation; says nothing about the *direction* or *shape* of the effect.
+
+
+# Final remarks
+
+
+## Choosing a method
+
+| You want to… | Use |
+|---|---|
+| Explain **one** prediction | SHAP (preferred), LIME |
+| See per-instance feature curves | **ICE** |
+| Average effect of a feature | **PDP** (independent features) |
+| Average effect with correlated features | **ALE** |
+| Rank features by importance | **Permutation Importance** (or mean $|\text{SHAP}|$) |
+| Global summary of a model | SHAP summary + PFI + PDP/ALE |
+
+Best practice: **combine** several methods — they answer slightly different questions.
+
+
+<!-- ## References
+
+![](/images/methods_matrix.png){width=88%}
+
+- Molnar, C. (2025). *Interpretable Machine Learning: A Guide for Making Black Box Models Explainable* (3rd ed.). <https://christophm.github.io/interpretable-ml-book/>
+- Goldstein, A., Kapelner, A., Bleich, J., & Pitkin, E. (2015). Peeking Inside the Black Box: Visualizing Statistical Learning With Plots of Individual Conditional Expectation. *JCGS* 24(1).
+- Ribeiro, M. T., Singh, S., & Guestrin, C. (2016). "Why Should I Trust You?": Explaining the Predictions of Any Classifier. *KDD*.
+- Lundberg, S. M., & Lee, S.-I. (2017). A Unified Approach to Interpreting Model Predictions. *NeurIPS*.
+- Friedman, J. H. (2001). Greedy Function Approximation: A Gradient Boosting Machine. *Annals of Statistics*.
+- Apley, D. W., & Zhu, J. (2020). Visualizing the Effects of Predictor Variables in Black Box Supervised Learning Models. *JRSS-B*.
+- Breiman, L. (2001). Random Forests. *Machine Learning* 45(1).
+- Fisher, A., Rudin, C., & Dominici, F. (2019). All Models are Wrong, but Many are Useful. *JMLR*.
+
+
+## Thank you
+
+Questions? -->

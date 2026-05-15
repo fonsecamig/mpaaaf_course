@@ -89,7 +89,7 @@
         "\n",
         "## TensorFlow: Simple RNN"
       ],
-      "id": "9462516d"
+      "id": "41987f92"
     },
     {
       "cell_type": "code",
@@ -108,7 +108,7 @@
         "model.compile(optimizer=\"adam\", loss=\"mse\")\n",
         "model.summary()"
       ],
-      "id": "84b254f9",
+      "id": "07c96e69",
       "execution_count": null,
       "outputs": []
     },
@@ -266,7 +266,7 @@
         "\n",
         "## Tensorflow: LSTM"
       ],
-      "id": "8a02bf9e"
+      "id": "113b8f97"
     },
     {
       "cell_type": "code",
@@ -280,7 +280,7 @@
         "\n",
         "model.compile(optimizer=\"adam\", loss=\"mse\")"
       ],
-      "id": "b69f61b8",
+      "id": "9447bc85",
       "execution_count": null,
       "outputs": []
     },
@@ -331,7 +331,7 @@
         "\n",
         "## Tensorflow: GRU"
       ],
-      "id": "173eb909"
+      "id": "ce900ab7"
     },
     {
       "cell_type": "code",
@@ -343,7 +343,7 @@
         "    layers.Dense(1)\n",
         "])"
       ],
-      "id": "5c1c618d",
+      "id": "619e699a",
       "execution_count": null,
       "outputs": []
     },
@@ -366,7 +366,7 @@
         "\n",
         "## TensorFlow: Recurrent Dropout"
       ],
-      "id": "ce8c7c84"
+      "id": "ae6f22e0"
     },
     {
       "cell_type": "code",
@@ -382,7 +382,7 @@
         "    layers.Dense(1)\n",
         "])"
       ],
-      "id": "d2562735",
+      "id": "354d9af6",
       "execution_count": null,
       "outputs": []
     },
@@ -400,7 +400,7 @@
         "\n",
         "Prevent exploding gradients:"
       ],
-      "id": "d764eec6"
+      "id": "bb0f7172"
     },
     {
       "cell_type": "code",
@@ -411,7 +411,7 @@
         "    clipnorm=1.0\n",
         ")"
       ],
-      "id": "d6daed3c",
+      "id": "3096077b",
       "execution_count": null,
       "outputs": []
     },
@@ -452,7 +452,7 @@
         "- Long sequences still challenging\n",
         "- Transformers dominate NLP"
       ],
-      "id": "ea34a413"
+      "id": "89d726cf"
     }
   ],
   "metadata": {

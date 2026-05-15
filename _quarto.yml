@@ -81,4 +81,13 @@ website:
             href: https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_rnn_financial_direction.ipynb
           - text: "Tokenization, Padding, Masking and Embeddings: Exercise 1"
             href: https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_rnn_imdb.ipynb
-            
+          - text: "Transformers: Exercise 1"
+            href: https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_sequence_reverse.ipynb
+          - text: "Transformers: Exercise 2"
+            href: https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_transformer_decoder.ipynb
+          - text: "Transformers: Exercise 3"
+            href: https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_transformer_decoder_strategy.ipynb
+          - text: "Transformers: Exercise 4"
+            href: https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_transformer_imdb.ipynb
+          - text: "Transformers: Exercise 5"
+            href: https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_transformer_nlp.ipynb

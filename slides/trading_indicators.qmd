@@ -1,0 +1,386 @@
+---
+title: "Technical Trading Indicators"
+subtitle: "Formula · Motivation · Interpretation"
+author: "Miguel Fonseca"
+format:
+  revealjs:
+    toc: true
+---
+
+# Returns & Volatility
+
+## Log-Return
+
+$$r_t(n) = \ln\left(\frac{C_t}{C_{t-n}}\right)$$
+
+**Motivation:** Log-returns are symmetric, additive over time, and approximately normally distributed — the standard unit of measurement in quantitative finance.
+
+**Interpretation:** 
+
+- $r > 0$ appreciation
+- $r < 0$ depreciation. 
+
+Typical periods: $n = 1, 5, 10, 20$.
+
+## Realised Volatility
+
+$$\sigma_n = \text{std}\!\left(\{r_{t-n+1}, \ldots, r_t\}\right)$$
+
+**Motivation:** Rolling standard deviation of log-returns is the most direct empirical measure of price uncertainty. Captures regime changes between calm and turbulent markets.
+
+**Interpretation:** 
+
+- Low = calm/trending regime
+- rising = growing uncertainty
+- high = crisis or event-driven. 
+
+Typical periods: $n = 5, 10, 20, 60$.
+
+## Overnight Gap
+
+$$\text{Gap}_t = \ln\!\left(\frac{O_t}{C_{t-1}}\right)$$
+
+**Motivation:** News, earnings, and macro events accumulate after hours. The overnight gap captures the information shock that arrives between sessions and cannot be hedged intraday.
+
+**Interpretation:** 
+
+- $> 0$ gap up (positive overnight news)
+- $< 0$ gap down (negative news). 
+
+Persistent gaps in one direction signal trend continuation.
+
+## Intraday Range
+
+$$\text{Range}_t = \frac{H_t - L_t}{C_t}$$
+
+**Motivation:** The High-Low spread normalised by Close measures intraday uncertainty independent of price level. Reacts to news within the same session, before close-to-close volatility can update.
+
+**Interpretation:**
+
+- Low = quiet session
+- spike = news or event
+- persistently high = volatile regime.
+
+No lookback parameter — uses the current bar only.
+
+## ATR — Average True Range
+
+$$\text{TR}_t = \max(H_t - L_t,\ |H_t - C_{t-1}|,\ |L_t - C_{t-1}|)$$
+$$\text{ATR}(n) = \text{mean}(\text{TR},\, n) = \frac{1}{n}\sum_{i=1}^{n} \text{TR}_{t-n+i}$$
+
+**Motivation:** Extends the simple H-L range to account for overnight gaps. The standard input for volatility-scaled position sizing and stop-loss placement.
+
+**Interpretation:**
+
+- Rising = volatility expanding
+- falling = contracting.
+
+Common stop rule: $k \times \text{ATR}$ with $k = 1.5$–$3$. Typical periods: $n = 7, 14, 21$.
+
+## Garman-Klass / Parkinson Estimator
+
+$$\hat{\sigma}^2_{GK} = \frac{1}{n}\sum_{i=1}^{n}\left[\tfrac{1}{2}\ln^2\!\frac{H_i}{L_i} - (2\ln 2 - 1)\ln^2\!\frac{C_i}{O_i}\right]$$
+
+**Motivation:** Close-to-close volatility discards intraday information. The Garman-Klass estimator uses the full OHLC bar, achieving 5–8× lower variance than the standard estimator for the same window.
+
+**Interpretation:** Same scale as realised volatility. Preferred for short windows or when intraday data is unavailable. Typical periods: $n = 5, 10, 20$.
+
+# Trend Indicators
+
+## SMA Crossover
+
+$$\text{SMA}(n)_t = \frac{1}{n}\sum_{i=0}^{n-1} C_{t-i}, \qquad \text{Signal} = \frac{\text{SMA}(s)}{\text{SMA}(l)} - 1$$
+
+**Motivation:** Simple moving averages smooth price noise and reveal trend direction. The ratio of short to long SMA quantifies how much the recent trend deviates from the longer-term baseline.
+
+**Interpretation:**
+
+- $> 0$ bullish (short above long)
+- $< 0$ bearish; zero-crossing signals a trend change.
+
+Typical pairs: $s/l = 5/20$, $10/50$, $50/200$.
+
+## EMA Crossover (Exponential Moving Average)
+
+$$\text{EMA}(n)_t = \alpha\, C_t + (1-\alpha)\,\text{EMA}(n)_{t-1}, \quad \alpha = \tfrac{2}{n+1}$$
+$$\text{Signal} = \frac{\text{EMA}(s)}{\text{EMA}(l)} - 1$$
+
+**Motivation:** EMA assigns exponentially decaying weights to past prices, making it more responsive to recent moves than SMA. Reduces lag at the cost of slightly more noise sensitivity.
+
+**Interpretation:** Same directional logic as SMA crossover but reacts faster; more susceptible to whipsaws in ranging markets.
+
+Typical pairs: $s/l = 12/26$, $9/21$, $5/20$.
+
+## MACD Signal Line (Moving Average Convergence/Divergence)
+
+$$\text{MACD}_t = \text{EMA}(s)_t - \text{EMA}(l)_t$$
+$$\text{Normalised} = \frac{\text{MACD}_t}{C_t}$$
+
+**Motivation:** Measures the convergence and divergence of two EMAs, revealing momentum shifts before price crossovers occur. Normalising by price makes it comparable across instruments.
+
+**Interpretation:** 
+
+- Positive and rising = bullish momentum building
+- MACD crosses signal line = entry/exit
+- histogram shrinking = momentum weakening.
+
+Standard parameters: $s=12$, $l=26$, signal $=9$.
+
+## ADX — Average Directional Index
+
+$$\text{ADX}(n) = \text{EMA}\!\left(\frac{|{+DI} - ({-DI})|}{+DI + (-DI)},\, n\right) \times 100$$
+
+**Motivation:** Most trend indicators show direction but not strength. ADX is direction-agnostic — it measures how strongly price is trending regardless of whether up or down.
+
+**Interpretation:** $< 20$ ranging; $20$–$25$ developing trend; $> 25$ strong trend; $> 40$ very strong. Pair with any crossover for direction. Typical periods: $n = 7, 14, 21$.
+
+## Parabolic SAR
+
+$$\text{SAR}_{t+1} = \text{SAR}_t + \alpha\,(\text{EP} - \text{SAR}_t)$$
+$$ \alpha_0 = 0.02,\ \alpha_{\max} = 0.20$$
+
+**Motivation:** A dynamic trailing stop that accelerates as a trend extends. Provides both a binary regime signal (above/below price) and a quantitative distance measure.
+
+**Interpretation:** 
+
+- Price $>$ SAR = uptrend
+- Price $<$ SAR = downtrend; SAR flip = reversal signal.
+
+As a model feature encode as binary or $(C - \text{SAR})/C$.
+
+# Momentum Indicators
+
+## Rate of Change (ROC)
+
+$$\text{ROC}(n)_t = \ln\!\left(\frac{C_t}{C_{t-n}}\right)$$
+
+**Motivation:** The simplest and most direct momentum measure — the log-return over a fixed lookback. Captures the cross-sectional momentum anomaly documented extensively in academic literature.
+
+**Interpretation:** $> 0$ positive momentum; $< 0$ negative; magnitude = strength. Use one feature per lookback. Typical periods: $n = 5, 10, 20, 60$.
+
+## RSI — Relative Strength Index
+
+$$\text{RS} = \frac{\overline{\text{Gain}(n)}}{\overline{\text{Loss}(n)}}\ , \, \text{RSI}(n) = 100 - \frac{100}{1 + \text{RS}}$$
+
+**Motivation:** Compares average up-moves to average down-moves over a window, producing a bounded oscillator $[0, 100]$. Normalises momentum by recent range, making it comparable across volatility environments.
+
+**Interpretation:**
+
+- $> 70$ overbought
+- $50$ neutral
+- $< 30$ oversold.
+
+The 50 line acts as a trend filter in many systems. Typical periods: $n = 7, 14, 21$.
+
+## Stochastic Oscillator %K / %D
+
+$$\text{\%K}(n) = \frac{C_t - L_n}{H_n - L_n} \times 100, \, \text{\%D}(m) = \text{SMA}(\text{\%K},\, m)$$
+
+**Motivation:** Measures where the current close sits within the recent High-Low range. In an uptrend, closes tend toward the top of the range; in a downtrend, toward the bottom.
+
+**Interpretation:** 
+
+- $> 80$ overbought
+- $< 20$ oversold
+- $\text{\%K}$ crosses $\text{\%D}$ = entry signal.
+
+Typical params: $n = 14$, $m = 3$.
+
+## Williams %R
+
+$$\text{\%R}(n) = -100 \times \frac{H_n - C_t}{H_n - L_n}$$
+
+**Motivation:** The inverse of Stochastic %K, emphasising proximity to the recent high. Mathematically $\text{\%R} = \text{\%K} - 100$. Highly correlated with Stochastic — in a lean feature set use one or decorrelate.
+
+**Interpretation:** 
+
+- $0$ to $-20$ overbought
+- $-50$ neutral
+- $-80$ to $-100$ oversold. 
+
+Typical periods: $n = 7, 14, 21$.
+
+## CCI — Commodity Channel Index
+
+$$\text{TP}_t = \frac{H_t + L_t + C_t}{3}, \qquad \text{CCI}(n) = \frac{\text{TP}_t - \text{SMA}(\text{TP},n)}{0.015 \times \text{MAD}(\text{TP},n)}$$
+
+**Motivation:** Measures how many mean absolute deviations the typical price is from its moving average. The 0.015 constant places ~70–80% of values in $[-100, +100]$ under normal conditions, combining momentum and mean-reversion signals.
+
+**Interpretation:** 
+
+- $> +100$ strong uptrend/overbought
+- $0$ neutral
+- $< -100$ strong downtrend/oversold. 
+
+Typical periods: $n = 10, 14, 20$.
+
+# Volume Indicators
+
+## Volume Log-Change
+
+$$\Delta V_t = \ln\!\left(\frac{V_t}{V_{t-1}}\right)$$
+
+**Motivation:** Volume is a proxy for market participation and conviction. Log-change normalises for wide variation in absolute volume across instruments and time.
+
+**Interpretation:** 
+
+- Price up + vol spike = confirmed breakout
+- price up + low vol = weak move
+- price down + vol spike = panic selling. 
+
+Divergence between price and volume often precedes reversals.
+
+## Volume Ratio
+
+$$\text{VR}(n)_t = \frac{V_t}{\text{SMA}(V,\, n)_t}$$
+
+**Motivation:** Raw volume is not comparable across instruments or through time. Normalising by rolling average produces a dimensionless activity score indicating whether current participation is above or below its historical norm.
+
+**Interpretation:** 
+
+- $\approx 1$ normal
+- $> 1.5$ above-average interest
+- $> 2$ unusual/event-driven
+- $< 0.5$ unusually quiet. 
+
+Typical periods: $n = 10, 20, 50$.
+
+## OBV / Rolling Mean
+
+$$\text{OBV}_t = \text{OBV}_{t-1} + \begin{cases} +V_t & C_t > C_{t-1} \\ -V_t & C_t < C_{t-1} \\ 0 & C_t = C_{t-1} \end{cases}$$
+$$\text{Feature} = \frac{\text{OBV}_t}{\text{SMA}(\text{OBV},\, n)_t}$$
+
+**Motivation:** Cumulative volume signed by price direction. Rising OBV with flat price indicates accumulation; falling OBV with rising price signals distribution and potential reversal.
+
+**Interpretation:** 
+
+- OBV rising + price flat = accumulation
+- OBV falling + price flat = distribution
+- OBV confirms trend = high conviction move. 
+
+Typical normalisation periods: $n = 10, 20$.
+
+## VWAP
+
+$$\text{VWAP}(n)_t = \frac{\displaystyle\sum_{i=t-n+1}^{t} C_i\, V_i}{\displaystyle\sum_{i=t-n+1}^{t} V_i}$$
+
+**Motivation:** The volume-weighted average price — the fair value benchmark used by institutional traders. Represents the average price paid per share: both a mean-reversion anchor and an execution quality benchmark.
+
+**Interpretation:** 
+
+- Price $>$ VWAP = bullish intraday bias
+- price $<$ VWAP = bearish
+- crossing VWAP = mean-reversion signal. 
+
+Best suited for intraday data; use rolling VWAP for daily bars.
+
+## CMF — Chaikin Money Flow
+
+$$\text{MFV}_t = V_t \cdot \frac{(C_t - L_t) - (H_t - C_t)}{H_t - L_t}$$
+$$\text{CMF}(n) = \frac{\sum \text{MFV}}{\sum V}$$
+
+**Motivation:** Weights volume by where the close falls within the bar's range. A close near the high implies buying pressure; near the low implies selling pressure. Summing over a window reveals sustained accumulation or distribution.
+
+**Interpretation:** 
+
+- $> +0.25$ strong buying
+- $0$ to $+0.25$ moderate accumulation
+- $-0.25$ to $0$ distribution
+- $< -0.25$ strong selling. 
+
+Typical periods: $n = 10, 20, 21$.
+
+# Mean-Reversion Indicators
+
+## Bollinger Band Position
+
+$$\text{BB}\%(n) = \frac{C_t - \text{SMA}(n)_t}{2\,\sigma_n}$$
+
+**Motivation:** Defines a dynamic envelope around price based on rolling standard deviation. The position within the bands quantifies how stretched price is relative to recent volatility — the core of mean-reversion strategies.
+
+**Interpretation:** 
+
+- $+1$ at upper band (overbought)
+- $0$ at SMA (neutral)
+- $-1$ at lower band (oversold). 
+
+Band width itself is a volatility regime indicator. Typical periods: $n = 10, 20, 50$.
+
+## Distance from 52-Week High / Low
+
+$$d_{\text{high}}(n) = \frac{C_t - \max(C,\, n)}{C_t}, \qquad d_{\text{low}}(n) = \frac{C_t - \min(C,\, n)}{C_t}$$
+
+**Motivation:** 52-week highs and lows are psychologically and structurally significant price levels. Breakouts above the 52-week high have strong documented momentum effects; proximity to the low captures distress or value.
+
+**Interpretation:** 
+
+- Near 52w high = momentum or resistance
+- breaking 52w high = strong breakout signal
+- near 52w low = distress or value opportunity. 
+
+Typical periods: $n = 52, 26, 13$ weeks.
+
+## Z-Score of Price
+
+$$Z(n)_t = \frac{C_t - \text{SMA}(n)_t}{\sigma_n}$$
+
+**Motivation:** Places current price in a standardised statistical context — how many standard deviations from its recent mean. The cleanest, most model-friendly mean-reversion feature, especially useful for pairs trading and stat-arb strategies.
+
+**Interpretation:** 
+
+- $> +2$ statistically overbought
+- $\approx 0$ near mean
+- $< -2$ statistically oversold. 
+
+Near-identical to BB% with the same $n$ — one may be redundant. Typical periods: $n = 20, 60, 120$.
+
+# Reference Tables
+
+## Returns & Volatility
+
+| Indicator | Typical Periods | Interpretation |
+|-----------|-----------------|----------------|
+| Log-return | $n = 1, 5, 10, 20$ | $+$ appreciation; $-$ depreciation |
+| Realised vol | $n = 5, 10, 20, 60$ | Higher = riskier regime |
+| Overnight gap | — | Out-of-hours information shock |
+| Intraday range | — | Intraday uncertainty; spikes on events |
+| ATR | $n = 7, 14, 21$ | Vol-adjusted range; stop sizing |
+| Garman-Klass | $n = 5, 10, 20$ | Efficient OHLC volatility estimate |
+
+## Trend Indicators
+
+| Indicator | Typical Periods | Interpretation |
+|-----------|-----------------|----------------|
+| SMA crossover | $5/20$, $10/50$, $50/200$ | $+$ bullish; $-$ bearish |
+| EMA crossover | $12/26$, $9/21$, $5/20$ | Faster signal than SMA |
+| MACD | $12/26$, signal $= 9$ | $+$ and rising = bullish momentum |
+| ADX | $n = 7, 14, 21$ | $>25$ trending; $<20$ ranging |
+| Parabolic SAR | AF $= 0.02$, max $0.20$ | Above SAR = uptrend |
+
+## Momentum Indicators
+
+| Indicator | Typical Periods | Interpretation |
+|-----------|-----------------|----------------|
+| ROC | $n = 5, 10, 20, 60$ | $+$ upward momentum |
+| RSI | $n = 7, 14, 21$ | $>70$ overbought; $<30$ oversold |
+| Stochastic %K/%D | $n = 14$, $m = 3$ | $>80$ overbought; $<20$ oversold |
+| Williams %R | $n = 7, 14, 21$ | $0$ to $-20$ overbought |
+| CCI | $n = 10, 14, 20$ | $\pm 100$ = trend signals |
+
+## Volume Indicators
+
+| Indicator | Typical Periods | Interpretation |
+|-----------|-----------------|----------------|
+| Vol log-change | — | Spikes confirm breakouts |
+| Volume ratio | $n = 10, 20, 50$ | $>1.5$ above-average activity |
+| OBV / mean | $n = 10, 20$ | Rising OBV = accumulation |
+| VWAP | Intraday; rolling $n = 5, 10, 20$ | Price $>$ VWAP = bullish bias |
+| CMF | $n = 10, 20, 21$ | $>0$ buying; $<0$ selling pressure |
+
+## Mean-Reversion Indicators
+
+| Indicator | Typical Periods | Interpretation |
+|-----------|-----------------|----------------|
+| Bollinger Band % | $n = 10, 20, 50$ | $\pm 1$ = band edges |
+| Distance high/low | $n = 13, 26, 52$ weeks | Near high = momentum or resistance |
+| Z-score | $n = 20, 60, 120$ | $\pm 2$ statistically extreme |

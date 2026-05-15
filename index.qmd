@@ -200,6 +200,14 @@ sidebar:
 - [Exercise 4](https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_transformer_imdb.ipynb)
 - [Exercise 5](https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_transformer_nlp.ipynb)
 
+## Technical Indicators
+
+- [Slides](slides/trading_indicators.qmd)
+
+### Exercises
+
+- [Exercise 1](https://colab.research.google.com/github/fonsecamig/mpaaaf_course/blob/main/notebooks/exerc_trading_indicators.ipynb)
+
 ## References
 
 - Bishop, C. M., & Bishop, H. (2024). *Deep learning: Foundations and concepts.* Springer. [https://www.bishopbook.com](https://www.bishopbook.com)
