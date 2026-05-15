@@ -210,249 +210,473 @@
     "text": "TensorFlow 2: Attention Layer\n\nimport tensorflow as tf\n\nx = tf.random.uniform((1, 3, 4))  # (batch_size, seq_len, d_model)\n\nattention = tf.keras.layers.MultiHeadAttention(\n    num_heads=4,\n    key_dim=64\n)\n\noutput = attention(query=x, value=x, key=x)\n\noutput\n\n&lt;tf.Tensor: shape=(1, 3, 4), dtype=float32, numpy=\narray([[[ 0.03951177, -0.10049264, -0.17430738, -0.02694875],\n        [ 0.03958983, -0.10045344, -0.1743136 , -0.0269275 ],\n        [ 0.03962982, -0.10053368, -0.17419639, -0.02690087]]],\n      dtype=float32)&gt;"
   },
   {
-    "objectID": "slides/rnn.html#why-do-we-need-rnns",
-    "href": "slides/rnn.html#why-do-we-need-rnns",
-    "title": "Recurrent Neural Networks",
-    "section": "Why Do We Need RNNs?",
-    "text": "Why Do We Need RNNs?\n\n\nFeedforward Networks Assume Independence\nFor MLPs:\n\\[\n\\mathbf x_i \\perp \\mathbf x_j\n\\]\nBut many datasets are sequential!\n\nRecurrent Networks Capture Dependencies\n\\[\nP(\\mathbf x_t | \\mathbf x_{t-1}, \\mathbf x_{t-2}, ..., \\mathbf x_1)\n\\]\nCases where RNNs are useful:\n\nText\nSpeech\nFinancial time-series\nBiological sequences\nSensor signals"
+    "objectID": "slides/tokenization_pading_masking_embeddings.html#why-text-needs-processing",
+    "href": "slides/tokenization_pading_masking_embeddings.html#why-text-needs-processing",
+    "title": "Tokenization, Embeddings, Padding, and Masking",
+    "section": "Why Text Needs Processing",
+    "text": "Why Text Needs Processing\n\nModels operate on numbers, not text\nRaw text is:\n\nVariable length\nDiscrete\nUnstructured\n\n\n\nGoal: transform text → structured numerical tensors\n\nPipeline\nRaw Text → Tokenization → Integer Sequences → Padding → Embedding → Model"
   },
   {
-    "objectID": "slides/rnn.html#applications",
-    "href": "slides/rnn.html#applications",
-    "title": "Recurrent Neural Networks",
-    "section": "Applications",
-    "text": "Applications\n\nLanguage modeling\nMachine translation\nSpeech recognition\nTime-series forecasting\nGenomics\nVideo processing"
+    "objectID": "slides/tokenization_pading_masking_embeddings.html#what-is-tokenization",
+    "href": "slides/tokenization_pading_masking_embeddings.html#what-is-tokenization",
+    "title": "Tokenization, Embeddings, Padding, and Masking",
+    "section": "What is Tokenization?",
+    "text": "What is Tokenization?\n\nSplitting text into units:\n\nWords\nSubwords\nCharacters\n\n\n\nExample: “Deep learning is powerful” → [“deep”, “learning”, “is”, “powerful”]"
   },
   {
-    "objectID": "slides/rnn.html#core-recurrence",
-    "href": "slides/rnn.html#core-recurrence",
-    "title": "Recurrent Neural Networks",
-    "section": "Core Recurrence",
-    "text": "Core Recurrence\n\\[\n\\mathbf z_t =\\mathbf W_h \\mathbf h_{t-1} + \\mathbf W_x \\mathbf x_t + \\mathbf b\n\\]\n\\[\n\\mathbf h_t = \\sigma(\\mathbf z_t)\n\\]\n\\[\n\\mathbf y_t = \\mathbf W_y \\mathbf h_t\n\\]\nSame weights reused across time."
+    "objectID": "slides/tokenization_pading_masking_embeddings.html#types-of-tokenization",
+    "href": "slides/tokenization_pading_masking_embeddings.html#types-of-tokenization",
+    "title": "Tokenization, Embeddings, Padding, and Masking",
+    "section": "Types of Tokenization",
+    "text": "Types of Tokenization\n\nWord-level\n\n\"deep learning is fun\" → [\"deep\", \"learning\", \"is\", \"fun\"]\n\nSubword (BPE / WordPiece)\n\n\"unbelievable\" → [\"un\", \"believ\", \"able\"]\n\"playing\" → [\"play\", \"##ing\"] (WordPiece style)\n\nCharacter-level\n\n\"cat\" → [\"c\", \"a\", \"t\"]"
   },
   {
-    "objectID": "slides/rnn.html#unrolled-through-time",
-    "href": "slides/rnn.html#unrolled-through-time",
-    "title": "Recurrent Neural Networks",
-    "section": "Unrolled Through Time",
-    "text": "Unrolled Through Time\n\nUnrolled RNN"
+    "objectID": "slides/tokenization_pading_masking_embeddings.html#tokenization-in-tensorflow",
+    "href": "slides/tokenization_pading_masking_embeddings.html#tokenization-in-tensorflow",
+    "title": "Tokenization, Embeddings, Padding, and Masking",
+    "section": "Tokenization in TensorFlow",
+    "text": "Tokenization in TensorFlow\n\nfrom tensorflow.keras.preprocessing.text import Tokenizer\n\ntexts = [\n    \"deep learning is powerful\",\n    \"machine learning is fun\"\n]\n\ntokenizer = Tokenizer(num_words=1000, oov_token=\"&lt;OOV&gt;\")\ntokenizer.fit_on_texts(texts)\n\nsequences = tokenizer.texts_to_sequences(texts)\n\nprint(sequences)\n\n[[4, 2, 3, 5], [6, 2, 3, 7]]\n\n\nVocabulary Mapping\n\nprint(tokenizer.word_index)\n\n{'&lt;OOV&gt;': 1, 'learning': 2, 'is': 3, 'deep': 4, 'powerful': 5, 'machine': 6, 'fun': 7}\n\n\nProblem: Variable-Length Sequences\n[3, 1, 2, 5]\n[4, 1, 2, 6]\n[3, 1]"
   },
   {
-    "objectID": "slides/rnn.html#tensorflow-simple-rnn",
-    "href": "slides/rnn.html#tensorflow-simple-rnn",
-    "title": "Recurrent Neural Networks",
-    "section": "TensorFlow: Simple RNN",
-    "text": "TensorFlow: Simple RNN\n\nimport tensorflow as tf\nfrom tensorflow import keras\nfrom tensorflow.keras import layers\n\nmodel = keras.Sequential([\n    layers.SimpleRNN(64, return_sequences=True),\n    layers.SimpleRNN(32),\n    layers.Dense(1)\n])\n\nmodel.compile(optimizer=\"adam\", loss=\"mse\")\nmodel.summary()\n\nModel: \"sequential_4\"\n\n\n\n┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓\n┃ Layer (type)                    ┃ Output Shape           ┃       Param # ┃\n┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩\n│ simple_rnn_2 (SimpleRNN)        │ ?                      │   0 (unbuilt) │\n├─────────────────────────────────┼────────────────────────┼───────────────┤\n│ simple_rnn_3 (SimpleRNN)        │ ?                      │   0 (unbuilt) │\n├─────────────────────────────────┼────────────────────────┼───────────────┤\n│ dense_4 (Dense)                 │ ?                      │   0 (unbuilt) │\n└─────────────────────────────────┴────────────────────────┴───────────────┘\n\n\n\n Total params: 0 (0.00 B)\n\n\n\n Trainable params: 0 (0.00 B)\n\n\n\n Non-trainable params: 0 (0.00 B)"
+    "objectID": "slides/tokenization_pading_masking_embeddings.html#padding-why-do-we-need-it",
+    "href": "slides/tokenization_pading_masking_embeddings.html#padding-why-do-we-need-it",
+    "title": "Tokenization, Embeddings, Padding, and Masking",
+    "section": "Padding: Why Do We Need It?",
+    "text": "Padding: Why Do We Need It?\nProblem: Variable-Length Sequences\nText sequences have different lengths:\n[3, 1, 2, 5]\n[4, 1]\nNeural networks require:\n\\[\n(\\text{batch}, \\text{fixed length})\n\\]\n\nCannot stack sequences directly into tensors\n\nSolution: Padding\nAdd special token (0) to standardize length:\n[4, 1] → [4, 1, 0, 0]\n\n\n\n\n\n\n\nKey Idea\n\n\nPadding = making data rectangular"
   },
   {
-    "objectID": "slides/rnn.html#backpropagation-through-time-bptt",
-    "href": "slides/rnn.html#backpropagation-through-time-bptt",
-    "title": "Recurrent Neural Networks",
-    "section": "Backpropagation Through Time (BPTT)",
-    "text": "Backpropagation Through Time (BPTT)\nTraining objective:\n\\[\n\\frac{\\partial \\mathscr L}{\\partial \\mathbf W_h} =\\sum_{t=1}^{T}\\frac{\\partial \\mathscr L}{\\partial \\mathbf h_t}\\frac{\\partial \\mathbf h_t}{\\partial \\mathbf W_h}\n\\]\nBut:\n\\[\n\\frac{\\partial \\mathbf h_t}{\\partial \\mathbf h_{t-k}}=\\prod_{i=t-k+1}^{t}\\frac{\\partial \\mathbf h_i}{\\partial \\mathbf h_{i-1}}\n\\]\nwith:\n\\[\n\\frac{\\partial \\mathbf h_i}{\\partial \\mathbf h_{i-1}}\n=\\mathbf W_h \\cdot \\text{diag}(\\sigma'(\\mathbf z_t))\n\\]\nRepeated matrix multiplication → instability."
+    "objectID": "slides/tokenization_pading_masking_embeddings.html#padding-sequences",
+    "href": "slides/tokenization_pading_masking_embeddings.html#padding-sequences",
+    "title": "Tokenization, Embeddings, Padding, and Masking",
+    "section": "Padding Sequences",
+    "text": "Padding Sequences\n\nfrom tensorflow.keras.preprocessing.sequence import pad_sequences\n\npadded = pad_sequences(sequences, padding='post')\nprint(padded)\n\n[[4 2 3 5]\n [6 2 3 7]]"
   },
   {
-    "objectID": "slides/rnn.html#the-vanishing-gradient-problem",
-    "href": "slides/rnn.html#the-vanishing-gradient-problem",
-    "title": "Recurrent Neural Networks",
-    "section": "The Vanishing Gradient Problem",
-    "text": "The Vanishing Gradient Problem\nSimplified Recurrence\n\\[\n\\mathbf h_t = \\sigma(\\mathbf W_h \\mathbf h_{t-1})\n\\]\nDerivative:\n\\[\n\\frac{\\partial \\mathbf h_t}{\\partial \\mathbf h_{t-1}}\n=\n\\mathbf W_h \\cdot \\text{diag}(\\sigma'(\\mathbf z))\n\\]\nRepeated products:\n\\[\n\\prod_{i=1}^{k} \\mathbf W_h \\boldsymbol{\\lambda}_i\n\\]\n\n\nIf:\n\\[\n\\rho(\\mathbf W_h) &lt; 1\n\\]\n\nGradient vanishes.\n\n\nIf:\n\\[\n\\rho(\\mathbf W_h) &gt; 1\n\\]\n\nExploding gradient."
+    "objectID": "slides/tokenization_pading_masking_embeddings.html#padding-subtleties-consequences",
+    "href": "slides/tokenization_pading_masking_embeddings.html#padding-subtleties-consequences",
+    "title": "Tokenization, Embeddings, Padding, and Masking",
+    "section": "Padding: Subtleties & Consequences",
+    "text": "Padding: Subtleties & Consequences\nTypes of Padding\n\nPost-padding (preferred in NLP)\n\n[real data | padding]\n\nPre-padding\n\n[padding | real data]\n\n\nHidden Problem\nPadding introduces fake data (zeros)\n\n\n\n\n\n\nWarning\n\n\nModel may learn: “zero is important”.\n\n\n\nImplication\nPadding must be handled carefully\n\nLeads to masking"
   },
   {
-    "objectID": "slides/rnn.html#lstm-gate-equations",
-    "href": "slides/rnn.html#lstm-gate-equations",
-    "title": "Recurrent Neural Networks",
-    "section": "LSTM Gate Equations",
-    "text": "LSTM Gate Equations\n\n\n\n\n\n\nNote\n\n\nAllow constant error flow through a memory cell.\n\n\n\nForget gate:\n\\[\n\\mathbf f_t = \\sigma\\left(\\mathbf W_f [\\mathbf h_{t-1} \\, \\mathbf x_t] + \\mathbf b_f\\right)\n\\]\nInput gate:\n\\[\n\\mathbf i_t = \\sigma\\left(\\mathbf W_i [\\mathbf h_{t-1} \\, \\mathbf x_t] + \\mathbf b_i\\right)\n\\]\nOutput:\n\\[\n\\mathbf o_t = \\sigma\\left(\\mathbf W_o [\\mathbf h_{t-1} \\, \\mathbf x_t] + \\mathbf b_o\\right)\n\\]\nInput Node\n\\[\n\\widetilde{\\mathbf c} = \\tanh\\left(\\mathbf W_c [\\mathbf h_{t-1} \\, \\mathbf x_t] + \\mathbf b_c\\right)\n\\]"
+    "objectID": "slides/tokenization_pading_masking_embeddings.html#embeddings-1",
+    "href": "slides/tokenization_pading_masking_embeddings.html#embeddings-1",
+    "title": "Tokenization, Embeddings, Padding, and Masking",
+    "section": "Embeddings",
+    "text": "Embeddings\n\nDense vector representation of tokens\nCaptures semantic meaning"
   },
   {
-    "objectID": "slides/rnn.html#cell-update",
-    "href": "slides/rnn.html#cell-update",
-    "title": "Recurrent Neural Networks",
-    "section": "Cell update",
-    "text": "Cell update\n\\[\n\\mathbf c_t = \\mathbf f_t \\odot \\mathbf c_{t-1} + \\mathbf i_t \\odot \\widetilde{\\mathbf c}_t\n\\]\n\\[\n\\mathbf h_t = \\mathbf o_t \\odot \\tanh(\\mathbf c_t)\n\\]"
+    "objectID": "slides/tokenization_pading_masking_embeddings.html#embeddings-from-tokens-to-vectors",
+    "href": "slides/tokenization_pading_masking_embeddings.html#embeddings-from-tokens-to-vectors",
+    "title": "Tokenization, Embeddings, Padding, and Masking",
+    "section": "Embeddings: From Tokens to Vectors",
+    "text": "Embeddings: From Tokens to Vectors\nCore Idea\n\\[\nw \\rightarrow \\mathbf{e}_w \\in \\mathbb{R}^d\n\\]​\nEmbedding Matrix\n\\[\n\\mathbf{E} \\in \\mathbb{R}^{V \\times d}\n\\]\n\n\\(V\\): vocabulary size\n\\(d\\): embedding dimension\n\nLookup\n\nInput: [3, 1, 2]\nOutput: [E[3], E[1], E[2]]\n\n\nTrainable lookup table"
   },
   {
-    "objectID": "slides/rnn.html#why-lstm-works",
-    "href": "slides/rnn.html#why-lstm-works",
-    "title": "Recurrent Neural Networks",
-    "section": "Why LSTM Works",
-    "text": "Why LSTM Works\nIf:\n\\[\n\\mathbf f_t \\approx 1\n\\]\nThen:\n\\[\n\\frac{\\partial \\mathbf c_t}{\\partial \\mathbf c_{t-1}} \\approx 1\n\\]\n\nGradient preserved."
+    "objectID": "slides/tokenization_pading_masking_embeddings.html#why-embeddings-work",
+    "href": "slides/tokenization_pading_masking_embeddings.html#why-embeddings-work",
+    "title": "Tokenization, Embeddings, Padding, and Masking",
+    "section": "Why Embeddings Work",
+    "text": "Why Embeddings Work\nSemantic Geometry\nSimilar words → close vectors\n\n\n\n\nExample\n\n\nking - man + woman ≈ queen\n\n\n\n\nvs One-Hot Encoding\n\n\n\nOne-hot\nEmbedding\n\n\n\n\nSparse\nDense\n\n\nNo meaning\nSemantic meaning\n\n\n\nTraining\n\nLearned via backpropagation\nOnly used rows are updated"
   },
   {
-    "objectID": "slides/rnn.html#tensorflow-lstm",
-    "href": "slides/rnn.html#tensorflow-lstm",
-    "title": "Recurrent Neural Networks",
-    "section": "Tensorflow: LSTM",
-    "text": "Tensorflow: LSTM\n\nmodel = keras.Sequential([\n    layers.LSTM(64, return_sequences=True),\n    layers.LSTM(32),\n    layers.Dense(1)\n])\n\nmodel.compile(optimizer=\"adam\", loss=\"mse\")"
+    "objectID": "slides/tokenization_pading_masking_embeddings.html#embedding-layer",
+    "href": "slides/tokenization_pading_masking_embeddings.html#embedding-layer",
+    "title": "Tokenization, Embeddings, Padding, and Masking",
+    "section": "Embedding Layer",
+    "text": "Embedding Layer\n\nfrom tensorflow.keras.layers import Embedding\n\nembedding_layer = Embedding(input_dim=1000, output_dim=16)"
   },
   {
-    "objectID": "slides/rnn.html#gru-equations",
-    "href": "slides/rnn.html#gru-equations",
-    "title": "Recurrent Neural Networks",
-    "section": "GRU Equations",
-    "text": "GRU Equations\n\nSimpler alternative to LSTM.\n\nUpdate gate:\n\\[\n\\mathbf z_t = \\sigma\\left(\\mathbf W_z [\\mathbf h_{t-1} \\, \\mathbf x_t] + \\mathbf b_z\\right)\n\\]\nReset gate:\n\\[\n\\mathbf r_t = \\sigma\\left(\\mathbf W_r [\\mathbf h_{t-1} \\, \\mathbf x_t] + \\mathbf b_r\\right)\n\\]\nCandidate cell state:\n\\[\n\\widetilde{\\mathbf h}_t = \\tanh\\left(\\mathbf W_h [\\mathbf r_t \\! \\odot \\! \\mathbf h_{t-1} \\, \\mathbf x_t] + \\mathbf b_h\\right)\n\\]"
+    "objectID": "slides/tokenization_pading_masking_embeddings.html#putting-it-together",
+    "href": "slides/tokenization_pading_masking_embeddings.html#putting-it-together",
+    "title": "Tokenization, Embeddings, Padding, and Masking",
+    "section": "Putting It Together",
+    "text": "Putting It Together\nText\n\nTokenization\nInteger sequences\nPadding\nEmbedding\nModel\n\nTensor Shapes\n(batch, seq_len) → (batch, seq_len, embedding_dim)\nIntuition\n\nPadding → structure\nEmbedding → meaning"
   },
   {
-    "objectID": "slides/rnn.html#gru-update",
-    "href": "slides/rnn.html#gru-update",
-    "title": "Recurrent Neural Networks",
-    "section": "GRU Update",
-    "text": "GRU Update\n\\[\n\\mathbf h_t = (1 - \\mathbf z_t) \\odot \\mathbf h_{t-1} + \\mathbf z_t \\odot \\widetilde{\\mathbf h}_t\n\\]"
+    "objectID": "slides/tokenization_pading_masking_embeddings.html#full-pipeline-example",
+    "href": "slides/tokenization_pading_masking_embeddings.html#full-pipeline-example",
+    "title": "Tokenization, Embeddings, Padding, and Masking",
+    "section": "Full Pipeline Example",
+    "text": "Full Pipeline Example\n\nimport tensorflow as tf\n\nmodel = tf.keras.Sequential([\n    tf.keras.layers.Embedding(1000, 16, input_length=10),\n    tf.keras.layers.GlobalAveragePooling1D(),\n    tf.keras.layers.Dense(16, activation='relu'),\n    tf.keras.layers.Dense(1, activation='sigmoid')\n])\n\nmodel.summary()\n\nModel: \"sequential\"\n\n\n\n┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓\n┃ Layer (type)                    ┃ Output Shape           ┃       Param # ┃\n┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩\n│ embedding_1 (Embedding)         │ ?                      │   0 (unbuilt) │\n├─────────────────────────────────┼────────────────────────┼───────────────┤\n│ global_average_pooling1d        │ ?                      │             0 │\n│ (GlobalAveragePooling1D)        │                        │               │\n├─────────────────────────────────┼────────────────────────┼───────────────┤\n│ dense (Dense)                   │ ?                      │   0 (unbuilt) │\n├─────────────────────────────────┼────────────────────────┼───────────────┤\n│ dense_1 (Dense)                 │ ?                      │   0 (unbuilt) │\n└─────────────────────────────────┴────────────────────────┴───────────────┘\n\n\n\n Total params: 0 (0.00 B)\n\n\n\n Trainable params: 0 (0.00 B)\n\n\n\n Non-trainable params: 0 (0.00 B)"
   },
   {
-    "objectID": "slides/rnn.html#tensorflow-gru",
-    "href": "slides/rnn.html#tensorflow-gru",
-    "title": "Recurrent Neural Networks",
-    "section": "Tensorflow: GRU",
-    "text": "Tensorflow: GRU\n\nmodel = keras.Sequential([\n    layers.GRU(64, return_sequences=True),\n    layers.GRU(32),\n    layers.Dense(1)\n])"
+    "objectID": "slides/tokenization_pading_masking_embeddings.html#masking-ignoring-fake-data",
+    "href": "slides/tokenization_pading_masking_embeddings.html#masking-ignoring-fake-data",
+    "title": "Tokenization, Embeddings, Padding, and Masking",
+    "section": "Masking: Ignoring Fake Data",
+    "text": "Masking: Ignoring Fake Data\nProblem\nPadding introduces noise:\n[3, 1, 0, 0]\n\nModel should ignore zeros\n\nSolution: Masking\nMask tensor:\n[1, 1, 0, 0]\n\n1 → real data\n0 → ignore\n\nTensorFlow Example\n\nembedding = tf.keras.layers.Embedding(\n    input_dim=10000,\n    output_dim=64,\n    mask_zero=True\n)"
   },
   {
-    "objectID": "slides/rnn.html#recurrent-dropout",
-    "href": "slides/rnn.html#recurrent-dropout",
-    "title": "Recurrent Neural Networks",
-    "section": "Recurrent Dropout",
-    "text": "Recurrent Dropout\nStandard dropout disrupts temporal memory.\nRecurrent dropout:\n\nApplied on recurrent connections\nSame mask across timesteps"
+    "objectID": "slides/tokenization_pading_masking_embeddings.html#masking-special-cases",
+    "href": "slides/tokenization_pading_masking_embeddings.html#masking-special-cases",
+    "title": "Tokenization, Embeddings, Padding, and Masking",
+    "section": "Masking: Special Cases",
+    "text": "Masking: Special Cases\nWhere It Works:\n\nLSTM / GRU\nRNNs\nAttention layers\n\n\n\n\n\n\n\n\nTime Series\n\n\nIn time series, masking is not limited to zero values.\nMissing data may be encoded as:\n\nNaN\n-1\nsentinel values (e.g., -999)\ndomain-specific flags\n\n\n\n\n\nMask must be explicitly defined, e.g.:\n\nx = tf.constant([[1, 2, -999], [3, -999, -999]])\nmask = tf.math.not_equal(x, -999)"
   },
   {
-    "objectID": "slides/rnn.html#tensorflow-recurrent-dropout",
-    "href": "slides/rnn.html#tensorflow-recurrent-dropout",
-    "title": "Recurrent Neural Networks",
-    "section": "TensorFlow: Recurrent Dropout",
-    "text": "TensorFlow: Recurrent Dropout\n\nmodel = keras.Sequential([\n    layers.LSTM(\n        64,\n        return_sequences=True,\n        recurrent_dropout=0.2\n    ),\n    layers.LSTM(32),\n    layers.Dense(1)\n])"
+    "objectID": "slides/tokenization_pading_masking_embeddings.html#masking-in-tensorflow",
+    "href": "slides/tokenization_pading_masking_embeddings.html#masking-in-tensorflow",
+    "title": "Tokenization, Embeddings, Padding, and Masking",
+    "section": "Masking in TensorFlow",
+    "text": "Masking in TensorFlow\nMasking with RNN - Text\n\nmodel = tf.keras.Sequential([\n    tf.keras.layers.Embedding(1000, 16, mask_zero=True),\n    tf.keras.layers.LSTM(32),\n    tf.keras.layers.Dense(1)\n])\n\nMasking with RNN - Time Series\n\nimport tensorflow as tf\n\nmodel = tf.keras.Sequential([\n    tf.keras.layers.Masking(mask_value=-999.0),\n    tf.keras.layers.LSTM(32),\n    tf.keras.layers.Dense(1)\n])"
   },
   {
-    "objectID": "slides/rnn.html#gradient-clipping",
-    "href": "slides/rnn.html#gradient-clipping",
-    "title": "Recurrent Neural Networks",
-    "section": "Gradient Clipping",
-    "text": "Gradient Clipping\n\\[\n\\nabla_{\\boldsymbol \\theta} \\mathscr L \\leftarrow \\frac{\\nabla_{\\boldsymbol \\theta} \\mathscr L}{\\max(1, \\frac{||\\nabla_{\\boldsymbol \\theta} \\mathscr L||}{\\lambda})}\n\\]\nPrevent exploding gradients:\n\noptimizer = tf.keras.optimizers.Adam(\n    learning_rate=0.001,\n    clipnorm=1.0\n)"
+    "objectID": "slides/tokenization_pading_masking_embeddings.html#finance-analogy-time-series-as-text",
+    "href": "slides/tokenization_pading_masking_embeddings.html#finance-analogy-time-series-as-text",
+    "title": "Tokenization, Embeddings, Padding, and Masking",
+    "section": "Finance Analogy: Time Series as “Text”",
+    "text": "Finance Analogy: Time Series as “Text”\n\n\n\nNLP Concept\nFinance Time Series Equivalent\n\n\n\n\nTokens\nTime steps (prices, returns)\n\n\nSentence\nPrice history window\n\n\nVocabulary\nFeature space (indicators)\n\n\nSequence\nTime series\n\n\n\nPadding in Finance\nDifferent assets / samples have:\n\nDifferent history lengths\nMissing observations\n\nExample:\n\nStock A: [r₁, r₂, r₃, r₄]\nStock B: [r₁, r₂]\n\nPad: [r₁, r₂, 0, 0]\nMasking in Finance\nIgnore:\n\nMissing data\nNon-trading days\nIncomplete windows\n\nMask: [1, 1, 0, 0]\nEmbeddings in Finance\nInstead of words → vectors:\n\nTime step → feature vector"
   },
   {
-    "objectID": "slides/rnn.html#deep-rnns",
-    "href": "slides/rnn.html#deep-rnns",
-    "title": "Recurrent Neural Networks",
-    "section": "Deep RNNs",
-    "text": "Deep RNNs\nStack multiple RNN layers for hierarchical representations:\n\nDeep RNN"
+    "objectID": "slides/regularization.html#why-regularisation",
+    "href": "slides/regularization.html#why-regularisation",
+    "title": "Regularisation for Neural Networks",
+    "section": "Why Regularisation?",
+    "text": "Why Regularisation?\n\nNeural networks are high-capacity models\nOverfitting is common\nTraining loss ↓ does not imply test loss ↓\n\nGoal:\n\nImprove generalisation by controlling effective model complexity"
   },
   {
-    "objectID": "slides/rnn.html#bidirectional-rnns",
-    "href": "slides/rnn.html#bidirectional-rnns",
-    "title": "Recurrent Neural Networks",
-    "section": "Bidirectional RNNs",
-    "text": "Bidirectional RNNs\nProcess sequences in both directions:\n\nBidirectional RNN"
+    "objectID": "slides/regularization.html#overfitting-in-neural-networks",
+    "href": "slides/regularization.html#overfitting-in-neural-networks",
+    "title": "Regularisation for Neural Networks",
+    "section": "Overfitting in Neural Networks",
+    "text": "Overfitting in Neural Networks\n\nMany parameters\nFlexible decision boundaries\nCan memorise training data\n\nTypical symptoms:\n\nTraining error → 0\nValidation error ↑"
   },
   {
-    "objectID": "slides/rnn.html#model-comparison",
-    "href": "slides/rnn.html#model-comparison",
-    "title": "Recurrent Neural Networks",
-    "section": "Model Comparison",
-    "text": "Model Comparison\n\n\n\nModel\nLong Dependencies\nComplexity\nSpeed\n\n\n\n\nRNN\nPoor\nLow\nFast\n\n\nLSTM\nExcellent\nHigh\nSlower\n\n\nGRU\nVery Good\nMedium\nFaster"
+    "objectID": "slides/regularization.html#what-is-regularisation",
+    "href": "slides/regularization.html#what-is-regularisation",
+    "title": "Regularisation for Neural Networks",
+    "section": "What Is Regularisation?",
+    "text": "What Is Regularisation?\nDefinition\nAny technique that constrains learning to improve out-of-sample performance.\nThree perspectives\n\nPenalise complexity\n\nInject noise\n\nStop training early"
   },
   {
-    "objectID": "slides/rnn.html#limitations-of-rnns",
-    "href": "slides/rnn.html#limitations-of-rnns",
-    "title": "Recurrent Neural Networks",
-    "section": "Limitations of RNNs",
-    "text": "Limitations of RNNs\n\nSequential computation\nHard to parallelize\nLong sequences still challenging\nTransformers dominate NLP"
+    "objectID": "slides/regularization.html#explicit-regularisation-l2-weight-decay",
+    "href": "slides/regularization.html#explicit-regularisation-l2-weight-decay",
+    "title": "Regularisation for Neural Networks",
+    "section": "Explicit Regularisation: L2 (Weight Decay)",
+    "text": "Explicit Regularisation: L2 (Weight Decay)\n\\[\n\\mathscr{L}(\\theta) = \\mathscr{L}_{data}(\\theta) + \\lambda \\sum_i w_i^2\n\\]\nEffects\n\nPenalises large weights\nEncourages smooth functions\nImproves conditioning"
   },
   {
-    "objectID": "slides/intro_tensorflow2.html#what-is-tensorflow",
-    "href": "slides/intro_tensorflow2.html#what-is-tensorflow",
-    "title": "TensorFlow 2 — The Basics",
-    "section": "What is TensorFlow?",
-    "text": "What is TensorFlow?\n\nOpen-source machine learning framework\nDeveloped by Google\nDesigned for:\n\nResearch\nProduction\nScalability (CPU / GPU / TPU)"
+    "objectID": "slides/regularization.html#geometric-interpretation-of-l2",
+    "href": "slides/regularization.html#geometric-interpretation-of-l2",
+    "title": "Regularisation for Neural Networks",
+    "section": "Geometric Interpretation of L2",
+    "text": "Geometric Interpretation of L2\n\nPenalises distance from origin\nShrinks parameters continuously\nEquivalent to Gaussian prior on weights"
   },
   {
-    "objectID": "slides/intro_tensorflow2.html#tensorflow-vs-others",
-    "href": "slides/intro_tensorflow2.html#tensorflow-vs-others",
-    "title": "TensorFlow 2 — The Basics",
-    "section": "TensorFlow vs Others",
-    "text": "TensorFlow vs Others\n\n\n\nFramework\nFocus\nStrength\n\n\n\n\nscikit-learn\nClassical ML\nSimplicity\n\n\nPyTorch\nResearch\nFlexibility\n\n\nTensorFlow 2\nResearch + Prod\nEnd-to-end pipelines"
+    "objectID": "slides/regularization.html#l1-regularisation",
+    "href": "slides/regularization.html#l1-regularisation",
+    "title": "Regularisation for Neural Networks",
+    "section": "L1 Regularisation",
+    "text": "L1 Regularisation\n\\[\n\\mathscr{L}(\\theta) = \\mathscr{L}_{data}(\\theta) + \\lambda \\sum_i |w_i|\n\\]\nKey properties\n\nProduces sparse solutions\nPerforms implicit feature selection\nLess common in deep networks"
   },
   {
-    "objectID": "slides/intro_tensorflow2.html#what-is-a-tensor",
-    "href": "slides/intro_tensorflow2.html#what-is-a-tensor",
-    "title": "TensorFlow 2 — The Basics",
-    "section": "What is a tensor?",
-    "text": "What is a tensor?\n\nGeneralization of:\n\nScalar (rank 0)\nVector (rank 1)\nMatrix (rank 2)\nHigher dimensions (rank ≥ 3)"
+    "objectID": "slides/regularization.html#l1-vs-l2",
+    "href": "slides/regularization.html#l1-vs-l2",
+    "title": "Regularisation for Neural Networks",
+    "section": "L1 vs L2",
+    "text": "L1 vs L2\n\n\n\nAspect\nL1\nL2\n\n\n\n\nSparsity\nYes\nNo\n\n\nWeight shrinkage\nHard\nSmooth\n\n\nInterpretability\nHigher\nLower"
   },
   {
-    "objectID": "slides/intro_tensorflow2.html#creating-tensors",
-    "href": "slides/intro_tensorflow2.html#creating-tensors",
-    "title": "TensorFlow 2 — The Basics",
-    "section": "Creating Tensors",
-    "text": "Creating Tensors\n\nimport numpy as np\nimport tensorflow as tf\n\na = tf.constant(3)\nb = tf.constant([1, 2, 3])\nc = tf.constant([[1., 2.], [3., 4.]])"
+    "objectID": "slides/regularization.html#tensorflow-implementation",
+    "href": "slides/regularization.html#tensorflow-implementation",
+    "title": "Regularisation for Neural Networks",
+    "section": "Tensorflow Implementation",
+    "text": "Tensorflow Implementation\n\nfrom tensorflow import keras\nfrom tensorflow.keras import layers\n\nmodel = keras.Sequential([\n    layers.Dense(\n        128,\n        activation=\"relu\",\n        kernel_regularizer=keras.regularizers.l2(1e-3) ## L2 regularisation on weights\n    ),\n    layers.Dense(\n        128,\n        activation=\"relu\",\n        kernel_regularizer=keras.regularizers.l1(1e-3) ## L1 regularisation on weights\n    ),\n     layers.Dense(\n        128,\n        activation=\"relu\",\n        kernel_regularizer=keras.regularizers.l1_l2(1e-3) ## L1 and L2 regularisation on weights\n    ),\n    layers.Dense(1)\n])\n\nmodel.compile(\n    optimizer=\"adam\",\n    loss=\"mse\"\n)"
   },
   {
-    "objectID": "slides/intro_tensorflow2.html#tensor-properties",
-    "href": "slides/intro_tensorflow2.html#tensor-properties",
-    "title": "TensorFlow 2 — The Basics",
-    "section": "Tensor Properties",
-    "text": "Tensor Properties\n\nc.shape\nc.dtype\ntf.rank(c)\n\n&lt;tf.Tensor: shape=(), dtype=int32, numpy=2&gt;\n\n\n\n\n\n\n\n\n\nKey Idea\n\n\nTensors have shape, dtype, and rank"
+    "objectID": "slides/regularization.html#stochastic-regularisation-1",
+    "href": "slides/regularization.html#stochastic-regularisation-1",
+    "title": "Regularisation for Neural Networks",
+    "section": "Stochastic Regularisation",
+    "text": "Stochastic Regularisation\n\nInject randomness during training\nForces robustness\nPrevents co-adaptation\n\nExamples:\n\nDropout\nNoise injection\nBatchNorm (indirectly)"
   },
   {
-    "objectID": "slides/intro_tensorflow2.html#tensor-operations",
-    "href": "slides/intro_tensorflow2.html#tensor-operations",
-    "title": "TensorFlow 2 — The Basics",
-    "section": "Tensor Operations",
-    "text": "Tensor Operations\nTensorFlow feels like NumPy:\n\nx = tf.random.normal((3, 2))\ny = tf.ones((3, 2))\n\nx + y\nx * y\n\n&lt;tf.Tensor: shape=(3, 2), dtype=float32, numpy=\narray([[ 0.93306696, -0.3520624 ],\n       [-0.15182333, -0.10537166],\n       [-0.16372524,  0.5422379 ]], dtype=float32)&gt;\n\n\nMatrix multiplication:\n\ntf.matmul(x, tf.transpose(y))\n\n&lt;tf.Tensor: shape=(3, 3), dtype=float32, numpy=\narray([[ 0.58100456,  0.58100456,  0.58100456],\n       [-0.257195  , -0.257195  , -0.257195  ],\n       [ 0.37851262,  0.37851262,  0.37851262]], dtype=float32)&gt;"
+    "objectID": "slides/regularization.html#dropout",
+    "href": "slides/regularization.html#dropout",
+    "title": "Regularisation for Neural Networks",
+    "section": "Dropout",
+    "text": "Dropout\nIdea\n\nRandomly drop neurons during training\n\n\\[\n\\widetilde{h} = h \\cdot \\text{Bernoulli}(p)\n\\]\nInterpretation\n\nApproximate ensemble learning\nStrong regularisation effect\n\n\n\n\n\n\n\nWarning\n\n\nNot to be used on inference time!"
   },
   {
-    "objectID": "slides/intro_tensorflow2.html#important-tensor-rules",
-    "href": "slides/intro_tensorflow2.html#important-tensor-rules",
-    "title": "TensorFlow 2 — The Basics",
-    "section": "Important Tensor Rules",
-    "text": "Important Tensor Rules\n\nTensors are immutable\nOperations are GPU-aware\nBroadcasting rules apply (like NumPy)"
+    "objectID": "slides/regularization.html#dropout-practical-notes",
+    "href": "slides/regularization.html#dropout-practical-notes",
+    "title": "Regularisation for Neural Networks",
+    "section": "Dropout: Practical Notes",
+    "text": "Dropout: Practical Notes\n\nMost effective in fully-connected layers\nTypical rates: 0.1–0.5\nOften unnecessary with BatchNorm\n\nTensorflow Implementation\n\nmodel = keras.Sequential([\n    layers.Dense(128, activation=\"relu\"),\n    layers.Dropout(0.3),\n\n    layers.Dense(128, activation=\"relu\"),\n    layers.Dropout(0.3),\n\n    layers.Dense(1)\n])\n\nmodel.compile(\n    optimizer=\"adam\",\n    loss=\"mse\"\n)"
   },
   {
-    "objectID": "slides/intro_tensorflow2.html#why-keras",
-    "href": "slides/intro_tensorflow2.html#why-keras",
-    "title": "TensorFlow 2 — The Basics",
-    "section": "Why Keras?",
-    "text": "Why Keras?\n\nReduces boilerplate\nEnforces best practices\nIntegrated into TensorFlow 2"
+    "objectID": "slides/regularization.html#normalisation-layers-1",
+    "href": "slides/regularization.html#normalisation-layers-1",
+    "title": "Regularisation for Neural Networks",
+    "section": "Normalisation Layers",
+    "text": "Normalisation Layers\nPrimary purpose:\n\nStabilise optimisation\n\nSecondary effect:\n\nRegularisation through noise or smoothing"
   },
   {
-    "objectID": "slides/intro_tensorflow2.html#building-a-model-sequential",
-    "href": "slides/intro_tensorflow2.html#building-a-model-sequential",
-    "title": "TensorFlow 2 — The Basics",
-    "section": "Building a Model (Sequential)",
-    "text": "Building a Model (Sequential)\n\nmodel = tf.keras.Sequential([\n    tf.keras.layers.Dense(32, activation=\"relu\"),\n    tf.keras.layers.Dense(1)\n])\n\nModel Summary\n\nmodel.summary()\n\nModel: \"sequential_4\"\n\n\n\n┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓\n┃ Layer (type)                    ┃ Output Shape           ┃       Param # ┃\n┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩\n│ dense_16 (Dense)                │ ?                      │   0 (unbuilt) │\n├─────────────────────────────────┼────────────────────────┼───────────────┤\n│ dense_17 (Dense)                │ ?                      │   0 (unbuilt) │\n└─────────────────────────────────┴────────────────────────┴───────────────┘\n\n\n\n Total params: 0 (0.00 B)\n\n\n\n Trainable params: 0 (0.00 B)\n\n\n\n Non-trainable params: 0 (0.00 B)\n\n\n\nConcepts:\n\nLayers\nParameters\nTrainable weights"
+    "objectID": "slides/regularization.html#batch-normalization",
+    "href": "slides/regularization.html#batch-normalization",
+    "title": "Regularisation for Neural Networks",
+    "section": "Batch Normalization",
+    "text": "Batch Normalization\nFor mini-batch \\(B\\):\n\\[\n\\widehat{x} = \\frac{x - \\mu_B}{\\sqrt{\\sigma_B^2 + \\epsilon}}, \\quad\ny = \\gamma \\widehat{x} + \\beta\n\\]\n\n\\(\\mu_B\\) and \\(\\sigma_B^2\\) are batch statistics\n\\(\\gamma\\) and \\(\\beta\\) are learnable parameters"
   },
   {
-    "objectID": "slides/intro_tensorflow2.html#functional-api",
-    "href": "slides/intro_tensorflow2.html#functional-api",
-    "title": "TensorFlow 2 — The Basics",
-    "section": "Functional API",
-    "text": "Functional API\n\ninputs = tf.keras.Input(shape=(10,))\nx = tf.keras.layers.Dense(32, activation=\"relu\")(inputs)\noutputs = tf.keras.layers.Dense(1)(x)\n\nmodel = tf.keras.Model(inputs, outputs)\n\nUse when:\n\nMultiple inputs / outputs\nComplex architectures"
+    "objectID": "slides/regularization.html#why-batchnorm-works",
+    "href": "slides/regularization.html#why-batchnorm-works",
+    "title": "Regularisation for Neural Networks",
+    "section": "Why BatchNorm Works",
+    "text": "Why BatchNorm Works\n\nReduces sensitivity to parameter scale\nAllows higher learning rates\nImproves gradient flow"
   },
   {
-    "objectID": "slides/intro_tensorflow2.html#the-3-step-pattern",
-    "href": "slides/intro_tensorflow2.html#the-3-step-pattern",
-    "title": "TensorFlow 2 — The Basics",
-    "section": "The 3-Step Pattern",
-    "text": "The 3-Step Pattern\n\ncompile\nfit\nevaluate / predict\n\n\nThis pattern appears everywhere in TF2."
+    "objectID": "slides/regularization.html#batchnorm-as-regularisation",
+    "href": "slides/regularization.html#batchnorm-as-regularisation",
+    "title": "Regularisation for Neural Networks",
+    "section": "BatchNorm as Regularisation",
+    "text": "BatchNorm as Regularisation\n\nUses batch statistics\nIntroduces stochastic noise\nNoise depends on batch composition\n\nResult\n\nReduced overfitting\nOften replaces dropout"
   },
   {
-    "objectID": "slides/intro_tensorflow2.html#compile-step",
-    "href": "slides/intro_tensorflow2.html#compile-step",
-    "title": "TensorFlow 2 — The Basics",
-    "section": "Compile Step",
-    "text": "Compile Step\n\nmodel.compile(\n    optimizer=\"adam\",\n    loss=\"mse\",\n    metrics=[\"mae\"]\n)\n\n\nOptimizer → how parameters change\nLoss → what we minimize\nMetrics → what we monitor"
+    "objectID": "slides/regularization.html#limitations-of-batchnorm",
+    "href": "slides/regularization.html#limitations-of-batchnorm",
+    "title": "Regularisation for Neural Networks",
+    "section": "Limitations of BatchNorm",
+    "text": "Limitations of BatchNorm\n\nDepends on batch size\nPoor with small batches\nNot ideal for:\n\nRNNs\nOnline learning\nTransformers\n\n\n\n\n\n\n\n\nNote\n\n\nFor inference, use moving averages of \\(\\mu\\) and \\(\\sigma\\) from training."
   },
   {
-    "objectID": "slides/intro_tensorflow2.html#fit-the-model",
-    "href": "slides/intro_tensorflow2.html#fit-the-model",
-    "title": "TensorFlow 2 — The Basics",
-    "section": "Fit the Model",
-    "text": "Fit the Model\nTraining concepts:\n\nEpoch\nBatch\nValidation set\n\n\nX_train, y_train = np.random.rand(100, 10), np.random.rand(100, 1)  # Training data\nhistory = model.fit(\n    X_train,\n    y_train,\n    epochs=5,\n    batch_size=32,\n    validation_split=0.2\n)\n\n\nEpoch 1/5\n\n\n1/3 ━━━━━━━━━━━━━━━━━━━━ 0s 249ms/step - loss: 0.4548 - mae: 0.6070\n\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\n3/3 ━━━━━━━━━━━━━━━━━━━━ 0s 33ms/step - loss: 0.3491 - mae: 0.5141 - val_loss: 0.2891 - val_mae: 0.4323\n\nEpoch 2/5\n\n\n1/3 ━━━━━━━━━━━━━━━━━━━━ 0s 6ms/step - loss: 0.2861 - mae: 0.4540\n\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\n3/3 ━━━━━━━━━━━━━━━━━━━━ 0s 9ms/step - loss: 0.2879 - mae: 0.4664 - val_loss: 0.2414 - val_mae: 0.3880\n\nEpoch 3/5\n\n\n1/3 ━━━━━━━━━━━━━━━━━━━━ 0s 7ms/step - loss: 0.2322 - mae: 0.4032\n\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\n3/3 ━━━━━━━━━━━━━━━━━━━━ 0s 9ms/step - loss: 0.2401 - mae: 0.4244 - val_loss: 0.2023 - val_mae: 0.3491\n\nEpoch 4/5\n\n\n1/3 ━━━━━━━━━━━━━━━━━━━━ 0s 6ms/step - loss: 0.2379 - mae: 0.4157\n\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\n3/3 ━━━━━━━━━━━━━━━━━━━━ 0s 9ms/step - loss: 0.2022 - mae: 0.3880 - val_loss: 0.1721 - val_mae: 0.3188\n\nEpoch 5/5\n\n\n1/3 ━━━━━━━━━━━━━━━━━━━━ 0s 7ms/step - loss: 0.2142 - mae: 0.3795\n\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\n3/3 ━━━━━━━━━━━━━━━━━━━━ 0s 8ms/step - loss: 0.1729 - mae: 0.3561 - val_loss: 0.1503 - val_mae: 0.2999"
+    "objectID": "slides/regularization.html#batchnorm---tensorflow-implementation",
+    "href": "slides/regularization.html#batchnorm---tensorflow-implementation",
+    "title": "Regularisation for Neural Networks",
+    "section": "BatchNorm - TensorFlow Implementation",
+    "text": "BatchNorm - TensorFlow Implementation\n\nmodel = keras.Sequential([\n    layers.Dense(128, use_bias=False),\n    layers.BatchNormalization(),\n    layers.Activation(\"relu\"),\n\n    layers.Dense(128, use_bias=False),\n    layers.BatchNormalization(),\n    layers.Activation(\"relu\"),\n\n    layers.Dense(1)\n])"
   },
   {
-    "objectID": "slides/intro_tensorflow2.html#evaluate-and-predict",
-    "href": "slides/intro_tensorflow2.html#evaluate-and-predict",
-    "title": "TensorFlow 2 — The Basics",
-    "section": "Evaluate and Predict",
-    "text": "Evaluate and Predict\n\nX_test, y_test = np.random.rand(20, 10), np.random.rand(20, 1)  # Test data\nmodel.evaluate(X_test, y_test)\n\n\n1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 6ms/step - loss: 0.1391 - mae: 0.3047\n\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\n1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 12ms/step - loss: 0.1391 - mae: 0.3047\n\n\n\n\n[0.13910728693008423, 0.30469390749931335]\n\n\n\nX_new = np.random.rand(5, 10)  # New data for prediction\nmodel.predict(X_new)\n\n\n1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 12ms/step\n\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\n1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 17ms/step\n\n\n\n\narray([[ 0.21222718],\n       [ 0.31611803],\n       [ 0.27205643],\n       [-0.10213057],\n       [ 0.3311126 ]], dtype=float32)"
+    "objectID": "slides/regularization.html#layer-normalization",
+    "href": "slides/regularization.html#layer-normalization",
+    "title": "Regularisation for Neural Networks",
+    "section": "Layer Normalization",
+    "text": "Layer Normalization\nNormalises within a single sample:\n\\[\n\\widehat{x} = \\frac{x - \\mu_{features}}{\\sqrt{\\sigma_{features}^2 + \\epsilon}}\n\\]"
+  },
+  {
+    "objectID": "slides/regularization.html#why-layernorm",
+    "href": "slides/regularization.html#why-layernorm",
+    "title": "Regularisation for Neural Networks",
+    "section": "Why LayerNorm?",
+    "text": "Why LayerNorm?\n\nIndependent of batch size\nStable for sequential models\nStandard in Transformers\n\nRegularisation effect\n\nSmoother optimisation landscape\nLess noise than BatchNorm"
+  },
+  {
+    "objectID": "slides/regularization.html#layernorm---tensorflow-implementation",
+    "href": "slides/regularization.html#layernorm---tensorflow-implementation",
+    "title": "Regularisation for Neural Networks",
+    "section": "LayerNorm - TensorFlow Implementation",
+    "text": "LayerNorm - TensorFlow Implementation\n\nmodel = keras.Sequential([\n    layers.Dense(128, use_bias=False),\n    layers.LayerNormalization(),\n    layers.Activation(\"relu\"),\n\n    layers.Dense(128, use_bias=False),\n    layers.LayerNormalization(),\n    layers.Activation(\"relu\"),\n\n    layers.Dense(1)\n])"
+  },
+  {
+    "objectID": "slides/regularization.html#batchnorm-vs-layernorm",
+    "href": "slides/regularization.html#batchnorm-vs-layernorm",
+    "title": "Regularisation for Neural Networks",
+    "section": "BatchNorm vs LayerNorm",
+    "text": "BatchNorm vs LayerNorm\n\n\n\nAspect\nBatchNorm\nLayerNorm\n\n\n\n\nNormalisation axis\nBatch\nFeatures\n\n\nBatch-size dependent\nYes\nNo\n\n\nNoise level\nHigh\nLow\n\n\nTypical use\nCNNs\nTransformers"
+  },
+  {
+    "objectID": "slides/regularization.html#implicit-regularisation-1",
+    "href": "slides/regularization.html#implicit-regularisation-1",
+    "title": "Regularisation for Neural Networks",
+    "section": "Implicit Regularisation",
+    "text": "Implicit Regularisation\nNot explicitly added to the loss.\nExamples:\n\nEarly stopping\nSGD noise\nFinite training time"
+  },
+  {
+    "objectID": "slides/regularization.html#early-stopping",
+    "href": "slides/regularization.html#early-stopping",
+    "title": "Regularisation for Neural Networks",
+    "section": "Early Stopping",
+    "text": "Early Stopping\n\nStop training when validation loss increases\nPrevents late-stage memorisation\n\nTheory\n\nEquivalent to L2 in linear models"
+  },
+  {
+    "objectID": "slides/regularization.html#regularisation-strategy",
+    "href": "slides/regularization.html#regularisation-strategy",
+    "title": "Regularisation for Neural Networks",
+    "section": "Regularisation Strategy",
+    "text": "Regularisation Strategy\n\nStart with:\n\nWeight decay\nEarly stopping\n\nAdd:\n\nBatchNorm or LayerNorm\n\nUse Dropout:\n\nIf BatchNorm is absent\nOr in final dense layers"
+  },
+  {
+    "objectID": "slides/regularization.html#common-anti-patterns",
+    "href": "slides/regularization.html#common-anti-patterns",
+    "title": "Regularisation for Neural Networks",
+    "section": "Common Anti-Patterns",
+    "text": "Common Anti-Patterns\n\nDropout + BatchNorm everywhere\nOver-regularising small datasets\nIgnoring optimiser interactions"
+  },
+  {
+    "objectID": "slides/regularization.html#key-takeaways",
+    "href": "slides/regularization.html#key-takeaways",
+    "title": "Regularisation for Neural Networks",
+    "section": "Key Takeaways",
+    "text": "Key Takeaways\n\nRegularisation controls effective capacity\nNormalisation layers regularise implicitly\nMethods are complementary\nValidation performance is the final arbiter"
+  },
+  {
+    "objectID": "slides/intro_ml.html#what-is-machine-learning",
+    "href": "slides/intro_ml.html#what-is-machine-learning",
+    "title": "Introduction to Machine Learning",
+    "section": "What is Machine Learning?",
+    "text": "What is Machine Learning?\n\n\n\n\n\n\nMachine Learning (ML)\n\n\nAlgorithms that learn patterns from data and make predictions or decisions without being explicitly programmed.\n\n\n\n\nExamples:\n\nEmail spam detection\nCredit risk assessment\nImage and speech recognition\nRecommendation systems"
+  },
+  {
+    "objectID": "slides/intro_ml.html#machine-learning-vs.-statistics",
+    "href": "slides/intro_ml.html#machine-learning-vs.-statistics",
+    "title": "Introduction to Machine Learning",
+    "section": "Machine Learning vs. Statistics",
+    "text": "Machine Learning vs. Statistics\n\n\n\n\n\n\n\n\nAspect\nStatistics\nMachine Learning\n\n\n\n\nPrimary goal\nInference, explanation, uncertainty quantification\nPrediction, pattern discovery, automation\n\n\nTypical questions\nWhy does this happen?Is the effect significant?\nWhat will happen next?Can we predict accurately?\n\n\nModel assumptions\nStrong (distributional forms, linearity, independence)\nOften weak or implicit\n\n\nData size\nSmall to moderate datasets\nLarge, high-dimensional datasets\n\n\n\n\nEvaluation | Hypothesis tests, confidence intervals | Train/validation/test split, predictive metrics |\n\nPhilosophy | Model the data-generating process | Optimize performance on unseen data |"
+  },
+  {
+    "objectID": "slides/intro_ml.html#main-categories-of-machine-learning",
+    "href": "slides/intro_ml.html#main-categories-of-machine-learning",
+    "title": "Introduction to Machine Learning",
+    "section": "Main Categories of Machine Learning",
+    "text": "Main Categories of Machine Learning\n1. Supervised Learning\n\nData with labels\nLearn input → output mapping\n\n2. Unsupervised Learning\n\nData without labels\nDiscover hidden structure\n\n(We will focus mainly on supervised learning.)"
+  },
+  {
+    "objectID": "slides/intro_ml.html#supervised-learning-1",
+    "href": "slides/intro_ml.html#supervised-learning-1",
+    "title": "Introduction to Machine Learning",
+    "section": "Supervised Learning",
+    "text": "Supervised Learning\nEach observation consists of:\n\nFeatures \\(X\\)\nTarget \\(y\\)\n\nGoal: \\[\nf(X) \\approx y\n\\]\nTypical applications:\n\nPredict prices\nClassify emails\nDiagnose diseases"
+  },
+  {
+    "objectID": "slides/intro_ml.html#supervised-learning-tasks",
+    "href": "slides/intro_ml.html#supervised-learning-tasks",
+    "title": "Introduction to Machine Learning",
+    "section": "Supervised Learning Tasks",
+    "text": "Supervised Learning Tasks\nTwo main task types:\n\n\n\nTask\nOutput\n\n\n\n\nRegression\nContinuous value\n\n\nClassification\nDiscrete class"
+  },
+  {
+    "objectID": "slides/intro_ml.html#regression",
+    "href": "slides/intro_ml.html#regression",
+    "title": "Introduction to Machine Learning",
+    "section": "Regression",
+    "text": "Regression\nRegression predicts a numerical value.\nExamples:\n\nHouse price prediction\nStock return forecasting\nTemperature prediction\n\nTypical models:\n\nLinear Regression\nRidge / Lasso\nRandom Forest Regressor"
+  },
+  {
+    "objectID": "slides/intro_ml.html#classification",
+    "href": "slides/intro_ml.html#classification",
+    "title": "Introduction to Machine Learning",
+    "section": "Classification",
+    "text": "Classification\nClassification predicts a category or label.\nExamples:\n\nSpam vs non-spam\nFraud vs non-fraud\nDisease vs healthy\n\nTypical models:\n\nLogistic Regression\nk-Nearest Neighbors\nDecision Trees\nSupport Vector Machines"
+  },
+  {
+    "objectID": "slides/intro_ml.html#unsupervised-learning-2",
+    "href": "slides/intro_ml.html#unsupervised-learning-2",
+    "title": "Introduction to Machine Learning",
+    "section": "Unsupervised Learning",
+    "text": "Unsupervised Learning\nNo labeled output variable.\nGoals:\n\nDiscover structure\nGroup similar observations\nReduce dimensionality\n\nExamples:\n\nCustomer segmentation\nTopic modeling\nData visualization"
+  },
+  {
+    "objectID": "slides/intro_ml.html#unsupervised-learning-tasks",
+    "href": "slides/intro_ml.html#unsupervised-learning-tasks",
+    "title": "Introduction to Machine Learning",
+    "section": "Unsupervised Learning Tasks",
+    "text": "Unsupervised Learning Tasks\nCommon tasks:\n\nClustering (e.g. k-means)\nDimensionality reduction (e.g. PCA)\n\nTypical use cases:\n\nExploratory data analysis\nPreprocessing\nFeature engineering"
+  },
+  {
+    "objectID": "slides/intro_ml.html#the-machine-learning-workflow",
+    "href": "slides/intro_ml.html#the-machine-learning-workflow",
+    "title": "Introduction to Machine Learning",
+    "section": "The Machine Learning Workflow",
+    "text": "The Machine Learning Workflow\n\nCollect data\n\nClean and preprocess\n\nSplit data\n\nTrain model\n\nEvaluate model\n\nImprove / deploy"
+  },
+  {
+    "objectID": "slides/intro_ml.html#data-splitting",
+    "href": "slides/intro_ml.html#data-splitting",
+    "title": "Introduction to Machine Learning",
+    "section": "Data Splitting",
+    "text": "Data Splitting\nWe typically split data into:\n\nTraining set – used to fit the model\n\nValidation set – used for model selection / tuning\n\nTest set – used for final evaluation"
+  },
+  {
+    "objectID": "slides/intro_ml.html#why-not-train-on-all-data",
+    "href": "slides/intro_ml.html#why-not-train-on-all-data",
+    "title": "Introduction to Machine Learning",
+    "section": "Why Not Train on all Data?",
+    "text": "Why Not Train on all Data?\nIf we train and evaluate on the same data:\n\nModel may memorize the data\nPerformance estimate becomes optimistic\n\nThis is called overfitting."
+  },
+  {
+    "objectID": "slides/intro_ml.html#train-validation-test-split",
+    "href": "slides/intro_ml.html#train-validation-test-split",
+    "title": "Introduction to Machine Learning",
+    "section": "Train / Validation / Test Split",
+    "text": "Train / Validation / Test Split\nTypical split ratios:\n\n60% train / 20% validation / 20% test\nor 70% / 15% / 15%\n\n\n\n\n\nKey principle:\n\n\nThe test set must remain untouched until the very end."
+  },
+  {
+    "objectID": "slides/intro_ml.html#example-data-splitting-in-python",
+    "href": "slides/intro_ml.html#example-data-splitting-in-python",
+    "title": "Introduction to Machine Learning",
+    "section": "Example: Data Splitting in Python",
+    "text": "Example: Data Splitting in Python\n\nfrom sklearn.model_selection import train_test_split\nimport numpy as np\n\n# Dummy data\nX = np.random.rand(100, 2)\ny = np.random.rand(100)\n\n# Train + test split\nX_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.2, random_state=42\n)\n\n# Train + validation split\nX_train, X_val, y_train, y_val = train_test_split(\n    X_train, y_train, test_size=0.25, random_state=42\n)\n\nX_train.shape, X_val.shape, X_test.shape\n\n((60, 2), (20, 2), (20, 2))"
+  },
+  {
+    "objectID": "slides/intro_ml.html#motivation",
+    "href": "slides/intro_ml.html#motivation",
+    "title": "Introduction to Machine Learning",
+    "section": "Motivation",
+    "text": "Motivation\nWhy Do We Need Cross-Validation?\n\nGoal: estimate generalization performance\nTraining error is optimistically biased\nSingle train/test split:\n\nHigh variance\nSensitive to random split\n\n\nCross-validation reduces uncertainty in model evaluation"
+  },
+  {
+    "objectID": "slides/intro_ml.html#the-core-idea",
+    "href": "slides/intro_ml.html#the-core-idea",
+    "title": "Introduction to Machine Learning",
+    "section": "The Core Idea",
+    "text": "The Core Idea\nWhat Is k-Fold Cross-Validation?\n\nSplit data into k approximately equal folds\nFor each fold:\n\nTrain on k−1 folds\nTest on the remaining fold\n\nAggregate performance metrics\n\n\\[\n\\text{CV score} = \\frac{1}{k} \\sum_{i=1}^{k} \\text{Score}_i\n\\]"
+  },
+  {
+    "objectID": "slides/intro_ml.html#choosing-k",
+    "href": "slides/intro_ml.html#choosing-k",
+    "title": "Introduction to Machine Learning",
+    "section": "Choosing k",
+    "text": "Choosing k\nBias–Variance Trade-off\n\n\n\nk\nCharacteristics\n\n\n\n\n2–5\nHigher bias, lower variance\n\n\n5–10\nCommon practical choice\n\n\nn (LOOCV)\nMinimal bias, high variance & cost\n\n\n\n\n\n\n\nRule of thumb\n\n\n\nk = 5 or 10 for most problems"
+  },
+  {
+    "objectID": "slides/intro_ml.html#formal-perspective",
+    "href": "slides/intro_ml.html#formal-perspective",
+    "title": "Introduction to Machine Learning",
+    "section": "Formal Perspective",
+    "text": "Formal Perspective\nExpected Error Estimation\nk-fold CV estimates:\n\\[\n\\mathbb{E}_{(X,Y)}[L(f_{\\mathscr{D}}, (X,Y))]\n\\]\nwith:\n\nDifferent training sets \\(\\mathscr{D}\\)\nSame learning algorithm\nSame data distribution"
+  },
+  {
+    "objectID": "slides/intro_ml.html#regression-vs-classification",
+    "href": "slides/intro_ml.html#regression-vs-classification",
+    "title": "Introduction to Machine Learning",
+    "section": "Regression vs Classification",
+    "text": "Regression vs Classification\nKey Differences\n\n\n\nAspect\nRegression\nClassification\n\n\n\n\nMetrics\nMSE, MAE, R²\nAccuracy, F1, AUC\n\n\nSplits\nRandom OK\nMust preserve class balance\n\n\nCV variant\nKFold\nStratified k-Fold"
+  },
+  {
+    "objectID": "slides/intro_ml.html#regression-k-fold-cv",
+    "href": "slides/intro_ml.html#regression-k-fold-cv",
+    "title": "Introduction to Machine Learning",
+    "section": "Regression: k-Fold CV",
+    "text": "Regression: k-Fold CV\nTypical Metrics\n\nMean Squared Error (MSE)\nMean Absolute Error (MAE)\n\\(R^2\\)\n\n\n\n\n\n\n\nNote\n\n\nScores may be negative in scikit-learn (loss convention)"
+  },
+  {
+    "objectID": "slides/intro_ml.html#regression-example-scikit-learn",
+    "href": "slides/intro_ml.html#regression-example-scikit-learn",
+    "title": "Introduction to Machine Learning",
+    "section": "Regression Example (scikit-learn)",
+    "text": "Regression Example (scikit-learn)\n\nimport numpy as np\nfrom sklearn.datasets import make_regression\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.model_selection import KFold, cross_val_score\n\nX, y = make_regression(n_samples=100, n_features=5, noise=10, random_state=42)\n\nmodel = LinearRegression()\ncv = KFold(n_splits=5, shuffle=True, random_state=42)\n\nscores = cross_val_score(\n    model, X, y,\n    cv=cv,\n    scoring=\"neg_mean_squared_error\"\n)\n\nmse_scores = -scores\nprint(\"MSE per fold:\", mse_scores)\nprint(\"Mean MSE:\", mse_scores.mean())\n\nMSE per fold: [113.44800318  81.16181775  88.22981966  85.52522476 102.8583864 ]\nMean MSE: 94.2446503511611"
+  },
+  {
+    "objectID": "slides/intro_ml.html#classification-stratified-k-fold-cv",
+    "href": "slides/intro_ml.html#classification-stratified-k-fold-cv",
+    "title": "Introduction to Machine Learning",
+    "section": "Classification: Stratified k-Fold CV",
+    "text": "Classification: Stratified k-Fold CV\nWhy Stratified k-Fold?\nIn classification:\n\nPreserves class proportions in each fold\nEspecially important for imbalanced datasets\n\nUse:\n\nKFold → regression\nStratifiedKFold → classification"
+  },
+  {
+    "objectID": "slides/intro_ml.html#classification-example",
+    "href": "slides/intro_ml.html#classification-example",
+    "title": "Introduction to Machine Learning",
+    "section": "Classification Example",
+    "text": "Classification Example\n\nfrom sklearn.datasets import make_classification\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.model_selection import StratifiedKFold, cross_val_score\n\nX, y = make_classification(\n    n_samples=500,\n    n_features=5,\n    n_classes=2,\n    random_state=42\n)\n\nmodel = LogisticRegression(max_iter=1000)\n\nskf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)\n\nscores = cross_val_score(\n    model, X, y,\n    cv=skf,\n    scoring=\"accuracy\"\n)\n\nscores\n\narray([0.92, 0.89, 0.87, 0.85, 0.9 ])"
+  },
+  {
+    "objectID": "slides/intro_ml.html#best-practices-in-cv",
+    "href": "slides/intro_ml.html#best-practices-in-cv",
+    "title": "Introduction to Machine Learning",
+    "section": "Best Practices in CV",
+    "text": "Best Practices in CV\nCross-validation is often used to:\n\nCompare models\nTune hyperparameters\n\n\n\n\n\n\n\nWarning\n\n\nCross-Validation \\(\\neq\\) Test Set\n\n\n\n\n\n\n\n\n\n\nImportant Rule\n\n\nNever touch the test set until the very end\n\n\n\n\n\nCV is for model selection\nTest set is for final evaluation"
   },
   {
     "objectID": "slides/hyperparameter_tuning.html#motivation",
@@ -1043,6 +1267,13 @@
     "text": "Transformers\n\nAttention\n\nSlides\n\n\n\nDecoders\n\nSlides\n\n\n\nEncoders\n\nSlides\n\n\n\nReading\n\nBishop, C. M., & Bishop, H. (2024). Deep learning: Foundations and concepts. Springer. https://www.bishopbook.com\n\nChapter 12: Transformers\n\nChollet, F. (2021). Deep learning with Python (2nd ed.). Manning Publications.\n\nChapter 11: Deep learning for text\n\nZhang, A., Lipton, Z. C., Li, M., & Smola, A. J. (2023). Dive into deep learning. Cambridge University Press. https://d2l.ai\n\nChapter 11: Attention Mechanisms and Transformers\nChapter 15: Natural Language Processing: Pretraining\n\n\n\n\nExercises\n\nExercise 1\nExercise 2\nExercise 3\nExercise 4\nExercise 5"
   },
   {
+    "objectID": "index.html#technical-indicators",
+    "href": "index.html#technical-indicators",
+    "title": "Modeling, Programming and Machine Learning for Financial Analysis",
+    "section": "Technical Indicators",
+    "text": "Technical Indicators\n\nSlides\n\n\nExercises\n\nExercise 1"
+  },
+  {
     "objectID": "index.html#references",
     "href": "index.html#references",
     "title": "Modeling, Programming and Machine Learning for Financial Analysis",
@@ -1498,473 +1729,655 @@
     "text": "Example 3: Volatility Forecasting\n\nNon-linear alternative to GARCH\nInputs:\n\nReturns\nSquared returns\nMacro variables"
   },
   {
-    "objectID": "slides/intro_ml.html#what-is-machine-learning",
-    "href": "slides/intro_ml.html#what-is-machine-learning",
-    "title": "Introduction to Machine Learning",
-    "section": "What is Machine Learning?",
-    "text": "What is Machine Learning?\n\n\n\n\n\n\nMachine Learning (ML)\n\n\nAlgorithms that learn patterns from data and make predictions or decisions without being explicitly programmed.\n\n\n\n\nExamples:\n\nEmail spam detection\nCredit risk assessment\nImage and speech recognition\nRecommendation systems"
+    "objectID": "slides/interpretable_ml.html#why-interpretability",
+    "href": "slides/interpretable_ml.html#why-interpretability",
+    "title": "Interpretable Machine Learning",
+    "section": "Why interpretability?",
+    "text": "Why interpretability?\nModern ML models — random forests, gradient boosting, neural networks — are powerful but opaque. A single prediction may depend on hundreds of features through highly non-linear interactions.\nWe want to answer questions like:\n\nWhy did the model predict this for this instance?\nWhich features drive predictions overall?\nHow does the prediction change as a feature varies?\nCan we trust the model on new data?"
   },
   {
-    "objectID": "slides/intro_ml.html#machine-learning-vs.-statistics",
-    "href": "slides/intro_ml.html#machine-learning-vs.-statistics",
-    "title": "Introduction to Machine Learning",
-    "section": "Machine Learning vs. Statistics",
-    "text": "Machine Learning vs. Statistics\n\n\n\n\n\n\n\n\nAspect\nStatistics\nMachine Learning\n\n\n\n\nPrimary goal\nInference, explanation, uncertainty quantification\nPrediction, pattern discovery, automation\n\n\nTypical questions\nWhy does this happen?Is the effect significant?\nWhat will happen next?Can we predict accurately?\n\n\nModel assumptions\nStrong (distributional forms, linearity, independence)\nOften weak or implicit\n\n\nData size\nSmall to moderate datasets\nLarge, high-dimensional datasets\n\n\n\n\nEvaluation | Hypothesis tests, confidence intervals | Train/validation/test split, predictive metrics |\n\nPhilosophy | Model the data-generating process | Optimize performance on unseen data |"
+    "objectID": "slides/interpretable_ml.html#two-scopes-of-explanation",
+    "href": "slides/interpretable_ml.html#two-scopes-of-explanation",
+    "title": "Interpretable Machine Learning",
+    "section": "Two scopes of explanation",
+    "text": "Two scopes of explanation\n\n\nLocal methods explain a single prediction (or a small neighbourhood).\nGlobal methods describe the whole model: average effects, importances.\nModel-agnostic = treats the model as a black box; works for any predictor."
   },
   {
-    "objectID": "slides/intro_ml.html#main-categories-of-machine-learning",
-    "href": "slides/intro_ml.html#main-categories-of-machine-learning",
-    "title": "Introduction to Machine Learning",
-    "section": "Main Categories of Machine Learning",
-    "text": "Main Categories of Machine Learning\n1. Supervised Learning\n\nData with labels\nLearn input → output mapping\n\n2. Unsupervised Learning\n\nData without labels\nDiscover hidden structure\n\n(We will focus mainly on supervised learning.)"
+    "objectID": "slides/interpretable_ml.html#the-running-example",
+    "href": "slides/interpretable_ml.html#the-running-example",
+    "title": "Interpretable Machine Learning",
+    "section": "The running example",
+    "text": "The running example\nThroughout this deck we use the California housing dataset and a RandomForestRegressor trained on it.\n\nTarget: median house value (units of $100k).\n8 numeric features: MedInc, HouseAge, AveRooms, AveBedrms, Population, AveOccup, Latitude, Longitude.\nHeld-out \\(R^2 \\approx 0.74\\).\n\nfrom sklearn.datasets import fetch_california_housing\nfrom sklearn.ensemble import RandomForestRegressor\nfrom sklearn.model_selection import train_test_split\n\nX, y = fetch_california_housing(return_X_y=True, as_frame=True)\nX_tr, X_te, y_tr, y_te = train_test_split(X, y, random_state=42)\nmodel = RandomForestRegressor(n_estimators=200, max_depth=12,\n                              random_state=42, n_jobs=-1).fit(X_tr, y_tr)"
   },
   {
-    "objectID": "slides/intro_ml.html#supervised-learning-1",
-    "href": "slides/intro_ml.html#supervised-learning-1",
-    "title": "Introduction to Machine Learning",
-    "section": "Supervised Learning",
-    "text": "Supervised Learning\nEach observation consists of:\n\nFeatures \\(X\\)\nTarget \\(y\\)\n\nGoal: \\[\nf(X) \\approx y\n\\]\nTypical applications:\n\nPredict prices\nClassify emails\nDiagnose diseases"
+    "objectID": "slides/interpretable_ml.html#individual-conditional-expectation-ice",
+    "href": "slides/interpretable_ml.html#individual-conditional-expectation-ice",
+    "title": "Interpretable Machine Learning",
+    "section": "1. Individual Conditional Expectation (ICE)",
+    "text": "1. Individual Conditional Expectation (ICE)\nMotivation\nA Partial Dependence Plot (PDP) shows the average relationship between a feature and the prediction. But the average can hide:\n\nHeterogeneous effects — opposite effects in different sub-populations that cancel out on average.\nInteractions — the effect of feature \\(X_j\\) depends on the value of another feature.\n\nIdea: show one line per instance instead of averaging."
   },
   {
-    "objectID": "slides/intro_ml.html#supervised-learning-tasks",
-    "href": "slides/intro_ml.html#supervised-learning-tasks",
-    "title": "Introduction to Machine Learning",
-    "section": "Supervised Learning Tasks",
-    "text": "Supervised Learning Tasks\nTwo main task types:\n\n\n\nTask\nOutput\n\n\n\n\nRegression\nContinuous value\n\n\nClassification\nDiscrete class"
+    "objectID": "slides/interpretable_ml.html#ice-theory",
+    "href": "slides/interpretable_ml.html#ice-theory",
+    "title": "Interpretable Machine Learning",
+    "section": "ICE — Theory",
+    "text": "ICE — Theory\nFor each instance \\(\\mathbf{x}^{(i)} = (x_1^{(i)}, \\dots, x_p^{(i)})\\), we hold every feature fixed except \\(X_j\\). We then sweep \\(X_j\\) across a grid of values \\(\\{v_1, \\dots, v_K\\}\\) and record the model’s predictions:\n\\[\n\\text{ICE}^{(i)}_j(v) = \\widehat{f}\\!\\left(v,\\, \\mathbf{x}^{(i)}_{-j}\\right)\n\\]\nPlotting these curves gives one line per instance.\nCentered ICE (c-ICE) anchors curves at a reference point \\(a\\) to compare shapes more easily:\n\\[\n\\text{c-ICE}^{(i)}_j(v) \\;=\\; \\widehat{f}\\!\\left(v, \\mathbf{x}^{(i)}_{-j}\\right) \\;-\\; \\widehat{f}\\!\\left(a, \\mathbf{x}^{(i)}_{-j}\\right)\n\\]\nThe PDP is just the average of the ICE curves."
   },
   {
-    "objectID": "slides/intro_ml.html#regression",
-    "href": "slides/intro_ml.html#regression",
-    "title": "Introduction to Machine Learning",
-    "section": "Regression",
-    "text": "Regression\nRegression predicts a numerical value.\nExamples:\n\nHouse price prediction\nStock return forecasting\nTemperature prediction\n\nTypical models:\n\nLinear Regression\nRidge / Lasso\nRandom Forest Regressor"
+    "objectID": "slides/interpretable_ml.html#ice-example",
+    "href": "slides/interpretable_ml.html#ice-example",
+    "title": "Interpretable Machine Learning",
+    "section": "ICE — Example",
+    "text": "ICE — Example\n\n\nLeft: raw ICE curves diverge by intercept (different baselines).\nRight: centered ICE makes shape differences visible — most curves rise similarly with MedInc, suggesting limited interaction here."
   },
   {
-    "objectID": "slides/intro_ml.html#classification",
-    "href": "slides/intro_ml.html#classification",
-    "title": "Introduction to Machine Learning",
-    "section": "Classification",
-    "text": "Classification\nClassification predicts a category or label.\nExamples:\n\nSpam vs non-spam\nFraud vs non-fraud\nDisease vs healthy\n\nTypical models:\n\nLogistic Regression\nk-Nearest Neighbors\nDecision Trees\nSupport Vector Machines"
+    "objectID": "slides/interpretable_ml.html#ice-python",
+    "href": "slides/interpretable_ml.html#ice-python",
+    "title": "Interpretable Machine Learning",
+    "section": "ICE — Python",
+    "text": "ICE — Python\nscikit-learn ships ICE/PDP in sklearn.inspection:\nfrom sklearn.inspection import PartialDependenceDisplay\nimport matplotlib.pyplot as plt\n\nfig, ax = plt.subplots(figsize=(6, 4))\nPartialDependenceDisplay.from_estimator(\n    model, X_tr, features=[\"MedInc\"],\n    kind=\"both\",            # \"both\" = ICE lines + average PDP\n    subsample=80,           # subsample for clarity\n    centered=True,          # produce c-ICE\n    ax=ax,\n)\nplt.show()\nOther packages: PiML, PDPbox (Python) and iml, pdp, ICEbox (R).\nPros & Cons\n\n✔ Intuitive, reveals heterogeneity, model-agnostic.\n✗ Only one feature at a time; can become a hairball; suffers from extrapolation when features are correlated (same issue as PDP)."
   },
   {
-    "objectID": "slides/intro_ml.html#unsupervised-learning-2",
-    "href": "slides/intro_ml.html#unsupervised-learning-2",
-    "title": "Introduction to Machine Learning",
-    "section": "Unsupervised Learning",
-    "text": "Unsupervised Learning\nNo labeled output variable.\nGoals:\n\nDiscover structure\nGroup similar observations\nReduce dimensionality\n\nExamples:\n\nCustomer segmentation\nTopic modeling\nData visualization"
+    "objectID": "slides/interpretable_ml.html#lime-local-interpretable-model-agnostic-explanations",
+    "href": "slides/interpretable_ml.html#lime-local-interpretable-model-agnostic-explanations",
+    "title": "Interpretable Machine Learning",
+    "section": "2. LIME — Local Interpretable Model-agnostic Explanations",
+    "text": "2. LIME — Local Interpretable Model-agnostic Explanations\nMotivation\nWe want an answer to: “Why did the black-box model predict 0.83 for this instance?”\nIdea (Ribeiro, Singh & Guestrin, 2016): in a small neighbourhood, even a very complex function looks roughly linear. So fit a simple, interpretable model — a sparse linear model or a shallow tree — that is locally faithful to the black box."
   },
   {
-    "objectID": "slides/intro_ml.html#unsupervised-learning-tasks",
-    "href": "slides/intro_ml.html#unsupervised-learning-tasks",
-    "title": "Introduction to Machine Learning",
-    "section": "Unsupervised Learning Tasks",
-    "text": "Unsupervised Learning Tasks\nCommon tasks:\n\nClustering (e.g. k-means)\nDimensionality reduction (e.g. PCA)\n\nTypical use cases:\n\nExploratory data analysis\nPreprocessing\nFeature engineering"
+    "objectID": "slides/interpretable_ml.html#lime-theory",
+    "href": "slides/interpretable_ml.html#lime-theory",
+    "title": "Interpretable Machine Learning",
+    "section": "LIME — Theory",
+    "text": "LIME — Theory\nThe explanation for instance \\(\\mathbf{x}\\) is the model \\(g\\) from a family \\(G\\) of interpretable models that minimises:\n\\[\n\\text{explanation}(\\mathbf{x}) \\;=\\; \\arg\\min_{g \\in G}\\;\n\\underbrace{L\\!\\left(\\widehat{f},\\, g,\\, \\pi_{\\mathbf{x}}\\right)}_{\\text{local fidelity}}\n\\;+\\;\n\\underbrace{\\Omega(g)}_{\\text{simplicity}}\n\\]\n\n\\(\\widehat{f}\\) — the black-box model;\n\\(\\pi_{\\mathbf{x}}\\) — a proximity kernel around \\(\\mathbf{x}\\) (typically exponential);\n\\(L\\) — weighted loss (e.g. weighted MSE);\n\\(\\Omega(g)\\) — complexity penalty (e.g. number of non-zero coefficients).\n\nThe LIME algorithm:\n\nPick the instance \\(\\mathbf{x}\\) to explain.\nPerturb it to create a synthetic neighbourhood and predict with \\(\\widehat{f}\\).\nWeight each perturbation by its proximity to \\(\\mathbf{x}\\).\nFit a sparse linear model on the weighted sample.\nRead off the coefficients — those are the explanation."
   },
   {
-    "objectID": "slides/intro_ml.html#the-machine-learning-workflow",
-    "href": "slides/intro_ml.html#the-machine-learning-workflow",
-    "title": "Introduction to Machine Learning",
-    "section": "The Machine Learning Workflow",
-    "text": "The Machine Learning Workflow\n\nCollect data\n\nClean and preprocess\n\nSplit data\n\nTrain model\n\nEvaluate model\n\nImprove / deploy"
+    "objectID": "slides/interpretable_ml.html#lime-example",
+    "href": "slides/interpretable_ml.html#lime-example",
+    "title": "Interpretable Machine Learning",
+    "section": "LIME — Example",
+    "text": "LIME — Example\n\n\nThe black-box model has a complex decision boundary.\n\nWe sample synthetic points around the instance of interest (yellow).\n\nEach synthetic point is weighted by its proximity to the instance.\n\nThe weighted linear model (white line) is locally faithful to \\(\\widehat{f}\\)."
   },
   {
-    "objectID": "slides/intro_ml.html#data-splitting",
-    "href": "slides/intro_ml.html#data-splitting",
-    "title": "Introduction to Machine Learning",
-    "section": "Data Splitting",
-    "text": "Data Splitting\nWe typically split data into:\n\nTraining set – used to fit the model\n\nValidation set – used for model selection / tuning\n\nTest set – used for final evaluation"
+    "objectID": "slides/interpretable_ml.html#lime-python",
+    "href": "slides/interpretable_ml.html#lime-python",
+    "title": "Interpretable Machine Learning",
+    "section": "LIME — Python",
+    "text": "LIME — Python\nimport lime\nimport lime.lime_tabular\n\nexplainer = lime.lime_tabular.LimeTabularExplainer(\n    training_data=X_tr.values,\n    feature_names=X_tr.columns.tolist(),\n    mode=\"regression\",\n    discretize_continuous=True,\n)\n\nexp = explainer.explain_instance(\n    data_row=X_te.iloc[0].values,\n    predict_fn=model.predict,\n    num_features=6,\n)\n\nexp.show_in_notebook(show_table=True)   # or exp.as_pyplot_figure()\nPackages: lime (tabular, text, image), eli5, interpret (Microsoft InterpretML).\nPros & Cons\n\n✔ Works on tabular, text and images; intuitive coefficients.\n✗ Instability: small changes in the neighbourhood (kernel width, sampling seed) can flip explanations; choice of kernel is itself an open problem."
   },
   {
-    "objectID": "slides/intro_ml.html#why-not-train-on-all-data",
-    "href": "slides/intro_ml.html#why-not-train-on-all-data",
-    "title": "Introduction to Machine Learning",
-    "section": "Why Not Train on all Data?",
-    "text": "Why Not Train on all Data?\nIf we train and evaluate on the same data:\n\nModel may memorize the data\nPerformance estimate becomes optimistic\n\nThis is called overfitting."
+    "objectID": "slides/interpretable_ml.html#shap-shapley-additive-explanations",
+    "href": "slides/interpretable_ml.html#shap-shapley-additive-explanations",
+    "title": "Interpretable Machine Learning",
+    "section": "3. SHAP — SHapley Additive exPlanations",
+    "text": "3. SHAP — SHapley Additive exPlanations\nMotivation\nLIME gives a local linear approximation, but its coefficients have no theoretical guarantees: change the kernel width and the explanation may change.\nSHAP (Lundberg & Lee, 2017) borrows the Shapley value from cooperative game theory: a unique attribution scheme satisfying a small set of natural axioms."
   },
   {
-    "objectID": "slides/intro_ml.html#train-validation-test-split",
-    "href": "slides/intro_ml.html#train-validation-test-split",
-    "title": "Introduction to Machine Learning",
-    "section": "Train / Validation / Test Split",
-    "text": "Train / Validation / Test Split\nTypical split ratios:\n\n60% train / 20% validation / 20% test\nor 70% / 15% / 15%\n\n\n\n\n\nKey principle:\n\n\nThe test set must remain untouched until the very end."
+    "objectID": "slides/interpretable_ml.html#shap-theory",
+    "href": "slides/interpretable_ml.html#shap-theory",
+    "title": "Interpretable Machine Learning",
+    "section": "SHAP — Theory",
+    "text": "SHAP — Theory\nTreat each feature as a “player” cooperating to produce the prediction \\(\\widehat{f}(\\mathbf{x})\\). The contribution of feature \\(j\\) is its Shapley value:\n\\[\n\\phi_j \\;=\\; \\sum_{S \\subseteq F \\setminus \\{j\\}}\n\\frac{|S|!\\,(|F| - |S| - 1)!}{|F|!}\n\\left[\\, v(S \\cup \\{j\\}) \\;-\\; v(S) \\,\\right]\n\\]\nwhere \\(v(S)\\) is the model’s expected prediction when only the features in \\(S\\) are known.\nAxioms uniquely characterising Shapley values:\n\nEfficiency: \\(\\sum_j \\phi_j \\;=\\; \\widehat{f}(\\mathbf{x}) - \\mathbb{E}[\\widehat{f}(X)]\\)\nSymmetry: features with identical contributions get equal \\(\\phi\\).\nDummy: a feature that never changes the output gets \\(\\phi = 0\\).\nAdditivity: \\(\\phi\\) of a sum of models = sum of the \\(\\phi\\)’s.\n\nExact Shapley values cost \\(\\mathscr{O}(2^p)\\) → SHAP provides efficient estimators:\n\nKernelSHAP (model-agnostic, weighted linear regression).\nTreeSHAP (exact, polynomial-time for tree ensembles).\nDeepSHAP (approximations for neural networks)."
   },
   {
-    "objectID": "slides/intro_ml.html#example-data-splitting-in-python",
-    "href": "slides/intro_ml.html#example-data-splitting-in-python",
-    "title": "Introduction to Machine Learning",
-    "section": "Example: Data Splitting in Python",
-    "text": "Example: Data Splitting in Python\n\nfrom sklearn.model_selection import train_test_split\nimport numpy as np\n\n# Dummy data\nX = np.random.rand(100, 2)\ny = np.random.rand(100)\n\n# Train + test split\nX_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.2, random_state=42\n)\n\n# Train + validation split\nX_train, X_val, y_train, y_val = train_test_split(\n    X_train, y_train, test_size=0.25, random_state=42\n)\n\nX_train.shape, X_val.shape, X_test.shape\n\n((60, 2), (20, 2), (20, 2))"
+    "objectID": "slides/interpretable_ml.html#shap-example-single-prediction",
+    "href": "slides/interpretable_ml.html#shap-example-single-prediction",
+    "title": "Interpretable Machine Learning",
+    "section": "SHAP — Example (single prediction)",
+    "text": "SHAP — Example (single prediction)\n\nA waterfall plot decomposes a single prediction \\(\\widehat{f}(\\mathbf{x})\\) from \\(\\mathbb{E}[\\widehat{f}(X)]\\) (bottom) to the actual value (top), one feature at a time. Red pushes up, blue pushes down."
   },
   {
-    "objectID": "slides/intro_ml.html#motivation",
-    "href": "slides/intro_ml.html#motivation",
-    "title": "Introduction to Machine Learning",
-    "section": "Motivation",
-    "text": "Motivation\nWhy Do We Need Cross-Validation?\n\nGoal: estimate generalization performance\nTraining error is optimistically biased\nSingle train/test split:\n\nHigh variance\nSensitive to random split\n\n\nCross-validation reduces uncertainty in model evaluation"
+    "objectID": "slides/interpretable_ml.html#shap-example-global-view",
+    "href": "slides/interpretable_ml.html#shap-example-global-view",
+    "title": "Interpretable Machine Learning",
+    "section": "SHAP — Example (global view)",
+    "text": "SHAP — Example (global view)\n\nThe beeswarm plot stacks SHAP values across many instances. Each row is a feature, each dot an instance; colour encodes the original feature value.\n→ MedInc dominates: high incomes (red) push predictions up; low incomes pull them down."
   },
   {
-    "objectID": "slides/intro_ml.html#the-core-idea",
-    "href": "slides/intro_ml.html#the-core-idea",
-    "title": "Introduction to Machine Learning",
-    "section": "The Core Idea",
-    "text": "The Core Idea\nWhat Is k-Fold Cross-Validation?\n\nSplit data into k approximately equal folds\nFor each fold:\n\nTrain on k−1 folds\nTest on the remaining fold\n\nAggregate performance metrics\n\n\\[\n\\text{CV score} = \\frac{1}{k} \\sum_{i=1}^{k} \\text{Score}_i\n\\]"
+    "objectID": "slides/interpretable_ml.html#shap-python",
+    "href": "slides/interpretable_ml.html#shap-python",
+    "title": "Interpretable Machine Learning",
+    "section": "SHAP — Python",
+    "text": "SHAP — Python\n\nimport shap\n\n# TreeSHAP — exact and fast for tree models\nexplainer = shap.TreeExplainer(model)\nshap_values = explainer(X_te)             # an Explanation object\n\n# Single prediction\nshap.plots.waterfall(shap_values[0])\n\n# Global summary\nshap.plots.beeswarm(shap_values)\nshap.plots.bar(shap_values)               # mean |SHAP| per feature (above)\n\n# Model-agnostic alternative\nkexp = shap.KernelExplainer(model.predict, shap.sample(X_tr, 100))\nPackages: shap, also wrapped by interpret and alibi.\nPros & Cons\n\n✔ Strong theoretical foundation; consistent local and global views.\n✗ Exact computation expensive; for correlated features the “marginal” vs “conditional” expectations debate matters; TreeSHAP background-set choice affects results."
   },
   {
-    "objectID": "slides/intro_ml.html#choosing-k",
-    "href": "slides/intro_ml.html#choosing-k",
-    "title": "Introduction to Machine Learning",
-    "section": "Choosing k",
-    "text": "Choosing k\nBias–Variance Trade-off\n\n\n\nk\nCharacteristics\n\n\n\n\n2–5\nHigher bias, lower variance\n\n\n5–10\nCommon practical choice\n\n\nn (LOOCV)\nMinimal bias, high variance & cost\n\n\n\n\n\n\n\nRule of thumb\n\n\n\nk = 5 or 10 for most problems"
+    "objectID": "slides/interpretable_ml.html#partial-dependence-plot-pdp",
+    "href": "slides/interpretable_ml.html#partial-dependence-plot-pdp",
+    "title": "Interpretable Machine Learning",
+    "section": "4. Partial Dependence Plot (PDP)",
+    "text": "4. Partial Dependence Plot (PDP)\nMotivation\nThe simplest answer to “How does feature \\(X_j\\) affect predictions on average?”: fix every other feature at its observed values and average over them.\nFriedman (2001) introduced PDPs as a tool to interpret gradient-boosted models."
   },
   {
-    "objectID": "slides/intro_ml.html#formal-perspective",
-    "href": "slides/intro_ml.html#formal-perspective",
-    "title": "Introduction to Machine Learning",
-    "section": "Formal Perspective",
-    "text": "Formal Perspective\nExpected Error Estimation\nk-fold CV estimates:\n\\[\n\\mathbb{E}_{(X,Y)}[L(f_{\\mathscr{D}}, (X,Y))]\n\\]\nwith:\n\nDifferent training sets \\(\\mathscr{D}\\)\nSame learning algorithm\nSame data distribution"
+    "objectID": "slides/interpretable_ml.html#pdp-theory",
+    "href": "slides/interpretable_ml.html#pdp-theory",
+    "title": "Interpretable Machine Learning",
+    "section": "PDP — Theory",
+    "text": "PDP — Theory\nThe partial dependence of the prediction on a subset of features \\(X_S\\) is:\n\\[\n\\widehat{f}_S(\\mathbf{x}_S) \\;=\\; \\mathbb{E}_{X_C}\\!\\left[\\, \\widehat{f}(\\mathbf{x}_S,\\, X_C) \\,\\right]\n\\;\\approx\\; \\frac{1}{n} \\sum_{i=1}^{n} \\widehat{f}\\!\\left(\\mathbf{x}_S,\\, \\mathbf{x}_C^{(i)}\\right)\n\\]\nwhere \\(C = \\{1,\\dots,p\\}\\setminus S\\) are the “other” features.\nThe PDP is the mean of the ICE curves. It can be plotted in 1-D (one feature) or 2-D (an interaction). It assumes feature \\(X_S\\) is independent of \\(X_C\\) — when that fails, the average is taken over impossible combinations and the curve becomes misleading."
   },
   {
-    "objectID": "slides/intro_ml.html#regression-vs-classification",
-    "href": "slides/intro_ml.html#regression-vs-classification",
-    "title": "Introduction to Machine Learning",
-    "section": "Regression vs Classification",
-    "text": "Regression vs Classification\nKey Differences\n\n\n\nAspect\nRegression\nClassification\n\n\n\n\nMetrics\nMSE, MAE, R²\nAccuracy, F1, AUC\n\n\nSplits\nRandom OK\nMust preserve class balance\n\n\nCV variant\nKFold\nStratified k-Fold"
+    "objectID": "slides/interpretable_ml.html#pdp-example",
+    "href": "slides/interpretable_ml.html#pdp-example",
+    "title": "Interpretable Machine Learning",
+    "section": "PDP — Example",
+    "text": "PDP — Example\n\n\nLeft: 1-D PDP — predicted price rises steeply with MedInc, then flattens.\nRight: 2-D PDP — for low occupancy, increasing MedInc increases price strongly; the joint effect is visible as the diagonal gradient."
   },
   {
-    "objectID": "slides/intro_ml.html#regression-k-fold-cv",
-    "href": "slides/intro_ml.html#regression-k-fold-cv",
-    "title": "Introduction to Machine Learning",
-    "section": "Regression: k-Fold CV",
-    "text": "Regression: k-Fold CV\nTypical Metrics\n\nMean Squared Error (MSE)\nMean Absolute Error (MAE)\n\\(R^2\\)\n\n\n\n\n\n\n\nNote\n\n\nScores may be negative in scikit-learn (loss convention)"
+    "objectID": "slides/interpretable_ml.html#pdp-python",
+    "href": "slides/interpretable_ml.html#pdp-python",
+    "title": "Interpretable Machine Learning",
+    "section": "PDP — Python",
+    "text": "PDP — Python\nfrom sklearn.inspection import PartialDependenceDisplay\nimport matplotlib.pyplot as plt\n\n# 1-D and 2-D PDPs in a single call\nPartialDependenceDisplay.from_estimator(\n    model, X_tr,\n    features=[\"MedInc\", \"AveOccup\", (\"MedInc\", \"AveOccup\")],\n    grid_resolution=40,\n)\nplt.tight_layout()\nplt.show()\nPackages: sklearn.inspection, PDPbox, PiML, interpret.\nPros & Cons\n\n✔ Easy to compute, easy to read, supports 2-D interactions.\n✗ Assumes feature independence — bias under correlation; hides heterogeneity (use ICE for that)."
   },
   {
-    "objectID": "slides/intro_ml.html#regression-example-scikit-learn",
-    "href": "slides/intro_ml.html#regression-example-scikit-learn",
-    "title": "Introduction to Machine Learning",
-    "section": "Regression Example (scikit-learn)",
-    "text": "Regression Example (scikit-learn)\n\nimport numpy as np\nfrom sklearn.datasets import make_regression\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.model_selection import KFold, cross_val_score\n\nX, y = make_regression(n_samples=100, n_features=5, noise=10, random_state=42)\n\nmodel = LinearRegression()\ncv = KFold(n_splits=5, shuffle=True, random_state=42)\n\nscores = cross_val_score(\n    model, X, y,\n    cv=cv,\n    scoring=\"neg_mean_squared_error\"\n)\n\nmse_scores = -scores\nprint(\"MSE per fold:\", mse_scores)\nprint(\"Mean MSE:\", mse_scores.mean())\n\nMSE per fold: [113.44800318  81.16181775  88.22981966  85.52522476 102.8583864 ]\nMean MSE: 94.2446503511611"
+    "objectID": "slides/interpretable_ml.html#accumulated-local-effects-ale",
+    "href": "slides/interpretable_ml.html#accumulated-local-effects-ale",
+    "title": "Interpretable Machine Learning",
+    "section": "5. Accumulated Local Effects (ALE)",
+    "text": "5. Accumulated Local Effects (ALE)\nMotivation\nPDPs break when features are correlated, because they evaluate the model at impossible feature combinations (e.g. a high Latitude with a low Longitude — outside California!).\nALE plots (Apley & Zhu, 2020) sidestep the problem: instead of averaging predictions, they average local differences of the prediction within small bins of the feature."
   },
   {
-    "objectID": "slides/intro_ml.html#classification-stratified-k-fold-cv",
-    "href": "slides/intro_ml.html#classification-stratified-k-fold-cv",
-    "title": "Introduction to Machine Learning",
-    "section": "Classification: Stratified k-Fold CV",
-    "text": "Classification: Stratified k-Fold CV\nWhy Stratified k-Fold?\nIn classification:\n\nPreserves class proportions in each fold\nEspecially important for imbalanced datasets\n\nUse:\n\nKFold → regression\nStratifiedKFold → classification"
+    "objectID": "slides/interpretable_ml.html#ale-theory",
+    "href": "slides/interpretable_ml.html#ale-theory",
+    "title": "Interpretable Machine Learning",
+    "section": "ALE — Theory",
+    "text": "ALE — Theory\nPartition the range of \\(X_j\\) into \\(K\\) quantile bins \\(\\{(z_{k-1}, z_k]\\}\\). For each bin compute the average local effect:\n\\[\n\\widehat{\\text{LE}}_k \\;=\\; \\frac{1}{n_k} \\sum_{i\\,:\\,x_j^{(i)} \\in (z_{k-1}, z_k]}\n\\left[\\, \\widehat{f}(z_k,\\, \\mathbf{x}^{(i)}_{-j}) \\,-\\, \\widehat{f}(z_{k-1},\\, \\mathbf{x}^{(i)}_{-j}) \\,\\right]\n\\]\nThe ALE is the cumulative sum of these local effects, centered to have mean 0:\n\\[\n\\widehat{\\text{ALE}}_j(x_j) \\;=\\; \\sum_{k\\,:\\,z_k\\,\\le\\,x_j} \\widehat{\\text{LE}}_k \\;-\\; c\n\\]\nThe key insight: each \\(\\widehat{\\text{LE}}_k\\) only uses data inside the bin, so we never extrapolate outside the data manifold."
   },
   {
-    "objectID": "slides/intro_ml.html#classification-example",
-    "href": "slides/intro_ml.html#classification-example",
-    "title": "Introduction to Machine Learning",
-    "section": "Classification Example",
-    "text": "Classification Example\n\nfrom sklearn.datasets import make_classification\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.model_selection import StratifiedKFold, cross_val_score\n\nX, y = make_classification(\n    n_samples=500,\n    n_features=5,\n    n_classes=2,\n    random_state=42\n)\n\nmodel = LogisticRegression(max_iter=1000)\n\nskf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)\n\nscores = cross_val_score(\n    model, X, y,\n    cv=skf,\n    scoring=\"accuracy\"\n)\n\nscores\n\narray([0.92, 0.89, 0.87, 0.85, 0.9 ])"
+    "objectID": "slides/interpretable_ml.html#ale-example",
+    "href": "slides/interpretable_ml.html#ale-example",
+    "title": "Interpretable Machine Learning",
+    "section": "ALE — Example",
+    "text": "ALE — Example\n\nLeft: Latitude and Longitude are strongly correlated (California’s shape). Right: PDP and ALE for Latitude disagree — ALE shows stronger location effects because it does not waste mass on impossible (Lat, Lon) combinations."
   },
   {
-    "objectID": "slides/intro_ml.html#best-practices-in-cv",
-    "href": "slides/intro_ml.html#best-practices-in-cv",
-    "title": "Introduction to Machine Learning",
-    "section": "Best Practices in CV",
-    "text": "Best Practices in CV\nCross-validation is often used to:\n\nCompare models\nTune hyperparameters\n\n\n\n\n\n\n\nWarning\n\n\nCross-Validation \\(\\neq\\) Test Set\n\n\n\n\n\n\n\n\n\n\nImportant Rule\n\n\nNever touch the test set until the very end\n\n\n\n\n\nCV is for model selection\nTest set is for final evaluation"
+    "objectID": "slides/interpretable_ml.html#ale-python",
+    "href": "slides/interpretable_ml.html#ale-python",
+    "title": "Interpretable Machine Learning",
+    "section": "ALE — Python",
+    "text": "ALE — Python\nThe most popular package is PyALE or alibi:\n# Option A — alibi\nfrom alibi.explainers import ALE, plot_ale\nale = ALE(model.predict, feature_names=X_tr.columns.tolist())\nexp = ale.explain(X_tr.values)\nplot_ale(exp, features=[\"Latitude\"])\n\n# Option B — PyALE\nfrom PyALE import ale\nale_eff = ale(X=X_tr, model=model, feature=[\"Latitude\"],\n              grid_size=30, include_CI=True)\nPackages: alibi, PyALE, interpret (partially); R has ALEPlot and iml.\nPros & Cons\n\n✔ Unbiased under correlation; faster than PDP (no full-grid evaluation).\n✗ Less intuitive (we plot cumulative local differences, not predictions); choice of bin count matters; only model-agnostic to first/second order."
   },
   {
-    "objectID": "slides/regularization.html#why-regularisation",
-    "href": "slides/regularization.html#why-regularisation",
-    "title": "Regularisation for Neural Networks",
-    "section": "Why Regularisation?",
-    "text": "Why Regularisation?\n\nNeural networks are high-capacity models\nOverfitting is common\nTraining loss ↓ does not imply test loss ↓\n\nGoal:\n\nImprove generalisation by controlling effective model complexity"
+    "objectID": "slides/interpretable_ml.html#permutation-feature-importance",
+    "href": "slides/interpretable_ml.html#permutation-feature-importance",
+    "title": "Interpretable Machine Learning",
+    "section": "6. Permutation Feature Importance",
+    "text": "6. Permutation Feature Importance\nMotivation\nA direct, model-agnostic measure of how much the model depends on a feature:\n\nIf we destroy the information in feature \\(X_j\\) by randomly shuffling its values, how much worse does the model get?\n\nIntroduced by Breiman (2001) for random forests and generalised by Fisher, Rudin & Dominici (2019) for any model."
   },
   {
-    "objectID": "slides/regularization.html#overfitting-in-neural-networks",
-    "href": "slides/regularization.html#overfitting-in-neural-networks",
-    "title": "Regularisation for Neural Networks",
-    "section": "Overfitting in Neural Networks",
-    "text": "Overfitting in Neural Networks\n\nMany parameters\nFlexible decision boundaries\nCan memorise training data\n\nTypical symptoms:\n\nTraining error → 0\nValidation error ↑"
+    "objectID": "slides/interpretable_ml.html#permutation-importance-theory",
+    "href": "slides/interpretable_ml.html#permutation-importance-theory",
+    "title": "Interpretable Machine Learning",
+    "section": "Permutation Importance — Theory",
+    "text": "Permutation Importance — Theory\n\nAlgorithm:\n\nCompute the baseline error on a held-out set: \\(e_{\\text{orig}} = L(y, \\widehat{f}(X))\\).\nFor each feature \\(j = 1, \\dots, p\\):\n\nPermute column \\(j\\) of \\(X\\) (breaking the link with \\(y\\)).\nRecompute the error \\(e_{\\text{perm}}^{(j)} = L(y, \\widehat{f}(X^{\\text{perm}_j}))\\).\n\nImportance: \\(\\text{PFI}_j \\;=\\; e_{\\text{perm}}^{(j)} - e_{\\text{orig}}\\) (or the ratio).\n\nRepeat the shuffle several times and average to reduce variance.\nWatch out: when features are correlated, permuting one creates unrealistic instances; importance can be inflated or split across correlated features."
   },
   {
-    "objectID": "slides/regularization.html#what-is-regularisation",
-    "href": "slides/regularization.html#what-is-regularisation",
-    "title": "Regularisation for Neural Networks",
-    "section": "What Is Regularisation?",
-    "text": "What Is Regularisation?\nDefinition\nAny technique that constrains learning to improve out-of-sample performance.\nThree perspectives\n\nPenalise complexity\n\nInject noise\n\nStop training early"
+    "objectID": "slides/interpretable_ml.html#permutation-importance-example",
+    "href": "slides/interpretable_ml.html#permutation-importance-example",
+    "title": "Interpretable Machine Learning",
+    "section": "Permutation Importance — Example",
+    "text": "Permutation Importance — Example\n\nMedInc is by far the most important feature: shuffling it costs ~ 0.9 in \\(R^2\\). AveOccup, Latitude and Longitude follow."
   },
   {
-    "objectID": "slides/regularization.html#explicit-regularisation-l2-weight-decay",
-    "href": "slides/regularization.html#explicit-regularisation-l2-weight-decay",
-    "title": "Regularisation for Neural Networks",
-    "section": "Explicit Regularisation: L2 (Weight Decay)",
-    "text": "Explicit Regularisation: L2 (Weight Decay)\n\\[\n\\mathscr{L}(\\theta) = \\mathscr{L}_{data}(\\theta) + \\lambda \\sum_i w_i^2\n\\]\nEffects\n\nPenalises large weights\nEncourages smooth functions\nImproves conditioning"
+    "objectID": "slides/interpretable_ml.html#permutation-importance-python",
+    "href": "slides/interpretable_ml.html#permutation-importance-python",
+    "title": "Interpretable Machine Learning",
+    "section": "Permutation Importance — Python",
+    "text": "Permutation Importance — Python\nfrom sklearn.inspection import permutation_importance\nimport pandas as pd\n\nresult = permutation_importance(\n    model, X_te, y_te,\n    n_repeats=20,\n    scoring=\"r2\",\n    random_state=42,\n    n_jobs=-1,\n)\n\nimportances = pd.Series(result.importances_mean,\n                        index=X_te.columns).sort_values(ascending=False)\nprint(importances)\nPackages: sklearn.inspection, eli5.show_weights, rfpimp (handles correlated features via “drop-column” importance).\nPros & Cons\n\n✔ Compresses everything into one number per feature; model-agnostic.\n✗ Depends on the loss and dataset (train vs test); biased by feature correlation; says nothing about the direction or shape of the effect."
   },
   {
-    "objectID": "slides/regularization.html#geometric-interpretation-of-l2",
-    "href": "slides/regularization.html#geometric-interpretation-of-l2",
-    "title": "Regularisation for Neural Networks",
-    "section": "Geometric Interpretation of L2",
-    "text": "Geometric Interpretation of L2\n\nPenalises distance from origin\nShrinks parameters continuously\nEquivalent to Gaussian prior on weights"
+    "objectID": "slides/interpretable_ml.html#choosing-a-method",
+    "href": "slides/interpretable_ml.html#choosing-a-method",
+    "title": "Interpretable Machine Learning",
+    "section": "Choosing a method",
+    "text": "Choosing a method\n\n\n\n\n\n\n\nYou want to…\nUse\n\n\n\n\nExplain one prediction\nSHAP (preferred), LIME\n\n\nSee per-instance feature curves\nICE\n\n\nAverage effect of a feature\nPDP (independent features)\n\n\nAverage effect with correlated features\nALE\n\n\nRank features by importance\nPermutation Importance (or mean \\(|\\text{SHAP}|\\))\n\n\nGlobal summary of a model\nSHAP summary + PFI + PDP/ALE\n\n\n\nBest practice: combine several methods — they answer slightly different questions."
   },
   {
-    "objectID": "slides/regularization.html#l1-regularisation",
-    "href": "slides/regularization.html#l1-regularisation",
-    "title": "Regularisation for Neural Networks",
-    "section": "L1 Regularisation",
-    "text": "L1 Regularisation\n\\[\n\\mathscr{L}(\\theta) = \\mathscr{L}_{data}(\\theta) + \\lambda \\sum_i |w_i|\n\\]\nKey properties\n\nProduces sparse solutions\nPerforms implicit feature selection\nLess common in deep networks"
+    "objectID": "slides/intro_tensorflow2.html#what-is-tensorflow",
+    "href": "slides/intro_tensorflow2.html#what-is-tensorflow",
+    "title": "TensorFlow 2 — The Basics",
+    "section": "What is TensorFlow?",
+    "text": "What is TensorFlow?\n\nOpen-source machine learning framework\nDeveloped by Google\nDesigned for:\n\nResearch\nProduction\nScalability (CPU / GPU / TPU)"
   },
   {
-    "objectID": "slides/regularization.html#l1-vs-l2",
-    "href": "slides/regularization.html#l1-vs-l2",
-    "title": "Regularisation for Neural Networks",
-    "section": "L1 vs L2",
-    "text": "L1 vs L2\n\n\n\nAspect\nL1\nL2\n\n\n\n\nSparsity\nYes\nNo\n\n\nWeight shrinkage\nHard\nSmooth\n\n\nInterpretability\nHigher\nLower"
+    "objectID": "slides/intro_tensorflow2.html#tensorflow-vs-others",
+    "href": "slides/intro_tensorflow2.html#tensorflow-vs-others",
+    "title": "TensorFlow 2 — The Basics",
+    "section": "TensorFlow vs Others",
+    "text": "TensorFlow vs Others\n\n\n\nFramework\nFocus\nStrength\n\n\n\n\nscikit-learn\nClassical ML\nSimplicity\n\n\nPyTorch\nResearch\nFlexibility\n\n\nTensorFlow 2\nResearch + Prod\nEnd-to-end pipelines"
   },
   {
-    "objectID": "slides/regularization.html#tensorflow-implementation",
-    "href": "slides/regularization.html#tensorflow-implementation",
-    "title": "Regularisation for Neural Networks",
-    "section": "Tensorflow Implementation",
-    "text": "Tensorflow Implementation\n\nfrom tensorflow import keras\nfrom tensorflow.keras import layers\n\nmodel = keras.Sequential([\n    layers.Dense(\n        128,\n        activation=\"relu\",\n        kernel_regularizer=keras.regularizers.l2(1e-3) ## L2 regularisation on weights\n    ),\n    layers.Dense(\n        128,\n        activation=\"relu\",\n        kernel_regularizer=keras.regularizers.l1(1e-3) ## L1 regularisation on weights\n    ),\n     layers.Dense(\n        128,\n        activation=\"relu\",\n        kernel_regularizer=keras.regularizers.l1_l2(1e-3) ## L1 and L2 regularisation on weights\n    ),\n    layers.Dense(1)\n])\n\nmodel.compile(\n    optimizer=\"adam\",\n    loss=\"mse\"\n)"
+    "objectID": "slides/intro_tensorflow2.html#what-is-a-tensor",
+    "href": "slides/intro_tensorflow2.html#what-is-a-tensor",
+    "title": "TensorFlow 2 — The Basics",
+    "section": "What is a tensor?",
+    "text": "What is a tensor?\n\nGeneralization of:\n\nScalar (rank 0)\nVector (rank 1)\nMatrix (rank 2)\nHigher dimensions (rank ≥ 3)"
   },
   {
-    "objectID": "slides/regularization.html#stochastic-regularisation-1",
-    "href": "slides/regularization.html#stochastic-regularisation-1",
-    "title": "Regularisation for Neural Networks",
-    "section": "Stochastic Regularisation",
-    "text": "Stochastic Regularisation\n\nInject randomness during training\nForces robustness\nPrevents co-adaptation\n\nExamples:\n\nDropout\nNoise injection\nBatchNorm (indirectly)"
+    "objectID": "slides/intro_tensorflow2.html#creating-tensors",
+    "href": "slides/intro_tensorflow2.html#creating-tensors",
+    "title": "TensorFlow 2 — The Basics",
+    "section": "Creating Tensors",
+    "text": "Creating Tensors\n\nimport numpy as np\nimport tensorflow as tf\n\na = tf.constant(3)\nb = tf.constant([1, 2, 3])\nc = tf.constant([[1., 2.], [3., 4.]])"
   },
   {
-    "objectID": "slides/regularization.html#dropout",
-    "href": "slides/regularization.html#dropout",
-    "title": "Regularisation for Neural Networks",
-    "section": "Dropout",
-    "text": "Dropout\nIdea\n\nRandomly drop neurons during training\n\n\\[\n\\widetilde{h} = h \\cdot \\text{Bernoulli}(p)\n\\]\nInterpretation\n\nApproximate ensemble learning\nStrong regularisation effect\n\n\n\n\n\n\n\nWarning\n\n\nNot to be used on inference time!"
+    "objectID": "slides/intro_tensorflow2.html#tensor-properties",
+    "href": "slides/intro_tensorflow2.html#tensor-properties",
+    "title": "TensorFlow 2 — The Basics",
+    "section": "Tensor Properties",
+    "text": "Tensor Properties\n\nc.shape\nc.dtype\ntf.rank(c)\n\n&lt;tf.Tensor: shape=(), dtype=int32, numpy=2&gt;\n\n\n\n\n\n\n\n\n\nKey Idea\n\n\nTensors have shape, dtype, and rank"
   },
   {
-    "objectID": "slides/regularization.html#dropout-practical-notes",
-    "href": "slides/regularization.html#dropout-practical-notes",
-    "title": "Regularisation for Neural Networks",
-    "section": "Dropout: Practical Notes",
-    "text": "Dropout: Practical Notes\n\nMost effective in fully-connected layers\nTypical rates: 0.1–0.5\nOften unnecessary with BatchNorm\n\nTensorflow Implementation\n\nmodel = keras.Sequential([\n    layers.Dense(128, activation=\"relu\"),\n    layers.Dropout(0.3),\n\n    layers.Dense(128, activation=\"relu\"),\n    layers.Dropout(0.3),\n\n    layers.Dense(1)\n])\n\nmodel.compile(\n    optimizer=\"adam\",\n    loss=\"mse\"\n)"
+    "objectID": "slides/intro_tensorflow2.html#tensor-operations",
+    "href": "slides/intro_tensorflow2.html#tensor-operations",
+    "title": "TensorFlow 2 — The Basics",
+    "section": "Tensor Operations",
+    "text": "Tensor Operations\nTensorFlow feels like NumPy:\n\nx = tf.random.normal((3, 2))\ny = tf.ones((3, 2))\n\nx + y\nx * y\n\n&lt;tf.Tensor: shape=(3, 2), dtype=float32, numpy=\narray([[ 0.93306696, -0.3520624 ],\n       [-0.15182333, -0.10537166],\n       [-0.16372524,  0.5422379 ]], dtype=float32)&gt;\n\n\nMatrix multiplication:\n\ntf.matmul(x, tf.transpose(y))\n\n&lt;tf.Tensor: shape=(3, 3), dtype=float32, numpy=\narray([[ 0.58100456,  0.58100456,  0.58100456],\n       [-0.257195  , -0.257195  , -0.257195  ],\n       [ 0.37851262,  0.37851262,  0.37851262]], dtype=float32)&gt;"
   },
   {
-    "objectID": "slides/regularization.html#normalisation-layers-1",
-    "href": "slides/regularization.html#normalisation-layers-1",
-    "title": "Regularisation for Neural Networks",
-    "section": "Normalisation Layers",
-    "text": "Normalisation Layers\nPrimary purpose:\n\nStabilise optimisation\n\nSecondary effect:\n\nRegularisation through noise or smoothing"
+    "objectID": "slides/intro_tensorflow2.html#important-tensor-rules",
+    "href": "slides/intro_tensorflow2.html#important-tensor-rules",
+    "title": "TensorFlow 2 — The Basics",
+    "section": "Important Tensor Rules",
+    "text": "Important Tensor Rules\n\nTensors are immutable\nOperations are GPU-aware\nBroadcasting rules apply (like NumPy)"
   },
   {
-    "objectID": "slides/regularization.html#batch-normalization",
-    "href": "slides/regularization.html#batch-normalization",
-    "title": "Regularisation for Neural Networks",
-    "section": "Batch Normalization",
-    "text": "Batch Normalization\nFor mini-batch \\(B\\):\n\\[\n\\widehat{x} = \\frac{x - \\mu_B}{\\sqrt{\\sigma_B^2 + \\epsilon}}, \\quad\ny = \\gamma \\widehat{x} + \\beta\n\\]\n\n\\(\\mu_B\\) and \\(\\sigma_B^2\\) are batch statistics\n\\(\\gamma\\) and \\(\\beta\\) are learnable parameters"
+    "objectID": "slides/intro_tensorflow2.html#why-keras",
+    "href": "slides/intro_tensorflow2.html#why-keras",
+    "title": "TensorFlow 2 — The Basics",
+    "section": "Why Keras?",
+    "text": "Why Keras?\n\nReduces boilerplate\nEnforces best practices\nIntegrated into TensorFlow 2"
   },
   {
-    "objectID": "slides/regularization.html#why-batchnorm-works",
-    "href": "slides/regularization.html#why-batchnorm-works",
-    "title": "Regularisation for Neural Networks",
-    "section": "Why BatchNorm Works",
-    "text": "Why BatchNorm Works\n\nReduces sensitivity to parameter scale\nAllows higher learning rates\nImproves gradient flow"
+    "objectID": "slides/intro_tensorflow2.html#building-a-model-sequential",
+    "href": "slides/intro_tensorflow2.html#building-a-model-sequential",
+    "title": "TensorFlow 2 — The Basics",
+    "section": "Building a Model (Sequential)",
+    "text": "Building a Model (Sequential)\n\nmodel = tf.keras.Sequential([\n    tf.keras.layers.Dense(32, activation=\"relu\"),\n    tf.keras.layers.Dense(1)\n])\n\nModel Summary\n\nmodel.summary()\n\nModel: \"sequential_4\"\n\n\n\n┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓\n┃ Layer (type)                    ┃ Output Shape           ┃       Param # ┃\n┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩\n│ dense_16 (Dense)                │ ?                      │   0 (unbuilt) │\n├─────────────────────────────────┼────────────────────────┼───────────────┤\n│ dense_17 (Dense)                │ ?                      │   0 (unbuilt) │\n└─────────────────────────────────┴────────────────────────┴───────────────┘\n\n\n\n Total params: 0 (0.00 B)\n\n\n\n Trainable params: 0 (0.00 B)\n\n\n\n Non-trainable params: 0 (0.00 B)\n\n\n\nConcepts:\n\nLayers\nParameters\nTrainable weights"
   },
   {
-    "objectID": "slides/regularization.html#batchnorm-as-regularisation",
-    "href": "slides/regularization.html#batchnorm-as-regularisation",
-    "title": "Regularisation for Neural Networks",
-    "section": "BatchNorm as Regularisation",
-    "text": "BatchNorm as Regularisation\n\nUses batch statistics\nIntroduces stochastic noise\nNoise depends on batch composition\n\nResult\n\nReduced overfitting\nOften replaces dropout"
+    "objectID": "slides/intro_tensorflow2.html#functional-api",
+    "href": "slides/intro_tensorflow2.html#functional-api",
+    "title": "TensorFlow 2 — The Basics",
+    "section": "Functional API",
+    "text": "Functional API\n\ninputs = tf.keras.Input(shape=(10,))\nx = tf.keras.layers.Dense(32, activation=\"relu\")(inputs)\noutputs = tf.keras.layers.Dense(1)(x)\n\nmodel = tf.keras.Model(inputs, outputs)\n\nUse when:\n\nMultiple inputs / outputs\nComplex architectures"
   },
   {
-    "objectID": "slides/regularization.html#limitations-of-batchnorm",
-    "href": "slides/regularization.html#limitations-of-batchnorm",
-    "title": "Regularisation for Neural Networks",
-    "section": "Limitations of BatchNorm",
-    "text": "Limitations of BatchNorm\n\nDepends on batch size\nPoor with small batches\nNot ideal for:\n\nRNNs\nOnline learning\nTransformers\n\n\n\n\n\n\n\n\nNote\n\n\nFor inference, use moving averages of \\(\\mu\\) and \\(\\sigma\\) from training."
+    "objectID": "slides/intro_tensorflow2.html#the-3-step-pattern",
+    "href": "slides/intro_tensorflow2.html#the-3-step-pattern",
+    "title": "TensorFlow 2 — The Basics",
+    "section": "The 3-Step Pattern",
+    "text": "The 3-Step Pattern\n\ncompile\nfit\nevaluate / predict\n\n\nThis pattern appears everywhere in TF2."
   },
   {
-    "objectID": "slides/regularization.html#batchnorm---tensorflow-implementation",
-    "href": "slides/regularization.html#batchnorm---tensorflow-implementation",
-    "title": "Regularisation for Neural Networks",
-    "section": "BatchNorm - TensorFlow Implementation",
-    "text": "BatchNorm - TensorFlow Implementation\n\nmodel = keras.Sequential([\n    layers.Dense(128, use_bias=False),\n    layers.BatchNormalization(),\n    layers.Activation(\"relu\"),\n\n    layers.Dense(128, use_bias=False),\n    layers.BatchNormalization(),\n    layers.Activation(\"relu\"),\n\n    layers.Dense(1)\n])"
+    "objectID": "slides/intro_tensorflow2.html#compile-step",
+    "href": "slides/intro_tensorflow2.html#compile-step",
+    "title": "TensorFlow 2 — The Basics",
+    "section": "Compile Step",
+    "text": "Compile Step\n\nmodel.compile(\n    optimizer=\"adam\",\n    loss=\"mse\",\n    metrics=[\"mae\"]\n)\n\n\nOptimizer → how parameters change\nLoss → what we minimize\nMetrics → what we monitor"
   },
   {
-    "objectID": "slides/regularization.html#layer-normalization",
-    "href": "slides/regularization.html#layer-normalization",
-    "title": "Regularisation for Neural Networks",
-    "section": "Layer Normalization",
-    "text": "Layer Normalization\nNormalises within a single sample:\n\\[\n\\widehat{x} = \\frac{x - \\mu_{features}}{\\sqrt{\\sigma_{features}^2 + \\epsilon}}\n\\]"
+    "objectID": "slides/intro_tensorflow2.html#fit-the-model",
+    "href": "slides/intro_tensorflow2.html#fit-the-model",
+    "title": "TensorFlow 2 — The Basics",
+    "section": "Fit the Model",
+    "text": "Fit the Model\nTraining concepts:\n\nEpoch\nBatch\nValidation set\n\n\nX_train, y_train = np.random.rand(100, 10), np.random.rand(100, 1)  # Training data\nhistory = model.fit(\n    X_train,\n    y_train,\n    epochs=5,\n    batch_size=32,\n    validation_split=0.2\n)\n\n\nEpoch 1/5\n\n\n1/3 ━━━━━━━━━━━━━━━━━━━━ 0s 249ms/step - loss: 0.4548 - mae: 0.6070\n\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\n3/3 ━━━━━━━━━━━━━━━━━━━━ 0s 33ms/step - loss: 0.3491 - mae: 0.5141 - val_loss: 0.2891 - val_mae: 0.4323\n\nEpoch 2/5\n\n\n1/3 ━━━━━━━━━━━━━━━━━━━━ 0s 6ms/step - loss: 0.2861 - mae: 0.4540\n\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\n3/3 ━━━━━━━━━━━━━━━━━━━━ 0s 9ms/step - loss: 0.2879 - mae: 0.4664 - val_loss: 0.2414 - val_mae: 0.3880\n\nEpoch 3/5\n\n\n1/3 ━━━━━━━━━━━━━━━━━━━━ 0s 7ms/step - loss: 0.2322 - mae: 0.4032\n\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\n3/3 ━━━━━━━━━━━━━━━━━━━━ 0s 9ms/step - loss: 0.2401 - mae: 0.4244 - val_loss: 0.2023 - val_mae: 0.3491\n\nEpoch 4/5\n\n\n1/3 ━━━━━━━━━━━━━━━━━━━━ 0s 6ms/step - loss: 0.2379 - mae: 0.4157\n\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\n3/3 ━━━━━━━━━━━━━━━━━━━━ 0s 9ms/step - loss: 0.2022 - mae: 0.3880 - val_loss: 0.1721 - val_mae: 0.3188\n\nEpoch 5/5\n\n\n1/3 ━━━━━━━━━━━━━━━━━━━━ 0s 7ms/step - loss: 0.2142 - mae: 0.3795\n\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\n3/3 ━━━━━━━━━━━━━━━━━━━━ 0s 8ms/step - loss: 0.1729 - mae: 0.3561 - val_loss: 0.1503 - val_mae: 0.2999"
   },
   {
-    "objectID": "slides/regularization.html#why-layernorm",
-    "href": "slides/regularization.html#why-layernorm",
-    "title": "Regularisation for Neural Networks",
-    "section": "Why LayerNorm?",
-    "text": "Why LayerNorm?\n\nIndependent of batch size\nStable for sequential models\nStandard in Transformers\n\nRegularisation effect\n\nSmoother optimisation landscape\nLess noise than BatchNorm"
+    "objectID": "slides/intro_tensorflow2.html#evaluate-and-predict",
+    "href": "slides/intro_tensorflow2.html#evaluate-and-predict",
+    "title": "TensorFlow 2 — The Basics",
+    "section": "Evaluate and Predict",
+    "text": "Evaluate and Predict\n\nX_test, y_test = np.random.rand(20, 10), np.random.rand(20, 1)  # Test data\nmodel.evaluate(X_test, y_test)\n\n\n1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 6ms/step - loss: 0.1391 - mae: 0.3047\n\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\n1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 12ms/step - loss: 0.1391 - mae: 0.3047\n\n\n\n\n[0.13910728693008423, 0.30469390749931335]\n\n\n\nX_new = np.random.rand(5, 10)  # New data for prediction\nmodel.predict(X_new)\n\n\n1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 12ms/step\n\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\n1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 17ms/step\n\n\n\n\narray([[ 0.21222718],\n       [ 0.31611803],\n       [ 0.27205643],\n       [-0.10213057],\n       [ 0.3311126 ]], dtype=float32)"
   },
   {
-    "objectID": "slides/regularization.html#layernorm---tensorflow-implementation",
-    "href": "slides/regularization.html#layernorm---tensorflow-implementation",
-    "title": "Regularisation for Neural Networks",
-    "section": "LayerNorm - TensorFlow Implementation",
-    "text": "LayerNorm - TensorFlow Implementation\n\nmodel = keras.Sequential([\n    layers.Dense(128, use_bias=False),\n    layers.LayerNormalization(),\n    layers.Activation(\"relu\"),\n\n    layers.Dense(128, use_bias=False),\n    layers.LayerNormalization(),\n    layers.Activation(\"relu\"),\n\n    layers.Dense(1)\n])"
+    "objectID": "slides/rnn.html#why-do-we-need-rnns",
+    "href": "slides/rnn.html#why-do-we-need-rnns",
+    "title": "Recurrent Neural Networks",
+    "section": "Why Do We Need RNNs?",
+    "text": "Why Do We Need RNNs?\n\n\nFeedforward Networks Assume Independence\nFor MLPs:\n\\[\n\\mathbf x_i \\perp \\mathbf x_j\n\\]\nBut many datasets are sequential!\n\nRecurrent Networks Capture Dependencies\n\\[\nP(\\mathbf x_t | \\mathbf x_{t-1}, \\mathbf x_{t-2}, ..., \\mathbf x_1)\n\\]\nCases where RNNs are useful:\n\nText\nSpeech\nFinancial time-series\nBiological sequences\nSensor signals"
   },
   {
-    "objectID": "slides/regularization.html#batchnorm-vs-layernorm",
-    "href": "slides/regularization.html#batchnorm-vs-layernorm",
-    "title": "Regularisation for Neural Networks",
-    "section": "BatchNorm vs LayerNorm",
-    "text": "BatchNorm vs LayerNorm\n\n\n\nAspect\nBatchNorm\nLayerNorm\n\n\n\n\nNormalisation axis\nBatch\nFeatures\n\n\nBatch-size dependent\nYes\nNo\n\n\nNoise level\nHigh\nLow\n\n\nTypical use\nCNNs\nTransformers"
+    "objectID": "slides/rnn.html#applications",
+    "href": "slides/rnn.html#applications",
+    "title": "Recurrent Neural Networks",
+    "section": "Applications",
+    "text": "Applications\n\nLanguage modeling\nMachine translation\nSpeech recognition\nTime-series forecasting\nGenomics\nVideo processing"
   },
   {
-    "objectID": "slides/regularization.html#implicit-regularisation-1",
-    "href": "slides/regularization.html#implicit-regularisation-1",
-    "title": "Regularisation for Neural Networks",
-    "section": "Implicit Regularisation",
-    "text": "Implicit Regularisation\nNot explicitly added to the loss.\nExamples:\n\nEarly stopping\nSGD noise\nFinite training time"
+    "objectID": "slides/rnn.html#core-recurrence",
+    "href": "slides/rnn.html#core-recurrence",
+    "title": "Recurrent Neural Networks",
+    "section": "Core Recurrence",
+    "text": "Core Recurrence\n\\[\n\\mathbf z_t =\\mathbf W_h \\mathbf h_{t-1} + \\mathbf W_x \\mathbf x_t + \\mathbf b\n\\]\n\\[\n\\mathbf h_t = \\sigma(\\mathbf z_t)\n\\]\n\\[\n\\mathbf y_t = \\mathbf W_y \\mathbf h_t\n\\]\nSame weights reused across time."
   },
   {
-    "objectID": "slides/regularization.html#early-stopping",
-    "href": "slides/regularization.html#early-stopping",
-    "title": "Regularisation for Neural Networks",
-    "section": "Early Stopping",
-    "text": "Early Stopping\n\nStop training when validation loss increases\nPrevents late-stage memorisation\n\nTheory\n\nEquivalent to L2 in linear models"
+    "objectID": "slides/rnn.html#unrolled-through-time",
+    "href": "slides/rnn.html#unrolled-through-time",
+    "title": "Recurrent Neural Networks",
+    "section": "Unrolled Through Time",
+    "text": "Unrolled Through Time\n\nUnrolled RNN"
   },
   {
-    "objectID": "slides/regularization.html#regularisation-strategy",
-    "href": "slides/regularization.html#regularisation-strategy",
-    "title": "Regularisation for Neural Networks",
-    "section": "Regularisation Strategy",
-    "text": "Regularisation Strategy\n\nStart with:\n\nWeight decay\nEarly stopping\n\nAdd:\n\nBatchNorm or LayerNorm\n\nUse Dropout:\n\nIf BatchNorm is absent\nOr in final dense layers"
+    "objectID": "slides/rnn.html#tensorflow-simple-rnn",
+    "href": "slides/rnn.html#tensorflow-simple-rnn",
+    "title": "Recurrent Neural Networks",
+    "section": "TensorFlow: Simple RNN",
+    "text": "TensorFlow: Simple RNN\n\nimport tensorflow as tf\nfrom tensorflow import keras\nfrom tensorflow.keras import layers\n\nmodel = keras.Sequential([\n    layers.SimpleRNN(64, return_sequences=True),\n    layers.SimpleRNN(32),\n    layers.Dense(1)\n])\n\nmodel.compile(optimizer=\"adam\", loss=\"mse\")\nmodel.summary()\n\nModel: \"sequential_4\"\n\n\n\n┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓\n┃ Layer (type)                    ┃ Output Shape           ┃       Param # ┃\n┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩\n│ simple_rnn_2 (SimpleRNN)        │ ?                      │   0 (unbuilt) │\n├─────────────────────────────────┼────────────────────────┼───────────────┤\n│ simple_rnn_3 (SimpleRNN)        │ ?                      │   0 (unbuilt) │\n├─────────────────────────────────┼────────────────────────┼───────────────┤\n│ dense_4 (Dense)                 │ ?                      │   0 (unbuilt) │\n└─────────────────────────────────┴────────────────────────┴───────────────┘\n\n\n\n Total params: 0 (0.00 B)\n\n\n\n Trainable params: 0 (0.00 B)\n\n\n\n Non-trainable params: 0 (0.00 B)"
   },
   {
-    "objectID": "slides/regularization.html#common-anti-patterns",
-    "href": "slides/regularization.html#common-anti-patterns",
-    "title": "Regularisation for Neural Networks",
-    "section": "Common Anti-Patterns",
-    "text": "Common Anti-Patterns\n\nDropout + BatchNorm everywhere\nOver-regularising small datasets\nIgnoring optimiser interactions"
+    "objectID": "slides/rnn.html#backpropagation-through-time-bptt",
+    "href": "slides/rnn.html#backpropagation-through-time-bptt",
+    "title": "Recurrent Neural Networks",
+    "section": "Backpropagation Through Time (BPTT)",
+    "text": "Backpropagation Through Time (BPTT)\nTraining objective:\n\\[\n\\frac{\\partial \\mathscr L}{\\partial \\mathbf W_h} =\\sum_{t=1}^{T}\\frac{\\partial \\mathscr L}{\\partial \\mathbf h_t}\\frac{\\partial \\mathbf h_t}{\\partial \\mathbf W_h}\n\\]\nBut:\n\\[\n\\frac{\\partial \\mathbf h_t}{\\partial \\mathbf h_{t-k}}=\\prod_{i=t-k+1}^{t}\\frac{\\partial \\mathbf h_i}{\\partial \\mathbf h_{i-1}}\n\\]\nwith:\n\\[\n\\frac{\\partial \\mathbf h_i}{\\partial \\mathbf h_{i-1}}\n=\\mathbf W_h \\cdot \\text{diag}(\\sigma'(\\mathbf z_t))\n\\]\nRepeated matrix multiplication → instability."
   },
   {
-    "objectID": "slides/regularization.html#key-takeaways",
-    "href": "slides/regularization.html#key-takeaways",
-    "title": "Regularisation for Neural Networks",
-    "section": "Key Takeaways",
-    "text": "Key Takeaways\n\nRegularisation controls effective capacity\nNormalisation layers regularise implicitly\nMethods are complementary\nValidation performance is the final arbiter"
+    "objectID": "slides/rnn.html#the-vanishing-gradient-problem",
+    "href": "slides/rnn.html#the-vanishing-gradient-problem",
+    "title": "Recurrent Neural Networks",
+    "section": "The Vanishing Gradient Problem",
+    "text": "The Vanishing Gradient Problem\nSimplified Recurrence\n\\[\n\\mathbf h_t = \\sigma(\\mathbf W_h \\mathbf h_{t-1})\n\\]\nDerivative:\n\\[\n\\frac{\\partial \\mathbf h_t}{\\partial \\mathbf h_{t-1}}\n=\n\\mathbf W_h \\cdot \\text{diag}(\\sigma'(\\mathbf z))\n\\]\nRepeated products:\n\\[\n\\prod_{i=1}^{k} \\mathbf W_h \\boldsymbol{\\lambda}_i\n\\]\n\n\nIf:\n\\[\n\\rho(\\mathbf W_h) &lt; 1\n\\]\n\nGradient vanishes.\n\n\nIf:\n\\[\n\\rho(\\mathbf W_h) &gt; 1\n\\]\n\nExploding gradient."
   },
   {
-    "objectID": "slides/tokenization_pading_masking_embeddings.html#why-text-needs-processing",
-    "href": "slides/tokenization_pading_masking_embeddings.html#why-text-needs-processing",
-    "title": "Tokenization, Embeddings, Padding, and Masking",
-    "section": "Why Text Needs Processing",
-    "text": "Why Text Needs Processing\n\nModels operate on numbers, not text\nRaw text is:\n\nVariable length\nDiscrete\nUnstructured\n\n\n\nGoal: transform text → structured numerical tensors\n\nPipeline\nRaw Text → Tokenization → Integer Sequences → Padding → Embedding → Model"
+    "objectID": "slides/rnn.html#lstm-gate-equations",
+    "href": "slides/rnn.html#lstm-gate-equations",
+    "title": "Recurrent Neural Networks",
+    "section": "LSTM Gate Equations",
+    "text": "LSTM Gate Equations\n\n\n\n\n\n\nNote\n\n\nAllow constant error flow through a memory cell.\n\n\n\nForget gate:\n\\[\n\\mathbf f_t = \\sigma\\left(\\mathbf W_f [\\mathbf h_{t-1} \\, \\mathbf x_t] + \\mathbf b_f\\right)\n\\]\nInput gate:\n\\[\n\\mathbf i_t = \\sigma\\left(\\mathbf W_i [\\mathbf h_{t-1} \\, \\mathbf x_t] + \\mathbf b_i\\right)\n\\]\nOutput:\n\\[\n\\mathbf o_t = \\sigma\\left(\\mathbf W_o [\\mathbf h_{t-1} \\, \\mathbf x_t] + \\mathbf b_o\\right)\n\\]\nInput Node\n\\[\n\\widetilde{\\mathbf c} = \\tanh\\left(\\mathbf W_c [\\mathbf h_{t-1} \\, \\mathbf x_t] + \\mathbf b_c\\right)\n\\]"
   },
   {
-    "objectID": "slides/tokenization_pading_masking_embeddings.html#what-is-tokenization",
-    "href": "slides/tokenization_pading_masking_embeddings.html#what-is-tokenization",
-    "title": "Tokenization, Embeddings, Padding, and Masking",
-    "section": "What is Tokenization?",
-    "text": "What is Tokenization?\n\nSplitting text into units:\n\nWords\nSubwords\nCharacters\n\n\n\nExample: “Deep learning is powerful” → [“deep”, “learning”, “is”, “powerful”]"
+    "objectID": "slides/rnn.html#cell-update",
+    "href": "slides/rnn.html#cell-update",
+    "title": "Recurrent Neural Networks",
+    "section": "Cell update",
+    "text": "Cell update\n\\[\n\\mathbf c_t = \\mathbf f_t \\odot \\mathbf c_{t-1} + \\mathbf i_t \\odot \\widetilde{\\mathbf c}_t\n\\]\n\\[\n\\mathbf h_t = \\mathbf o_t \\odot \\tanh(\\mathbf c_t)\n\\]"
   },
   {
-    "objectID": "slides/tokenization_pading_masking_embeddings.html#types-of-tokenization",
-    "href": "slides/tokenization_pading_masking_embeddings.html#types-of-tokenization",
-    "title": "Tokenization, Embeddings, Padding, and Masking",
-    "section": "Types of Tokenization",
-    "text": "Types of Tokenization\n\nWord-level\n\n\"deep learning is fun\" → [\"deep\", \"learning\", \"is\", \"fun\"]\n\nSubword (BPE / WordPiece)\n\n\"unbelievable\" → [\"un\", \"believ\", \"able\"]\n\"playing\" → [\"play\", \"##ing\"] (WordPiece style)\n\nCharacter-level\n\n\"cat\" → [\"c\", \"a\", \"t\"]"
+    "objectID": "slides/rnn.html#why-lstm-works",
+    "href": "slides/rnn.html#why-lstm-works",
+    "title": "Recurrent Neural Networks",
+    "section": "Why LSTM Works",
+    "text": "Why LSTM Works\nIf:\n\\[\n\\mathbf f_t \\approx 1\n\\]\nThen:\n\\[\n\\frac{\\partial \\mathbf c_t}{\\partial \\mathbf c_{t-1}} \\approx 1\n\\]\n\nGradient preserved."
   },
   {
-    "objectID": "slides/tokenization_pading_masking_embeddings.html#tokenization-in-tensorflow",
-    "href": "slides/tokenization_pading_masking_embeddings.html#tokenization-in-tensorflow",
-    "title": "Tokenization, Embeddings, Padding, and Masking",
-    "section": "Tokenization in TensorFlow",
-    "text": "Tokenization in TensorFlow\n\nfrom tensorflow.keras.preprocessing.text import Tokenizer\n\ntexts = [\n    \"deep learning is powerful\",\n    \"machine learning is fun\"\n]\n\ntokenizer = Tokenizer(num_words=1000, oov_token=\"&lt;OOV&gt;\")\ntokenizer.fit_on_texts(texts)\n\nsequences = tokenizer.texts_to_sequences(texts)\n\nprint(sequences)\n\n[[4, 2, 3, 5], [6, 2, 3, 7]]\n\n\nVocabulary Mapping\n\nprint(tokenizer.word_index)\n\n{'&lt;OOV&gt;': 1, 'learning': 2, 'is': 3, 'deep': 4, 'powerful': 5, 'machine': 6, 'fun': 7}\n\n\nProblem: Variable-Length Sequences\n[3, 1, 2, 5]\n[4, 1, 2, 6]\n[3, 1]"
+    "objectID": "slides/rnn.html#tensorflow-lstm",
+    "href": "slides/rnn.html#tensorflow-lstm",
+    "title": "Recurrent Neural Networks",
+    "section": "Tensorflow: LSTM",
+    "text": "Tensorflow: LSTM\n\nmodel = keras.Sequential([\n    layers.LSTM(64, return_sequences=True),\n    layers.LSTM(32),\n    layers.Dense(1)\n])\n\nmodel.compile(optimizer=\"adam\", loss=\"mse\")"
   },
   {
-    "objectID": "slides/tokenization_pading_masking_embeddings.html#padding-why-do-we-need-it",
-    "href": "slides/tokenization_pading_masking_embeddings.html#padding-why-do-we-need-it",
-    "title": "Tokenization, Embeddings, Padding, and Masking",
-    "section": "Padding: Why Do We Need It?",
-    "text": "Padding: Why Do We Need It?\nProblem: Variable-Length Sequences\nText sequences have different lengths:\n[3, 1, 2, 5]\n[4, 1]\nNeural networks require:\n\\[\n(\\text{batch}, \\text{fixed length})\n\\]\n\nCannot stack sequences directly into tensors\n\nSolution: Padding\nAdd special token (0) to standardize length:\n[4, 1] → [4, 1, 0, 0]\n\n\n\n\n\n\n\nKey Idea\n\n\nPadding = making data rectangular"
+    "objectID": "slides/rnn.html#gru-equations",
+    "href": "slides/rnn.html#gru-equations",
+    "title": "Recurrent Neural Networks",
+    "section": "GRU Equations",
+    "text": "GRU Equations\n\nSimpler alternative to LSTM.\n\nUpdate gate:\n\\[\n\\mathbf z_t = \\sigma\\left(\\mathbf W_z [\\mathbf h_{t-1} \\, \\mathbf x_t] + \\mathbf b_z\\right)\n\\]\nReset gate:\n\\[\n\\mathbf r_t = \\sigma\\left(\\mathbf W_r [\\mathbf h_{t-1} \\, \\mathbf x_t] + \\mathbf b_r\\right)\n\\]\nCandidate cell state:\n\\[\n\\widetilde{\\mathbf h}_t = \\tanh\\left(\\mathbf W_h [\\mathbf r_t \\! \\odot \\! \\mathbf h_{t-1} \\, \\mathbf x_t] + \\mathbf b_h\\right)\n\\]"
   },
   {
-    "objectID": "slides/tokenization_pading_masking_embeddings.html#padding-sequences",
-    "href": "slides/tokenization_pading_masking_embeddings.html#padding-sequences",
-    "title": "Tokenization, Embeddings, Padding, and Masking",
-    "section": "Padding Sequences",
-    "text": "Padding Sequences\n\nfrom tensorflow.keras.preprocessing.sequence import pad_sequences\n\npadded = pad_sequences(sequences, padding='post')\nprint(padded)\n\n[[4 2 3 5]\n [6 2 3 7]]"
+    "objectID": "slides/rnn.html#gru-update",
+    "href": "slides/rnn.html#gru-update",
+    "title": "Recurrent Neural Networks",
+    "section": "GRU Update",
+    "text": "GRU Update\n\\[\n\\mathbf h_t = (1 - \\mathbf z_t) \\odot \\mathbf h_{t-1} + \\mathbf z_t \\odot \\widetilde{\\mathbf h}_t\n\\]"
   },
   {
-    "objectID": "slides/tokenization_pading_masking_embeddings.html#padding-subtleties-consequences",
-    "href": "slides/tokenization_pading_masking_embeddings.html#padding-subtleties-consequences",
-    "title": "Tokenization, Embeddings, Padding, and Masking",
-    "section": "Padding: Subtleties & Consequences",
-    "text": "Padding: Subtleties & Consequences\nTypes of Padding\n\nPost-padding (preferred in NLP)\n\n[real data | padding]\n\nPre-padding\n\n[padding | real data]\n\n\nHidden Problem\nPadding introduces fake data (zeros)\n\n\n\n\n\n\nWarning\n\n\nModel may learn: “zero is important”.\n\n\n\nImplication\nPadding must be handled carefully\n\nLeads to masking"
+    "objectID": "slides/rnn.html#tensorflow-gru",
+    "href": "slides/rnn.html#tensorflow-gru",
+    "title": "Recurrent Neural Networks",
+    "section": "Tensorflow: GRU",
+    "text": "Tensorflow: GRU\n\nmodel = keras.Sequential([\n    layers.GRU(64, return_sequences=True),\n    layers.GRU(32),\n    layers.Dense(1)\n])"
   },
   {
-    "objectID": "slides/tokenization_pading_masking_embeddings.html#embeddings-1",
-    "href": "slides/tokenization_pading_masking_embeddings.html#embeddings-1",
-    "title": "Tokenization, Embeddings, Padding, and Masking",
-    "section": "Embeddings",
-    "text": "Embeddings\n\nDense vector representation of tokens\nCaptures semantic meaning"
+    "objectID": "slides/rnn.html#recurrent-dropout",
+    "href": "slides/rnn.html#recurrent-dropout",
+    "title": "Recurrent Neural Networks",
+    "section": "Recurrent Dropout",
+    "text": "Recurrent Dropout\nStandard dropout disrupts temporal memory.\nRecurrent dropout:\n\nApplied on recurrent connections\nSame mask across timesteps"
   },
   {
-    "objectID": "slides/tokenization_pading_masking_embeddings.html#embeddings-from-tokens-to-vectors",
-    "href": "slides/tokenization_pading_masking_embeddings.html#embeddings-from-tokens-to-vectors",
-    "title": "Tokenization, Embeddings, Padding, and Masking",
-    "section": "Embeddings: From Tokens to Vectors",
-    "text": "Embeddings: From Tokens to Vectors\nCore Idea\n\\[\nw \\rightarrow \\mathbf{e}_w \\in \\mathbb{R}^d\n\\]​\nEmbedding Matrix\n\\[\n\\mathbf{E} \\in \\mathbb{R}^{V \\times d}\n\\]\n\n\\(V\\): vocabulary size\n\\(d\\): embedding dimension\n\nLookup\n\nInput: [3, 1, 2]\nOutput: [E[3], E[1], E[2]]\n\n\nTrainable lookup table"
+    "objectID": "slides/rnn.html#tensorflow-recurrent-dropout",
+    "href": "slides/rnn.html#tensorflow-recurrent-dropout",
+    "title": "Recurrent Neural Networks",
+    "section": "TensorFlow: Recurrent Dropout",
+    "text": "TensorFlow: Recurrent Dropout\n\nmodel = keras.Sequential([\n    layers.LSTM(\n        64,\n        return_sequences=True,\n        recurrent_dropout=0.2\n    ),\n    layers.LSTM(32),\n    layers.Dense(1)\n])"
   },
   {
-    "objectID": "slides/tokenization_pading_masking_embeddings.html#why-embeddings-work",
-    "href": "slides/tokenization_pading_masking_embeddings.html#why-embeddings-work",
-    "title": "Tokenization, Embeddings, Padding, and Masking",
-    "section": "Why Embeddings Work",
-    "text": "Why Embeddings Work\nSemantic Geometry\nSimilar words → close vectors\n\n\n\n\nExample\n\n\nking - man + woman ≈ queen\n\n\n\n\nvs One-Hot Encoding\n\n\n\nOne-hot\nEmbedding\n\n\n\n\nSparse\nDense\n\n\nNo meaning\nSemantic meaning\n\n\n\nTraining\n\nLearned via backpropagation\nOnly used rows are updated"
+    "objectID": "slides/rnn.html#gradient-clipping",
+    "href": "slides/rnn.html#gradient-clipping",
+    "title": "Recurrent Neural Networks",
+    "section": "Gradient Clipping",
+    "text": "Gradient Clipping\n\\[\n\\nabla_{\\boldsymbol \\theta} \\mathscr L \\leftarrow \\frac{\\nabla_{\\boldsymbol \\theta} \\mathscr L}{\\max(1, \\frac{||\\nabla_{\\boldsymbol \\theta} \\mathscr L||}{\\lambda})}\n\\]\nPrevent exploding gradients:\n\noptimizer = tf.keras.optimizers.Adam(\n    learning_rate=0.001,\n    clipnorm=1.0\n)"
   },
   {
-    "objectID": "slides/tokenization_pading_masking_embeddings.html#embedding-layer",
-    "href": "slides/tokenization_pading_masking_embeddings.html#embedding-layer",
-    "title": "Tokenization, Embeddings, Padding, and Masking",
-    "section": "Embedding Layer",
-    "text": "Embedding Layer\n\nfrom tensorflow.keras.layers import Embedding\n\nembedding_layer = Embedding(input_dim=1000, output_dim=16)"
+    "objectID": "slides/rnn.html#deep-rnns",
+    "href": "slides/rnn.html#deep-rnns",
+    "title": "Recurrent Neural Networks",
+    "section": "Deep RNNs",
+    "text": "Deep RNNs\nStack multiple RNN layers for hierarchical representations:\n\nDeep RNN"
   },
   {
-    "objectID": "slides/tokenization_pading_masking_embeddings.html#putting-it-together",
-    "href": "slides/tokenization_pading_masking_embeddings.html#putting-it-together",
-    "title": "Tokenization, Embeddings, Padding, and Masking",
-    "section": "Putting It Together",
-    "text": "Putting It Together\nText\n\nTokenization\nInteger sequences\nPadding\nEmbedding\nModel\n\nTensor Shapes\n(batch, seq_len) → (batch, seq_len, embedding_dim)\nIntuition\n\nPadding → structure\nEmbedding → meaning"
+    "objectID": "slides/rnn.html#bidirectional-rnns",
+    "href": "slides/rnn.html#bidirectional-rnns",
+    "title": "Recurrent Neural Networks",
+    "section": "Bidirectional RNNs",
+    "text": "Bidirectional RNNs\nProcess sequences in both directions:\n\nBidirectional RNN"
   },
   {
-    "objectID": "slides/tokenization_pading_masking_embeddings.html#full-pipeline-example",
-    "href": "slides/tokenization_pading_masking_embeddings.html#full-pipeline-example",
-    "title": "Tokenization, Embeddings, Padding, and Masking",
-    "section": "Full Pipeline Example",
-    "text": "Full Pipeline Example\n\nimport tensorflow as tf\n\nmodel = tf.keras.Sequential([\n    tf.keras.layers.Embedding(1000, 16, input_length=10),\n    tf.keras.layers.GlobalAveragePooling1D(),\n    tf.keras.layers.Dense(16, activation='relu'),\n    tf.keras.layers.Dense(1, activation='sigmoid')\n])\n\nmodel.summary()\n\nModel: \"sequential\"\n\n\n\n┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓\n┃ Layer (type)                    ┃ Output Shape           ┃       Param # ┃\n┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩\n│ embedding_1 (Embedding)         │ ?                      │   0 (unbuilt) │\n├─────────────────────────────────┼────────────────────────┼───────────────┤\n│ global_average_pooling1d        │ ?                      │             0 │\n│ (GlobalAveragePooling1D)        │                        │               │\n├─────────────────────────────────┼────────────────────────┼───────────────┤\n│ dense (Dense)                   │ ?                      │   0 (unbuilt) │\n├─────────────────────────────────┼────────────────────────┼───────────────┤\n│ dense_1 (Dense)                 │ ?                      │   0 (unbuilt) │\n└─────────────────────────────────┴────────────────────────┴───────────────┘\n\n\n\n Total params: 0 (0.00 B)\n\n\n\n Trainable params: 0 (0.00 B)\n\n\n\n Non-trainable params: 0 (0.00 B)"
+    "objectID": "slides/rnn.html#model-comparison",
+    "href": "slides/rnn.html#model-comparison",
+    "title": "Recurrent Neural Networks",
+    "section": "Model Comparison",
+    "text": "Model Comparison\n\n\n\nModel\nLong Dependencies\nComplexity\nSpeed\n\n\n\n\nRNN\nPoor\nLow\nFast\n\n\nLSTM\nExcellent\nHigh\nSlower\n\n\nGRU\nVery Good\nMedium\nFaster"
   },
   {
-    "objectID": "slides/tokenization_pading_masking_embeddings.html#masking-ignoring-fake-data",
-    "href": "slides/tokenization_pading_masking_embeddings.html#masking-ignoring-fake-data",
-    "title": "Tokenization, Embeddings, Padding, and Masking",
-    "section": "Masking: Ignoring Fake Data",
-    "text": "Masking: Ignoring Fake Data\nProblem\nPadding introduces noise:\n[3, 1, 0, 0]\n\nModel should ignore zeros\n\nSolution: Masking\nMask tensor:\n[1, 1, 0, 0]\n\n1 → real data\n0 → ignore\n\nTensorFlow Example\n\nembedding = tf.keras.layers.Embedding(\n    input_dim=10000,\n    output_dim=64,\n    mask_zero=True\n)"
+    "objectID": "slides/rnn.html#limitations-of-rnns",
+    "href": "slides/rnn.html#limitations-of-rnns",
+    "title": "Recurrent Neural Networks",
+    "section": "Limitations of RNNs",
+    "text": "Limitations of RNNs\n\nSequential computation\nHard to parallelize\nLong sequences still challenging\nTransformers dominate NLP"
   },
   {
-    "objectID": "slides/tokenization_pading_masking_embeddings.html#masking-special-cases",
-    "href": "slides/tokenization_pading_masking_embeddings.html#masking-special-cases",
-    "title": "Tokenization, Embeddings, Padding, and Masking",
-    "section": "Masking: Special Cases",
-    "text": "Masking: Special Cases\nWhere It Works:\n\nLSTM / GRU\nRNNs\nAttention layers\n\n\n\n\n\n\n\n\nTime Series\n\n\nIn time series, masking is not limited to zero values.\nMissing data may be encoded as:\n\nNaN\n-1\nsentinel values (e.g., -999)\ndomain-specific flags\n\n\n\n\n\nMask must be explicitly defined, e.g.:\n\nx = tf.constant([[1, 2, -999], [3, -999, -999]])\nmask = tf.math.not_equal(x, -999)"
+    "objectID": "slides/trading_indicators.html#log-return",
+    "href": "slides/trading_indicators.html#log-return",
+    "title": "Technical Trading Indicators",
+    "section": "Log-Return",
+    "text": "Log-Return\n\\[r_t(n) = \\ln\\left(\\frac{C_t}{C_{t-n}}\\right)\\]\nMotivation: Log-returns are symmetric, additive over time, and approximately normally distributed — the standard unit of measurement in quantitative finance.\nInterpretation:\n\n\\(r &gt; 0\\) appreciation\n\\(r &lt; 0\\) depreciation.\n\nTypical periods: \\(n = 1, 5, 10, 20\\)."
   },
   {
-    "objectID": "slides/tokenization_pading_masking_embeddings.html#masking-in-tensorflow",
-    "href": "slides/tokenization_pading_masking_embeddings.html#masking-in-tensorflow",
-    "title": "Tokenization, Embeddings, Padding, and Masking",
-    "section": "Masking in TensorFlow",
-    "text": "Masking in TensorFlow\nMasking with RNN - Text\n\nmodel = tf.keras.Sequential([\n    tf.keras.layers.Embedding(1000, 16, mask_zero=True),\n    tf.keras.layers.LSTM(32),\n    tf.keras.layers.Dense(1)\n])\n\nMasking with RNN - Time Series\n\nimport tensorflow as tf\n\nmodel = tf.keras.Sequential([\n    tf.keras.layers.Masking(mask_value=-999.0),\n    tf.keras.layers.LSTM(32),\n    tf.keras.layers.Dense(1)\n])"
+    "objectID": "slides/trading_indicators.html#realised-volatility",
+    "href": "slides/trading_indicators.html#realised-volatility",
+    "title": "Technical Trading Indicators",
+    "section": "Realised Volatility",
+    "text": "Realised Volatility\n\\[\\sigma_n = \\text{std}\\!\\left(\\{r_{t-n+1}, \\ldots, r_t\\}\\right)\\]\nMotivation: Rolling standard deviation of log-returns is the most direct empirical measure of price uncertainty. Captures regime changes between calm and turbulent markets.\nInterpretation:\n\nLow = calm/trending regime\nrising = growing uncertainty\nhigh = crisis or event-driven.\n\nTypical periods: \\(n = 5, 10, 20, 60\\)."
   },
   {
-    "objectID": "slides/tokenization_pading_masking_embeddings.html#finance-analogy-time-series-as-text",
-    "href": "slides/tokenization_pading_masking_embeddings.html#finance-analogy-time-series-as-text",
-    "title": "Tokenization, Embeddings, Padding, and Masking",
-    "section": "Finance Analogy: Time Series as “Text”",
-    "text": "Finance Analogy: Time Series as “Text”\n\n\n\nNLP Concept\nFinance Time Series Equivalent\n\n\n\n\nTokens\nTime steps (prices, returns)\n\n\nSentence\nPrice history window\n\n\nVocabulary\nFeature space (indicators)\n\n\nSequence\nTime series\n\n\n\nPadding in Finance\nDifferent assets / samples have:\n\nDifferent history lengths\nMissing observations\n\nExample:\n\nStock A: [r₁, r₂, r₃, r₄]\nStock B: [r₁, r₂]\n\nPad: [r₁, r₂, 0, 0]\nMasking in Finance\nIgnore:\n\nMissing data\nNon-trading days\nIncomplete windows\n\nMask: [1, 1, 0, 0]\nEmbeddings in Finance\nInstead of words → vectors:\n\nTime step → feature vector"
+    "objectID": "slides/trading_indicators.html#overnight-gap",
+    "href": "slides/trading_indicators.html#overnight-gap",
+    "title": "Technical Trading Indicators",
+    "section": "Overnight Gap",
+    "text": "Overnight Gap\n\\[\\text{Gap}_t = \\ln\\!\\left(\\frac{O_t}{C_{t-1}}\\right)\\]\nMotivation: News, earnings, and macro events accumulate after hours. The overnight gap captures the information shock that arrives between sessions and cannot be hedged intraday.\nInterpretation:\n\n\\(&gt; 0\\) gap up (positive overnight news)\n\\(&lt; 0\\) gap down (negative news).\n\nPersistent gaps in one direction signal trend continuation."
+  },
+  {
+    "objectID": "slides/trading_indicators.html#intraday-range",
+    "href": "slides/trading_indicators.html#intraday-range",
+    "title": "Technical Trading Indicators",
+    "section": "Intraday Range",
+    "text": "Intraday Range\n\\[\\text{Range}_t = \\frac{H_t - L_t}{C_t}\\]\nMotivation: The High-Low spread normalised by Close measures intraday uncertainty independent of price level. Reacts to news within the same session, before close-to-close volatility can update.\nInterpretation:\n\nLow = quiet session\nspike = news or event\npersistently high = volatile regime.\n\nNo lookback parameter — uses the current bar only."
+  },
+  {
+    "objectID": "slides/trading_indicators.html#atr-average-true-range",
+    "href": "slides/trading_indicators.html#atr-average-true-range",
+    "title": "Technical Trading Indicators",
+    "section": "ATR — Average True Range",
+    "text": "ATR — Average True Range\n\\[\\text{TR}_t = \\max(H_t - L_t,\\ |H_t - C_{t-1}|,\\ |L_t - C_{t-1}|)\\] \\[\\text{ATR}(n) = \\text{mean}(\\text{TR},\\, n) = \\frac{1}{n}\\sum_{i=1}^{n} \\text{TR}_{t-n+i}\\]\nMotivation: Extends the simple H-L range to account for overnight gaps. The standard input for volatility-scaled position sizing and stop-loss placement.\nInterpretation:\n\nRising = volatility expanding\nfalling = contracting.\n\nCommon stop rule: \\(k \\times \\text{ATR}\\) with \\(k = 1.5\\)–\\(3\\). Typical periods: \\(n = 7, 14, 21\\)."
+  },
+  {
+    "objectID": "slides/trading_indicators.html#garman-klass-parkinson-estimator",
+    "href": "slides/trading_indicators.html#garman-klass-parkinson-estimator",
+    "title": "Technical Trading Indicators",
+    "section": "Garman-Klass / Parkinson Estimator",
+    "text": "Garman-Klass / Parkinson Estimator\n\\[\\hat{\\sigma}^2_{GK} = \\frac{1}{n}\\sum_{i=1}^{n}\\left[\\tfrac{1}{2}\\ln^2\\!\\frac{H_i}{L_i} - (2\\ln 2 - 1)\\ln^2\\!\\frac{C_i}{O_i}\\right]\\]\nMotivation: Close-to-close volatility discards intraday information. The Garman-Klass estimator uses the full OHLC bar, achieving 5–8× lower variance than the standard estimator for the same window.\nInterpretation: Same scale as realised volatility. Preferred for short windows or when intraday data is unavailable. Typical periods: \\(n = 5, 10, 20\\)."
+  },
+  {
+    "objectID": "slides/trading_indicators.html#sma-crossover",
+    "href": "slides/trading_indicators.html#sma-crossover",
+    "title": "Technical Trading Indicators",
+    "section": "SMA Crossover",
+    "text": "SMA Crossover\n\\[\\text{SMA}(n)_t = \\frac{1}{n}\\sum_{i=0}^{n-1} C_{t-i}, \\qquad \\text{Signal} = \\frac{\\text{SMA}(s)}{\\text{SMA}(l)} - 1\\]\nMotivation: Simple moving averages smooth price noise and reveal trend direction. The ratio of short to long SMA quantifies how much the recent trend deviates from the longer-term baseline.\nInterpretation:\n\n\\(&gt; 0\\) bullish (short above long)\n\\(&lt; 0\\) bearish; zero-crossing signals a trend change.\n\nTypical pairs: \\(s/l = 5/20\\), \\(10/50\\), \\(50/200\\)."
+  },
+  {
+    "objectID": "slides/trading_indicators.html#ema-crossover-exponential-moving-average",
+    "href": "slides/trading_indicators.html#ema-crossover-exponential-moving-average",
+    "title": "Technical Trading Indicators",
+    "section": "EMA Crossover (Exponential Moving Average)",
+    "text": "EMA Crossover (Exponential Moving Average)\n\\[\\text{EMA}(n)_t = \\alpha\\, C_t + (1-\\alpha)\\,\\text{EMA}(n)_{t-1}, \\quad \\alpha = \\tfrac{2}{n+1}\\] \\[\\text{Signal} = \\frac{\\text{EMA}(s)}{\\text{EMA}(l)} - 1\\]\nMotivation: EMA assigns exponentially decaying weights to past prices, making it more responsive to recent moves than SMA. Reduces lag at the cost of slightly more noise sensitivity.\nInterpretation: Same directional logic as SMA crossover but reacts faster; more susceptible to whipsaws in ranging markets.\nTypical pairs: \\(s/l = 12/26\\), \\(9/21\\), \\(5/20\\)."
+  },
+  {
+    "objectID": "slides/trading_indicators.html#macd-signal-line-moving-average-convergencedivergence",
+    "href": "slides/trading_indicators.html#macd-signal-line-moving-average-convergencedivergence",
+    "title": "Technical Trading Indicators",
+    "section": "MACD Signal Line (Moving Average Convergence/Divergence)",
+    "text": "MACD Signal Line (Moving Average Convergence/Divergence)\n\\[\\text{MACD}_t = \\text{EMA}(s)_t - \\text{EMA}(l)_t\\] \\[\\text{Normalised} = \\frac{\\text{MACD}_t}{C_t}\\]\nMotivation: Measures the convergence and divergence of two EMAs, revealing momentum shifts before price crossovers occur. Normalising by price makes it comparable across instruments.\nInterpretation:\n\nPositive and rising = bullish momentum building\nMACD crosses signal line = entry/exit\nhistogram shrinking = momentum weakening.\n\nStandard parameters: \\(s=12\\), \\(l=26\\), signal \\(=9\\)."
+  },
+  {
+    "objectID": "slides/trading_indicators.html#adx-average-directional-index",
+    "href": "slides/trading_indicators.html#adx-average-directional-index",
+    "title": "Technical Trading Indicators",
+    "section": "ADX — Average Directional Index",
+    "text": "ADX — Average Directional Index\n\\[\\text{ADX}(n) = \\text{EMA}\\!\\left(\\frac{|{+DI} - ({-DI})|}{+DI + (-DI)},\\, n\\right) \\times 100\\]\nMotivation: Most trend indicators show direction but not strength. ADX is direction-agnostic — it measures how strongly price is trending regardless of whether up or down.\nInterpretation: \\(&lt; 20\\) ranging; \\(20\\)–\\(25\\) developing trend; \\(&gt; 25\\) strong trend; \\(&gt; 40\\) very strong. Pair with any crossover for direction. Typical periods: \\(n = 7, 14, 21\\)."
+  },
+  {
+    "objectID": "slides/trading_indicators.html#parabolic-sar",
+    "href": "slides/trading_indicators.html#parabolic-sar",
+    "title": "Technical Trading Indicators",
+    "section": "Parabolic SAR",
+    "text": "Parabolic SAR\n\\[\\text{SAR}_{t+1} = \\text{SAR}_t + \\alpha\\,(\\text{EP} - \\text{SAR}_t)\\] \\[ \\alpha_0 = 0.02,\\ \\alpha_{\\max} = 0.20\\]\nMotivation: A dynamic trailing stop that accelerates as a trend extends. Provides both a binary regime signal (above/below price) and a quantitative distance measure.\nInterpretation:\n\nPrice \\(&gt;\\) SAR = uptrend\nPrice \\(&lt;\\) SAR = downtrend; SAR flip = reversal signal.\n\nAs a model feature encode as binary or \\((C - \\text{SAR})/C\\)."
+  },
+  {
+    "objectID": "slides/trading_indicators.html#rate-of-change-roc",
+    "href": "slides/trading_indicators.html#rate-of-change-roc",
+    "title": "Technical Trading Indicators",
+    "section": "Rate of Change (ROC)",
+    "text": "Rate of Change (ROC)\n\\[\\text{ROC}(n)_t = \\ln\\!\\left(\\frac{C_t}{C_{t-n}}\\right)\\]\nMotivation: The simplest and most direct momentum measure — the log-return over a fixed lookback. Captures the cross-sectional momentum anomaly documented extensively in academic literature.\nInterpretation: \\(&gt; 0\\) positive momentum; \\(&lt; 0\\) negative; magnitude = strength. Use one feature per lookback. Typical periods: \\(n = 5, 10, 20, 60\\)."
+  },
+  {
+    "objectID": "slides/trading_indicators.html#rsi-relative-strength-index",
+    "href": "slides/trading_indicators.html#rsi-relative-strength-index",
+    "title": "Technical Trading Indicators",
+    "section": "RSI — Relative Strength Index",
+    "text": "RSI — Relative Strength Index\n\\[\\text{RS} = \\frac{\\overline{\\text{Gain}(n)}}{\\overline{\\text{Loss}(n)}}\\ , \\, \\text{RSI}(n) = 100 - \\frac{100}{1 + \\text{RS}}\\]\nMotivation: Compares average up-moves to average down-moves over a window, producing a bounded oscillator \\([0, 100]\\). Normalises momentum by recent range, making it comparable across volatility environments.\nInterpretation:\n\n\\(&gt; 70\\) overbought\n\\(50\\) neutral\n\\(&lt; 30\\) oversold.\n\nThe 50 line acts as a trend filter in many systems. Typical periods: \\(n = 7, 14, 21\\)."
+  },
+  {
+    "objectID": "slides/trading_indicators.html#stochastic-oscillator-k-d",
+    "href": "slides/trading_indicators.html#stochastic-oscillator-k-d",
+    "title": "Technical Trading Indicators",
+    "section": "Stochastic Oscillator %K / %D",
+    "text": "Stochastic Oscillator %K / %D\n\\[\\text{\\%K}(n) = \\frac{C_t - L_n}{H_n - L_n} \\times 100, \\, \\text{\\%D}(m) = \\text{SMA}(\\text{\\%K},\\, m)\\]\nMotivation: Measures where the current close sits within the recent High-Low range. In an uptrend, closes tend toward the top of the range; in a downtrend, toward the bottom.\nInterpretation:\n\n\\(&gt; 80\\) overbought\n\\(&lt; 20\\) oversold\n\\(\\text{\\%K}\\) crosses \\(\\text{\\%D}\\) = entry signal.\n\nTypical params: \\(n = 14\\), \\(m = 3\\)."
+  },
+  {
+    "objectID": "slides/trading_indicators.html#williams-r",
+    "href": "slides/trading_indicators.html#williams-r",
+    "title": "Technical Trading Indicators",
+    "section": "Williams %R",
+    "text": "Williams %R\n\\[\\text{\\%R}(n) = -100 \\times \\frac{H_n - C_t}{H_n - L_n}\\]\nMotivation: The inverse of Stochastic %K, emphasising proximity to the recent high. Mathematically \\(\\text{\\%R} = \\text{\\%K} - 100\\). Highly correlated with Stochastic — in a lean feature set use one or decorrelate.\nInterpretation:\n\n\\(0\\) to \\(-20\\) overbought\n\\(-50\\) neutral\n\\(-80\\) to \\(-100\\) oversold.\n\nTypical periods: \\(n = 7, 14, 21\\)."
+  },
+  {
+    "objectID": "slides/trading_indicators.html#cci-commodity-channel-index",
+    "href": "slides/trading_indicators.html#cci-commodity-channel-index",
+    "title": "Technical Trading Indicators",
+    "section": "CCI — Commodity Channel Index",
+    "text": "CCI — Commodity Channel Index\n\\[\\text{TP}_t = \\frac{H_t + L_t + C_t}{3}, \\qquad \\text{CCI}(n) = \\frac{\\text{TP}_t - \\text{SMA}(\\text{TP},n)}{0.015 \\times \\text{MAD}(\\text{TP},n)}\\]\nMotivation: Measures how many mean absolute deviations the typical price is from its moving average. The 0.015 constant places ~70–80% of values in \\([-100, +100]\\) under normal conditions, combining momentum and mean-reversion signals.\nInterpretation:\n\n\\(&gt; +100\\) strong uptrend/overbought\n\\(0\\) neutral\n\\(&lt; -100\\) strong downtrend/oversold.\n\nTypical periods: \\(n = 10, 14, 20\\)."
+  },
+  {
+    "objectID": "slides/trading_indicators.html#volume-log-change",
+    "href": "slides/trading_indicators.html#volume-log-change",
+    "title": "Technical Trading Indicators",
+    "section": "Volume Log-Change",
+    "text": "Volume Log-Change\n\\[\\Delta V_t = \\ln\\!\\left(\\frac{V_t}{V_{t-1}}\\right)\\]\nMotivation: Volume is a proxy for market participation and conviction. Log-change normalises for wide variation in absolute volume across instruments and time.\nInterpretation:\n\nPrice up + vol spike = confirmed breakout\nprice up + low vol = weak move\nprice down + vol spike = panic selling.\n\nDivergence between price and volume often precedes reversals."
+  },
+  {
+    "objectID": "slides/trading_indicators.html#volume-ratio",
+    "href": "slides/trading_indicators.html#volume-ratio",
+    "title": "Technical Trading Indicators",
+    "section": "Volume Ratio",
+    "text": "Volume Ratio\n\\[\\text{VR}(n)_t = \\frac{V_t}{\\text{SMA}(V,\\, n)_t}\\]\nMotivation: Raw volume is not comparable across instruments or through time. Normalising by rolling average produces a dimensionless activity score indicating whether current participation is above or below its historical norm.\nInterpretation:\n\n\\(\\approx 1\\) normal\n\\(&gt; 1.5\\) above-average interest\n\\(&gt; 2\\) unusual/event-driven\n\\(&lt; 0.5\\) unusually quiet.\n\nTypical periods: \\(n = 10, 20, 50\\)."
+  },
+  {
+    "objectID": "slides/trading_indicators.html#obv-rolling-mean",
+    "href": "slides/trading_indicators.html#obv-rolling-mean",
+    "title": "Technical Trading Indicators",
+    "section": "OBV / Rolling Mean",
+    "text": "OBV / Rolling Mean\n\\[\\text{OBV}_t = \\text{OBV}_{t-1} + \\begin{cases} +V_t & C_t &gt; C_{t-1} \\\\ -V_t & C_t &lt; C_{t-1} \\\\ 0 & C_t = C_{t-1} \\end{cases}\\] \\[\\text{Feature} = \\frac{\\text{OBV}_t}{\\text{SMA}(\\text{OBV},\\, n)_t}\\]\nMotivation: Cumulative volume signed by price direction. Rising OBV with flat price indicates accumulation; falling OBV with rising price signals distribution and potential reversal.\nInterpretation:\n\nOBV rising + price flat = accumulation\nOBV falling + price flat = distribution\nOBV confirms trend = high conviction move.\n\nTypical normalisation periods: \\(n = 10, 20\\)."
+  },
+  {
+    "objectID": "slides/trading_indicators.html#vwap",
+    "href": "slides/trading_indicators.html#vwap",
+    "title": "Technical Trading Indicators",
+    "section": "VWAP",
+    "text": "VWAP\n\\[\\text{VWAP}(n)_t = \\frac{\\displaystyle\\sum_{i=t-n+1}^{t} C_i\\, V_i}{\\displaystyle\\sum_{i=t-n+1}^{t} V_i}\\]\nMotivation: The volume-weighted average price — the fair value benchmark used by institutional traders. Represents the average price paid per share: both a mean-reversion anchor and an execution quality benchmark.\nInterpretation:\n\nPrice \\(&gt;\\) VWAP = bullish intraday bias\nprice \\(&lt;\\) VWAP = bearish\ncrossing VWAP = mean-reversion signal.\n\nBest suited for intraday data; use rolling VWAP for daily bars."
+  },
+  {
+    "objectID": "slides/trading_indicators.html#cmf-chaikin-money-flow",
+    "href": "slides/trading_indicators.html#cmf-chaikin-money-flow",
+    "title": "Technical Trading Indicators",
+    "section": "CMF — Chaikin Money Flow",
+    "text": "CMF — Chaikin Money Flow\n\\[\\text{MFV}_t = V_t \\cdot \\frac{(C_t - L_t) - (H_t - C_t)}{H_t - L_t}\\] \\[\\text{CMF}(n) = \\frac{\\sum \\text{MFV}}{\\sum V}\\]\nMotivation: Weights volume by where the close falls within the bar’s range. A close near the high implies buying pressure; near the low implies selling pressure. Summing over a window reveals sustained accumulation or distribution.\nInterpretation:\n\n\\(&gt; +0.25\\) strong buying\n\\(0\\) to \\(+0.25\\) moderate accumulation\n\\(-0.25\\) to \\(0\\) distribution\n\\(&lt; -0.25\\) strong selling.\n\nTypical periods: \\(n = 10, 20, 21\\)."
+  },
+  {
+    "objectID": "slides/trading_indicators.html#bollinger-band-position",
+    "href": "slides/trading_indicators.html#bollinger-band-position",
+    "title": "Technical Trading Indicators",
+    "section": "Bollinger Band Position",
+    "text": "Bollinger Band Position\n\\[\\text{BB}\\%(n) = \\frac{C_t - \\text{SMA}(n)_t}{2\\,\\sigma_n}\\]\nMotivation: Defines a dynamic envelope around price based on rolling standard deviation. The position within the bands quantifies how stretched price is relative to recent volatility — the core of mean-reversion strategies.\nInterpretation:\n\n\\(+1\\) at upper band (overbought)\n\\(0\\) at SMA (neutral)\n\\(-1\\) at lower band (oversold).\n\nBand width itself is a volatility regime indicator. Typical periods: \\(n = 10, 20, 50\\)."
+  },
+  {
+    "objectID": "slides/trading_indicators.html#distance-from-52-week-high-low",
+    "href": "slides/trading_indicators.html#distance-from-52-week-high-low",
+    "title": "Technical Trading Indicators",
+    "section": "Distance from 52-Week High / Low",
+    "text": "Distance from 52-Week High / Low\n\\[d_{\\text{high}}(n) = \\frac{C_t - \\max(C,\\, n)}{C_t}, \\qquad d_{\\text{low}}(n) = \\frac{C_t - \\min(C,\\, n)}{C_t}\\]\nMotivation: 52-week highs and lows are psychologically and structurally significant price levels. Breakouts above the 52-week high have strong documented momentum effects; proximity to the low captures distress or value.\nInterpretation:\n\nNear 52w high = momentum or resistance\nbreaking 52w high = strong breakout signal\nnear 52w low = distress or value opportunity.\n\nTypical periods: \\(n = 52, 26, 13\\) weeks."
+  },
+  {
+    "objectID": "slides/trading_indicators.html#z-score-of-price",
+    "href": "slides/trading_indicators.html#z-score-of-price",
+    "title": "Technical Trading Indicators",
+    "section": "Z-Score of Price",
+    "text": "Z-Score of Price\n\\[Z(n)_t = \\frac{C_t - \\text{SMA}(n)_t}{\\sigma_n}\\]\nMotivation: Places current price in a standardised statistical context — how many standard deviations from its recent mean. The cleanest, most model-friendly mean-reversion feature, especially useful for pairs trading and stat-arb strategies.\nInterpretation:\n\n\\(&gt; +2\\) statistically overbought\n\\(\\approx 0\\) near mean\n\\(&lt; -2\\) statistically oversold.\n\nNear-identical to BB% with the same \\(n\\) — one may be redundant. Typical periods: \\(n = 20, 60, 120\\)."
+  },
+  {
+    "objectID": "slides/trading_indicators.html#returns-volatility-1",
+    "href": "slides/trading_indicators.html#returns-volatility-1",
+    "title": "Technical Trading Indicators",
+    "section": "Returns & Volatility",
+    "text": "Returns & Volatility\n\n\n\nIndicator\nTypical Periods\nInterpretation\n\n\n\n\nLog-return\n\\(n = 1, 5, 10, 20\\)\n\\(+\\) appreciation; \\(-\\) depreciation\n\n\nRealised vol\n\\(n = 5, 10, 20, 60\\)\nHigher = riskier regime\n\n\nOvernight gap\n—\nOut-of-hours information shock\n\n\nIntraday range\n—\nIntraday uncertainty; spikes on events\n\n\nATR\n\\(n = 7, 14, 21\\)\nVol-adjusted range; stop sizing\n\n\nGarman-Klass\n\\(n = 5, 10, 20\\)\nEfficient OHLC volatility estimate"
+  },
+  {
+    "objectID": "slides/trading_indicators.html#trend-indicators-1",
+    "href": "slides/trading_indicators.html#trend-indicators-1",
+    "title": "Technical Trading Indicators",
+    "section": "Trend Indicators",
+    "text": "Trend Indicators\n\n\n\nIndicator\nTypical Periods\nInterpretation\n\n\n\n\nSMA crossover\n\\(5/20\\), \\(10/50\\), \\(50/200\\)\n\\(+\\) bullish; \\(-\\) bearish\n\n\nEMA crossover\n\\(12/26\\), \\(9/21\\), \\(5/20\\)\nFaster signal than SMA\n\n\nMACD\n\\(12/26\\), signal \\(= 9\\)\n\\(+\\) and rising = bullish momentum\n\n\nADX\n\\(n = 7, 14, 21\\)\n\\(&gt;25\\) trending; \\(&lt;20\\) ranging\n\n\nParabolic SAR\nAF \\(= 0.02\\), max \\(0.20\\)\nAbove SAR = uptrend"
+  },
+  {
+    "objectID": "slides/trading_indicators.html#momentum-indicators-1",
+    "href": "slides/trading_indicators.html#momentum-indicators-1",
+    "title": "Technical Trading Indicators",
+    "section": "Momentum Indicators",
+    "text": "Momentum Indicators\n\n\n\n\n\n\n\n\nIndicator\nTypical Periods\nInterpretation\n\n\n\n\nROC\n\\(n = 5, 10, 20, 60\\)\n\\(+\\) upward momentum\n\n\nRSI\n\\(n = 7, 14, 21\\)\n\\(&gt;70\\) overbought; \\(&lt;30\\) oversold\n\n\nStochastic %K/%D\n\\(n = 14\\), \\(m = 3\\)\n\\(&gt;80\\) overbought; \\(&lt;20\\) oversold\n\n\nWilliams %R\n\\(n = 7, 14, 21\\)\n\\(0\\) to \\(-20\\) overbought\n\n\nCCI\n\\(n = 10, 14, 20\\)\n\\(\\pm 100\\) = trend signals"
+  },
+  {
+    "objectID": "slides/trading_indicators.html#volume-indicators-1",
+    "href": "slides/trading_indicators.html#volume-indicators-1",
+    "title": "Technical Trading Indicators",
+    "section": "Volume Indicators",
+    "text": "Volume Indicators\n\n\n\n\n\n\n\n\nIndicator\nTypical Periods\nInterpretation\n\n\n\n\nVol log-change\n—\nSpikes confirm breakouts\n\n\nVolume ratio\n\\(n = 10, 20, 50\\)\n\\(&gt;1.5\\) above-average activity\n\n\nOBV / mean\n\\(n = 10, 20\\)\nRising OBV = accumulation\n\n\nVWAP\nIntraday; rolling \\(n = 5, 10, 20\\)\nPrice \\(&gt;\\) VWAP = bullish bias\n\n\nCMF\n\\(n = 10, 20, 21\\)\n\\(&gt;0\\) buying; \\(&lt;0\\) selling pressure"
+  },
+  {
+    "objectID": "slides/trading_indicators.html#mean-reversion-indicators-1",
+    "href": "slides/trading_indicators.html#mean-reversion-indicators-1",
+    "title": "Technical Trading Indicators",
+    "section": "Mean-Reversion Indicators",
+    "text": "Mean-Reversion Indicators\n\n\n\n\n\n\n\n\nIndicator\nTypical Periods\nInterpretation\n\n\n\n\nBollinger Band %\n\\(n = 10, 20, 50\\)\n\\(\\pm 1\\) = band edges\n\n\nDistance high/low\n\\(n = 13, 26, 52\\) weeks\nNear high = momentum or resistance\n\n\nZ-score\n\\(n = 20, 60, 120\\)\n\\(\\pm 2\\) statistically extreme"
   },
   {
     "objectID": "slides/transformers_decoder.html#transformer-decoder-block",
