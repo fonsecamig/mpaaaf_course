@@ -139,7 +139,7 @@ $$\text{ADX}(n) = \text{EMA}\!\left(\frac{|{+DI} - ({-DI})|}{+DI + (-DI)},\, n\r
 
 Pair with any crossover for direction. Typical periods: $n = 7, 14, 21$.
 
-## Parabolic SAR
+## Parabolic SAR (Stop and Reverse)
 
 $$\text{SAR}_{t+1} = \text{SAR}_t + \alpha\,(\text{EP} - \text{SAR}_t)$$
 $$\text{EP} = \begin{cases} \max(H_t) & \text{uptrend} \\ \min(L_t) & \text{downtrend} \end{cases}$$
