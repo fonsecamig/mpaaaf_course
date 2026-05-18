@@ -228,7 +228,7 @@
         "\n",
         "## Example: Data Splitting in Python {.scrollable}"
       ],
-      "id": "f156588b"
+      "id": "9d1a501f"
     },
     {
       "cell_type": "code",
@@ -253,7 +253,7 @@
         "\n",
         "X_train.shape, X_val.shape, X_test.shape"
       ],
-      "id": "c2afe4a5",
+      "id": "1ee22a71",
       "execution_count": null,
       "outputs": []
     },
@@ -355,7 +355,7 @@
         "\n",
         "## Regression Example (scikit-learn) {.scrollable}"
       ],
-      "id": "05ef91df"
+      "id": "a1d63733"
     },
     {
       "cell_type": "code",
@@ -381,7 +381,7 @@
         "print(\"MSE per fold:\", mse_scores)\n",
         "print(\"Mean MSE:\", mse_scores.mean())"
       ],
-      "id": "ed6afb33",
+      "id": "54b0c9a6",
       "execution_count": null,
       "outputs": []
     },
@@ -407,7 +407,7 @@
         "\n",
         "## Classification Example"
       ],
-      "id": "c8b94f0a"
+      "id": "f01f606e"
     },
     {
       "cell_type": "code",
@@ -436,7 +436,7 @@
         "\n",
         "scores"
       ],
-      "id": "a0a692e5",
+      "id": "489a4933",
       "execution_count": null,
       "outputs": []
     },
@@ -464,7 +464,7 @@
         "- CV is for model selection\n",
         "- Test set is for final evaluation"
       ],
-      "id": "df658227"
+      "id": "1d69a4bd"
     }
   ],
   "metadata": {

@@ -133,7 +133,7 @@
         "\n",
         "## Masked Attention in TensorFlow 2"
       ],
-      "id": "895855a5"
+      "id": "5d28c030"
     },
     {
       "cell_type": "code",
@@ -162,7 +162,7 @@
         "\n",
         "output"
       ],
-      "id": "187bd670",
+      "id": "f3e9e6e8",
       "execution_count": null,
       "outputs": []
     },
@@ -174,7 +174,7 @@
         "\n",
         "## Decoder Block in TensorFlow 2"
       ],
-      "id": "741e76af"
+      "id": "dd8e3081"
     },
     {
       "cell_type": "code",
@@ -197,7 +197,7 @@
         "        ffn_output = self.ffn(x)\n",
         "        return self.norm2(x + ffn_output)"
       ],
-      "id": "8dc20866",
+      "id": "43758a40",
       "execution_count": null,
       "outputs": []
     },
@@ -238,7 +238,7 @@
         "::::\n",
         ":::"
       ],
-      "id": "ab11a3cb"
+      "id": "7a26095f"
     }
   ],
   "metadata": {

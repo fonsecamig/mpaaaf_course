@@ -6,6 +6,8 @@ author: "Miguel Fonseca"
 format:
   revealjs:
     toc: true
+    fig-align: center
+    smaller: true
 ---
 
 ## Why interpretability?
