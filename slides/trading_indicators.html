@@ -271,8 +271,8 @@ Miguel Fonseca
 </ul>
 <p>Pair with any crossover for direction. Typical periods: <span class="math inline">\(n = 7, 14, 21\)</span>.</p>
 </section>
-<section id="parabolic-sar" class="slide level2">
-<h2>Parabolic SAR</h2>
+<section id="parabolic-sar-stop-and-reverse" class="slide level2">
+<h2>Parabolic SAR (Stop and Reverse)</h2>
 <p><span class="math display">\[\text{SAR}_{t+1} = \text{SAR}_t + \alpha\,(\text{EP} - \text{SAR}_t)\]</span> <span class="math display">\[\text{EP} = \begin{cases} \max(H_t) &amp; \text{uptrend} \\ \min(L_t) &amp; \text{downtrend} \end{cases}\]</span> <span class="math display">\[ \alpha_0 = 0.02,\ \alpha_{\max} = 0.20, \text{SAR}_0 = \text{EP}_0 = C_n-C_{n-k}\]</span></p>
 <p><strong>Motivation:</strong> A dynamic trailing stop that accelerates as a trend extends. Provides both a binary regime signal (above/below price) and a quantitative distance measure.</p>
 <p><strong>Interpretation:</strong></p>

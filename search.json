@@ -2247,11 +2247,11 @@
     "text": "ADX — Average Directional Index\n\\[\\text{ADX}(n) = \\text{EMA}\\!\\left(\\frac{|{+DI} - ({-DI})|}{+DI + (-DI)},\\, n\\right) \\times 100\\]\nMotivation: Most trend indicators show direction but not strength. ADX is direction-agnostic — it measures how strongly price is trending regardless of whether up or down.\nInterpretation:\n\n\\(&lt; 20\\) ranging; \\(20\\)–\\(25\\) developing trend\n\\(&gt; 25\\) strong trend; \\(&gt; 40\\) very strong.\n\nPair with any crossover for direction. Typical periods: \\(n = 7, 14, 21\\)."
   },
   {
-    "objectID": "slides/trading_indicators.html#parabolic-sar",
-    "href": "slides/trading_indicators.html#parabolic-sar",
+    "objectID": "slides/trading_indicators.html#parabolic-sar-stop-and-reverse",
+    "href": "slides/trading_indicators.html#parabolic-sar-stop-and-reverse",
     "title": "Technical Trading Indicators",
-    "section": "Parabolic SAR",
-    "text": "Parabolic SAR\n\\[\\text{SAR}_{t+1} = \\text{SAR}_t + \\alpha\\,(\\text{EP} - \\text{SAR}_t)\\] \\[\\text{EP} = \\begin{cases} \\max(H_t) & \\text{uptrend} \\\\ \\min(L_t) & \\text{downtrend} \\end{cases}\\] \\[ \\alpha_0 = 0.02,\\ \\alpha_{\\max} = 0.20, \\text{SAR}_0 = \\text{EP}_0 = C_n-C_{n-k}\\]\nMotivation: A dynamic trailing stop that accelerates as a trend extends. Provides both a binary regime signal (above/below price) and a quantitative distance measure.\nInterpretation:\n\nPrice \\(&gt;\\) SAR = uptrend\nPrice \\(&lt;\\) SAR = downtrend\n\nSAR flip = reversal signal. As a model feature encode as binary or \\((C - \\text{SAR})/C\\)."
+    "section": "Parabolic SAR (Stop and Reverse)",
+    "text": "Parabolic SAR (Stop and Reverse)\n\\[\\text{SAR}_{t+1} = \\text{SAR}_t + \\alpha\\,(\\text{EP} - \\text{SAR}_t)\\] \\[\\text{EP} = \\begin{cases} \\max(H_t) & \\text{uptrend} \\\\ \\min(L_t) & \\text{downtrend} \\end{cases}\\] \\[ \\alpha_0 = 0.02,\\ \\alpha_{\\max} = 0.20, \\text{SAR}_0 = \\text{EP}_0 = C_n-C_{n-k}\\]\nMotivation: A dynamic trailing stop that accelerates as a trend extends. Provides both a binary regime signal (above/below price) and a quantitative distance measure.\nInterpretation:\n\nPrice \\(&gt;\\) SAR = uptrend\nPrice \\(&lt;\\) SAR = downtrend\n\nSAR flip = reversal signal. As a model feature encode as binary or \\((C - \\text{SAR})/C\\)."
   },
   {
     "objectID": "slides/trading_indicators.html#rate-of-change-roc",
