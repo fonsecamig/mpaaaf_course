@@ -2244,21 +2244,21 @@
     "href": "slides/trading_indicators.html#adx-average-directional-index",
     "title": "Technical Trading Indicators",
     "section": "ADX — Average Directional Index",
-    "text": "ADX — Average Directional Index\n\\[\\text{ADX}(n) = \\text{EMA}\\!\\left(\\frac{|{+DI} - ({-DI})|}{+DI + (-DI)},\\, n\\right) \\times 100\\]\nMotivation: Most trend indicators show direction but not strength. ADX is direction-agnostic — it measures how strongly price is trending regardless of whether up or down.\nInterpretation: \\(&lt; 20\\) ranging; \\(20\\)–\\(25\\) developing trend; \\(&gt; 25\\) strong trend; \\(&gt; 40\\) very strong. Pair with any crossover for direction. Typical periods: \\(n = 7, 14, 21\\)."
+    "text": "ADX — Average Directional Index\n\\[\\text{ADX}(n) = \\text{EMA}\\!\\left(\\frac{|{+DI} - ({-DI})|}{+DI + (-DI)},\\, n\\right) \\times 100\\]\nMotivation: Most trend indicators show direction but not strength. ADX is direction-agnostic — it measures how strongly price is trending regardless of whether up or down.\nInterpretation:\n\n\\(&lt; 20\\) ranging; \\(20\\)–\\(25\\) developing trend\n\\(&gt; 25\\) strong trend; \\(&gt; 40\\) very strong.\n\nPair with any crossover for direction. Typical periods: \\(n = 7, 14, 21\\)."
   },
   {
     "objectID": "slides/trading_indicators.html#parabolic-sar",
     "href": "slides/trading_indicators.html#parabolic-sar",
     "title": "Technical Trading Indicators",
     "section": "Parabolic SAR",
-    "text": "Parabolic SAR\n\\[\\text{SAR}_{t+1} = \\text{SAR}_t + \\alpha\\,(\\text{EP} - \\text{SAR}_t)\\] \\[ \\alpha_0 = 0.02,\\ \\alpha_{\\max} = 0.20\\]\nMotivation: A dynamic trailing stop that accelerates as a trend extends. Provides both a binary regime signal (above/below price) and a quantitative distance measure.\nInterpretation:\n\nPrice \\(&gt;\\) SAR = uptrend\nPrice \\(&lt;\\) SAR = downtrend; SAR flip = reversal signal.\n\nAs a model feature encode as binary or \\((C - \\text{SAR})/C\\)."
+    "text": "Parabolic SAR\n\\[\\text{SAR}_{t+1} = \\text{SAR}_t + \\alpha\\,(\\text{EP} - \\text{SAR}_t)\\] \\[\\text{EP} = \\begin{cases} \\max(H_t) & \\text{uptrend} \\\\ \\min(L_t) & \\text{downtrend} \\end{cases}\\] \\[ \\alpha_0 = 0.02,\\ \\alpha_{\\max} = 0.20, \\text{SAR}_0 = \\text{EP}_0 = C_n-C_{n-k}\\]\nMotivation: A dynamic trailing stop that accelerates as a trend extends. Provides both a binary regime signal (above/below price) and a quantitative distance measure.\nInterpretation:\n\nPrice \\(&gt;\\) SAR = uptrend\nPrice \\(&lt;\\) SAR = downtrend\n\nSAR flip = reversal signal. As a model feature encode as binary or \\((C - \\text{SAR})/C\\)."
   },
   {
     "objectID": "slides/trading_indicators.html#rate-of-change-roc",
     "href": "slides/trading_indicators.html#rate-of-change-roc",
     "title": "Technical Trading Indicators",
     "section": "Rate of Change (ROC)",
-    "text": "Rate of Change (ROC)\n\\[\\text{ROC}(n)_t = \\ln\\!\\left(\\frac{C_t}{C_{t-n}}\\right)\\]\nMotivation: The simplest and most direct momentum measure — the log-return over a fixed lookback. Captures the cross-sectional momentum anomaly documented extensively in academic literature.\nInterpretation: \\(&gt; 0\\) positive momentum; \\(&lt; 0\\) negative; magnitude = strength. Use one feature per lookback. Typical periods: \\(n = 5, 10, 20, 60\\)."
+    "text": "Rate of Change (ROC)\n\\[\\text{ROC}(n)_t = \\ln\\!\\left(\\frac{C_t}{C_{t-n}}\\right)\\]\nMotivation: The simplest and most direct momentum measure — the log-return over a fixed lookback. Captures the cross-sectional momentum anomaly documented extensively in academic literature.\nInterpretation:\n\n\\(&gt; 0\\) positive momentum\n\\(&lt; 0\\) negative; magnitude = strength.\n\nUse one feature per lookback. Typical periods: \\(n = 5, 10, 20, 60\\)."
   },
   {
     "objectID": "slides/trading_indicators.html#rsi-relative-strength-index",
@@ -2272,21 +2272,21 @@
     "href": "slides/trading_indicators.html#stochastic-oscillator-k-d",
     "title": "Technical Trading Indicators",
     "section": "Stochastic Oscillator %K / %D",
-    "text": "Stochastic Oscillator %K / %D\n\\[\\text{\\%K}(n) = \\frac{C_t - L_n}{H_n - L_n} \\times 100, \\, \\text{\\%D}(m) = \\text{SMA}(\\text{\\%K},\\, m)\\]\nMotivation: Measures where the current close sits within the recent High-Low range. In an uptrend, closes tend toward the top of the range; in a downtrend, toward the bottom.\nInterpretation:\n\n\\(&gt; 80\\) overbought\n\\(&lt; 20\\) oversold\n\\(\\text{\\%K}\\) crosses \\(\\text{\\%D}\\) = entry signal.\n\nTypical params: \\(n = 14\\), \\(m = 3\\)."
+    "text": "Stochastic Oscillator %K / %D\n\\[\\text{%K}(n) = \\frac{C_t - L_n}{H_n - L_n} \\times 100\\] \\[\\text{%D}(m) = \\text{SMA}(\\text{%K},\\, m)\\]\nMotivation: Measures where the current close sits within the recent High-Low range. In an uptrend, closes tend toward the top of the range; in a downtrend, toward the bottom.\nInterpretation:\n\n\\(&gt; 80\\) overbought\n\\(&lt; 20\\) oversold\n\\(\\text{%K}\\) crosses \\(\\text{%D}\\) = entry signal.\n\nTypical params: \\(n = 14\\), \\(m = 3\\)."
   },
   {
     "objectID": "slides/trading_indicators.html#williams-r",
     "href": "slides/trading_indicators.html#williams-r",
     "title": "Technical Trading Indicators",
     "section": "Williams %R",
-    "text": "Williams %R\n\\[\\text{\\%R}(n) = -100 \\times \\frac{H_n - C_t}{H_n - L_n}\\]\nMotivation: The inverse of Stochastic %K, emphasising proximity to the recent high. Mathematically \\(\\text{\\%R} = \\text{\\%K} - 100\\). Highly correlated with Stochastic — in a lean feature set use one or decorrelate.\nInterpretation:\n\n\\(0\\) to \\(-20\\) overbought\n\\(-50\\) neutral\n\\(-80\\) to \\(-100\\) oversold.\n\nTypical periods: \\(n = 7, 14, 21\\)."
+    "text": "Williams %R\n\\[\\text{%R}(n) = -100 \\times \\frac{H_n - C_t}{H_n - L_n}\\]\nMotivation: The inverse of Stochastic %K, emphasising proximity to the recent high. Mathematically \\(\\text{%R} = \\text{%K} - 100\\). Highly correlated with Stochastic Oscillator — in a lean feature set use one or decorrelate.\nInterpretation:\n\n\\(0\\) to \\(-20\\) overbought\n\\(-50\\) neutral\n\\(-80\\) to \\(-100\\) oversold.\n\nTypical periods: \\(n = 7, 14, 21\\)."
   },
   {
     "objectID": "slides/trading_indicators.html#cci-commodity-channel-index",
     "href": "slides/trading_indicators.html#cci-commodity-channel-index",
     "title": "Technical Trading Indicators",
     "section": "CCI — Commodity Channel Index",
-    "text": "CCI — Commodity Channel Index\n\\[\\text{TP}_t = \\frac{H_t + L_t + C_t}{3}, \\qquad \\text{CCI}(n) = \\frac{\\text{TP}_t - \\text{SMA}(\\text{TP},n)}{0.015 \\times \\text{MAD}(\\text{TP},n)}\\]\nMotivation: Measures how many mean absolute deviations the typical price is from its moving average. The 0.015 constant places ~70–80% of values in \\([-100, +100]\\) under normal conditions, combining momentum and mean-reversion signals.\nInterpretation:\n\n\\(&gt; +100\\) strong uptrend/overbought\n\\(0\\) neutral\n\\(&lt; -100\\) strong downtrend/oversold.\n\nTypical periods: \\(n = 10, 14, 20\\)."
+    "text": "CCI — Commodity Channel Index\n\\[\\text{TP}_t = \\frac{H_t + L_t + C_t}{3}\\] \\[\\text{CCI}(n) = \\frac{\\text{TP}_t - \\text{SMA}(\\text{TP},n)}{0.015 \\times \\text{MAD}(\\text{TP},n)}\\]\nMotivation: Measures how many mean absolute deviations the typical price is from its moving average. The 0.015 constant places ~70–80% of values in \\([-100, +100]\\) under normal conditions, combining momentum and mean-reversion signals.\nInterpretation:\n\n\\(&gt; +100\\) strong uptrend/overbought\n\\(0\\) neutral\n\\(&lt; -100\\) strong downtrend/oversold.\n\nTypical periods: \\(n = 10, 14, 20\\)."
   },
   {
     "objectID": "slides/trading_indicators.html#volume-log-change",

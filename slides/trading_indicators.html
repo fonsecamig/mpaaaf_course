@@ -134,7 +134,7 @@
 
 <section id="title-slide" class="quarto-title-block center">
   <h1 class="title">Technical Trading Indicators</h1>
-  <p class="subtitle">Formula · Motivation · Interpretation</p>
+  <p class="subtitle">Formula, Motivation &amp; Interpretation</p>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -264,18 +264,23 @@ Miguel Fonseca
 <h2>ADX — Average Directional Index</h2>
 <p><span class="math display">\[\text{ADX}(n) = \text{EMA}\!\left(\frac{|{+DI} - ({-DI})|}{+DI + (-DI)},\, n\right) \times 100\]</span></p>
 <p><strong>Motivation:</strong> Most trend indicators show direction but not strength. ADX is direction-agnostic — it measures how strongly price is trending regardless of whether up or down.</p>
-<p><strong>Interpretation:</strong> <span class="math inline">\(&lt; 20\)</span> ranging; <span class="math inline">\(20\)</span>–<span class="math inline">\(25\)</span> developing trend; <span class="math inline">\(&gt; 25\)</span> strong trend; <span class="math inline">\(&gt; 40\)</span> very strong. Pair with any crossover for direction. Typical periods: <span class="math inline">\(n = 7, 14, 21\)</span>.</p>
+<p><strong>Interpretation:</strong></p>
+<ul>
+<li><span class="math inline">\(&lt; 20\)</span> ranging; <span class="math inline">\(20\)</span>–<span class="math inline">\(25\)</span> developing trend</li>
+<li><span class="math inline">\(&gt; 25\)</span> strong trend; <span class="math inline">\(&gt; 40\)</span> very strong.</li>
+</ul>
+<p>Pair with any crossover for direction. Typical periods: <span class="math inline">\(n = 7, 14, 21\)</span>.</p>
 </section>
 <section id="parabolic-sar" class="slide level2">
 <h2>Parabolic SAR</h2>
-<p><span class="math display">\[\text{SAR}_{t+1} = \text{SAR}_t + \alpha\,(\text{EP} - \text{SAR}_t)\]</span> <span class="math display">\[ \alpha_0 = 0.02,\ \alpha_{\max} = 0.20\]</span></p>
+<p><span class="math display">\[\text{SAR}_{t+1} = \text{SAR}_t + \alpha\,(\text{EP} - \text{SAR}_t)\]</span> <span class="math display">\[\text{EP} = \begin{cases} \max(H_t) &amp; \text{uptrend} \\ \min(L_t) &amp; \text{downtrend} \end{cases}\]</span> <span class="math display">\[ \alpha_0 = 0.02,\ \alpha_{\max} = 0.20, \text{SAR}_0 = \text{EP}_0 = C_n-C_{n-k}\]</span></p>
 <p><strong>Motivation:</strong> A dynamic trailing stop that accelerates as a trend extends. Provides both a binary regime signal (above/below price) and a quantitative distance measure.</p>
 <p><strong>Interpretation:</strong></p>
 <ul>
 <li>Price <span class="math inline">\(&gt;\)</span> SAR = uptrend</li>
-<li>Price <span class="math inline">\(&lt;\)</span> SAR = downtrend; SAR flip = reversal signal.</li>
+<li>Price <span class="math inline">\(&lt;\)</span> SAR = downtrend</li>
 </ul>
-<p>As a model feature encode as binary or <span class="math inline">\((C - \text{SAR})/C\)</span>.</p>
+<p>SAR flip = reversal signal. As a model feature encode as binary or <span class="math inline">\((C - \text{SAR})/C\)</span>.</p>
 </section></section>
 <section>
 <section id="momentum-indicators" class="title-slide slide level1 center">
@@ -286,7 +291,12 @@ Miguel Fonseca
 <h2>Rate of Change (ROC)</h2>
 <p><span class="math display">\[\text{ROC}(n)_t = \ln\!\left(\frac{C_t}{C_{t-n}}\right)\]</span></p>
 <p><strong>Motivation:</strong> The simplest and most direct momentum measure — the log-return over a fixed lookback. Captures the cross-sectional momentum anomaly documented extensively in academic literature.</p>
-<p><strong>Interpretation:</strong> <span class="math inline">\(&gt; 0\)</span> positive momentum; <span class="math inline">\(&lt; 0\)</span> negative; magnitude = strength. Use one feature per lookback. Typical periods: <span class="math inline">\(n = 5, 10, 20, 60\)</span>.</p>
+<p><strong>Interpretation:</strong></p>
+<ul>
+<li><span class="math inline">\(&gt; 0\)</span> positive momentum</li>
+<li><span class="math inline">\(&lt; 0\)</span> negative; magnitude = strength.</li>
+</ul>
+<p>Use one feature per lookback. Typical periods: <span class="math inline">\(n = 5, 10, 20, 60\)</span>.</p>
 </section>
 <section id="rsi-relative-strength-index" class="slide level2">
 <h2>RSI — Relative Strength Index</h2>
@@ -302,20 +312,20 @@ Miguel Fonseca
 </section>
 <section id="stochastic-oscillator-k-d" class="slide level2">
 <h2>Stochastic Oscillator %K / %D</h2>
-<p><span class="math display">\[\text{\%K}(n) = \frac{C_t - L_n}{H_n - L_n} \times 100, \, \text{\%D}(m) = \text{SMA}(\text{\%K},\, m)\]</span></p>
+<p><span class="math display">\[\text{%K}(n) = \frac{C_t - L_n}{H_n - L_n} \times 100\]</span> <span class="math display">\[\text{%D}(m) = \text{SMA}(\text{%K},\, m)\]</span></p>
 <p><strong>Motivation:</strong> Measures where the current close sits within the recent High-Low range. In an uptrend, closes tend toward the top of the range; in a downtrend, toward the bottom.</p>
 <p><strong>Interpretation:</strong></p>
 <ul>
 <li><span class="math inline">\(&gt; 80\)</span> overbought</li>
 <li><span class="math inline">\(&lt; 20\)</span> oversold</li>
-<li><span class="math inline">\(\text{\%K}\)</span> crosses <span class="math inline">\(\text{\%D}\)</span> = entry signal.</li>
+<li><span class="math inline">\(\text{%K}\)</span> crosses <span class="math inline">\(\text{%D}\)</span> = entry signal.</li>
 </ul>
 <p>Typical params: <span class="math inline">\(n = 14\)</span>, <span class="math inline">\(m = 3\)</span>.</p>
 </section>
 <section id="williams-r" class="slide level2">
 <h2>Williams %R</h2>
-<p><span class="math display">\[\text{\%R}(n) = -100 \times \frac{H_n - C_t}{H_n - L_n}\]</span></p>
-<p><strong>Motivation:</strong> The inverse of Stochastic %K, emphasising proximity to the recent high. Mathematically <span class="math inline">\(\text{\%R} = \text{\%K} - 100\)</span>. Highly correlated with Stochastic — in a lean feature set use one or decorrelate.</p>
+<p><span class="math display">\[\text{%R}(n) = -100 \times \frac{H_n - C_t}{H_n - L_n}\]</span></p>
+<p><strong>Motivation:</strong> The inverse of Stochastic %K, emphasising proximity to the recent high. Mathematically <span class="math inline">\(\text{%R} = \text{%K} - 100\)</span>. Highly correlated with Stochastic Oscillator — in a lean feature set use one or decorrelate.</p>
 <p><strong>Interpretation:</strong></p>
 <ul>
 <li><span class="math inline">\(0\)</span> to <span class="math inline">\(-20\)</span> overbought</li>
@@ -326,7 +336,7 @@ Miguel Fonseca
 </section>
 <section id="cci-commodity-channel-index" class="slide level2">
 <h2>CCI — Commodity Channel Index</h2>
-<p><span class="math display">\[\text{TP}_t = \frac{H_t + L_t + C_t}{3}, \qquad \text{CCI}(n) = \frac{\text{TP}_t - \text{SMA}(\text{TP},n)}{0.015 \times \text{MAD}(\text{TP},n)}\]</span></p>
+<p><span class="math display">\[\text{TP}_t = \frac{H_t + L_t + C_t}{3}\]</span> <span class="math display">\[\text{CCI}(n) = \frac{\text{TP}_t - \text{SMA}(\text{TP},n)}{0.015 \times \text{MAD}(\text{TP},n)}\]</span></p>
 <p><strong>Motivation:</strong> Measures how many mean absolute deviations the typical price is from its moving average. The 0.015 constant places ~70–80% of values in <span class="math inline">\([-100, +100]\)</span> under normal conditions, combining momentum and mean-reversion signals.</p>
 <p><strong>Interpretation:</strong></p>
 <ul>
